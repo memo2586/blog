@@ -33,7 +33,7 @@
 <meta property="og:image" content="https://memo2586.github.io/2023/12/05/Games101-Lecture-02-Review-of-Linear-Algebra/image-20231124152224648.png">
 <meta property="og:image" content="https://memo2586.github.io/2023/12/05/Games101-Lecture-02-Review-of-Linear-Algebra/image-20231124152552096.png">
 <meta property="article:published_time" content="2023-12-05T09:57:46.000Z">
-<meta property="article:modified_time" content="2023-12-05T10:01:01.961Z">
+<meta property="article:modified_time" content="2023-12-05T10:55:56.209Z">
 <meta property="article:author" content="memo2586">
 <meta property="article:tag" content="Games101 , 计算机图形学">
 <meta name="twitter:card" content="summary_large_image">
@@ -390,8 +390,8 @@ class="math inline">\(\overrightarrow{a}\)</span>
 <strong>两个向量的单位向量的点乘越接近1，则这两个向量在方向上越接近。</strong></p></li>
 </ul>
 <hr />
-<h3 id="vector-multiplication-cross-product">3 Vector Multiplication
-(Cross Product)</h3>
+<h3 id="vector-multiplication-times-product">3 Vector Multiplication
+(times Product)</h3>
 <ul>
 <li><p><strong>叉乘的计算</strong></p>
 <p><img src="image-20231123200453651.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p></li>
@@ -399,7 +399,7 @@ class="math inline">\(\overrightarrow{a}\)</span>
 <p>​
 <strong>两个向量叉乘的计算结果是一个垂直于这两个向量所在平面的向量。</strong>
 <span class="math display">\[
-\overrightarrow{a}\cross\overrightarrow{b}=-\overrightarrow{b}\cross\overrightarrow{a}
+\overrightarrow{a}\times\overrightarrow{b}=-\overrightarrow{b}\times\overrightarrow{a}
 \tag1
 \]</span></p>
 <p><span class="math display">\[
@@ -424,13 +424,13 @@ class="math inline">\(\overrightarrow{a}\)</span>
 <li><p><strong>叉乘的性质</strong></p>
 <ul>
 <li><p><span
-class="math inline">\(\overrightarrow{a}\cross\overrightarrow{b}=-\overrightarrow{b}\cross\overrightarrow{a}\)</span></p></li>
+class="math inline">\(\overrightarrow{a}\times\overrightarrow{b}=-\overrightarrow{b}\times\overrightarrow{a}\)</span></p></li>
 <li><p><span
-class="math inline">\(\overrightarrow{a}\cross\overrightarrow{a}=\overrightarrow{0}\)</span></p></li>
+class="math inline">\(\overrightarrow{a}\times\overrightarrow{a}=\overrightarrow{0}\)</span></p></li>
 <li><p><span
-class="math inline">\(\overrightarrow{a}\cross(\overrightarrow{b}+\overrightarrow{c})=\overrightarrow{a}\cross\overrightarrow{b}+\overrightarrow{a}\cross\overrightarrow{c}\)</span></p></li>
+class="math inline">\(\overrightarrow{a}\times(\overrightarrow{b}+\overrightarrow{c})=\overrightarrow{a}\times\overrightarrow{b}+\overrightarrow{a}\times\overrightarrow{c}\)</span></p></li>
 <li><p><span
-class="math inline">\(\overrightarrow{a}\cross(k\overrightarrow{b})=k(\overrightarrow{a}\cross\overrightarrow{b})\)</span></p></li>
+class="math inline">\(\overrightarrow{a}\times(k\overrightarrow{b})=k(\overrightarrow{a}\times\overrightarrow{b})\)</span></p></li>
 </ul></li>
 <li><p><strong>笛卡尔坐标系下的叉乘运算</strong> <span
 class="math display">\[
@@ -446,7 +446,7 @@ class="math display">\[
 <p>​ <strong>判断某一点是否在图形的内部</strong>。</p>
 <p>​ <img src="image-20231124152224648.png" srcset="/img/loading.gif" lazyload style="zoom:33%;" /></p>
 <p>​ 如图，<span
-class="math inline">\(\overrightarrow{a}\cross\overrightarrow{b}\)</span>
+class="math inline">\(\overrightarrow{a}\times\overrightarrow{b}\)</span>
 的值为正，可得 <span class="math inline">\(\overrightarrow{b}\)</span>
 在 <span class="math inline">\(\overrightarrow{a}\)</span>
 的左侧，反之同理，可以判断两个向量的相对左右位置。</p>
@@ -454,9 +454,9 @@ class="math inline">\(\overrightarrow{a}\cross\overrightarrow{b}\)</span>
 <p>​
 要判断点P是否在顺序的，首尾相接的三个向量组成的三角形内部，则只需要计算
 <span
-class="math inline">\(\overrightarrow{AB}\cross\overrightarrow{AP}\)</span>、<span
-class="math inline">\(\overrightarrow{BC}\cross\overrightarrow{BP}\)</span>、<span
-class="math inline">\(\overrightarrow{CA}\cross\overrightarrow{CP}\)</span>
+class="math inline">\(\overrightarrow{AB}\times\overrightarrow{AP}\)</span>、<span
+class="math inline">\(\overrightarrow{BC}\times\overrightarrow{BP}\)</span>、<span
+class="math inline">\(\overrightarrow{CA}\times\overrightarrow{CP}\)</span>
 的值是否都为正值或负值，即点P都在三个向量的左侧或右侧。</p>
 <hr />
 <h3 id="orthonormal-bases-and-coordinate-frames">4. Orthonormal bases
@@ -481,7 +481,7 @@ and coordinate frames</h3>
 <h3 id="matrix">5. Matrix</h3>
 <ul>
 <li><p><strong>矩阵乘法</strong></p>
-<p>设 <span class="math inline">\(A\cross B=C\)</span> ，则有 <span
+<p>设 <span class="math inline">\(A\times B=C\)</span> ，则有 <span
 class="math inline">\(C_{ij}=A_i\cdot B_j\)</span></p></li>
 <li><p><strong>矩阵乘法的性质</strong></p>
 <ul>
