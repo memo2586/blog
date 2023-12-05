@@ -4,6 +4,27 @@
   
   
   <entry>
+    <title>hexo_debug</title>
+    <link href="/2023/12/05/hexo-debug/"/>
+    <url>/2023/12/05/hexo-debug/</url>
+    
+    <content type="html"><![CDATA[<h4id="记录一下hexo使用过程中遇到的的bug以及解决方法">记录一下hexo使用过程中遇到的的bug以及解决方法</h4><ul><li><p><strong>render LateX公式过程出现错误：parseAggregate: expectedcomma after expression</strong></p><p>Google后发现是LateX公式中要将 '{' 或 '}'符号中间用空格隔开...</p></li></ul>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>hexo</tag>
+      
+      <tag>bug</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Games101-Lecture_04_Transformation_Cont</title>
     <link href="/2023/12/05/Games101-Lecture-04-Transformation-Cont/"/>
     <url>/2023/12/05/Games101-Lecture-04-Transformation-Cont/</url>
