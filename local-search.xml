@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>Games101-Lecture_06_Rasterization_2_(Antialiasing)</title>
+    <link href="/2023/12/05/Games101-Lecture-06-Rasterization-2-Antialiasing/"/>
+    <url>/2023/12/05/Games101-Lecture-06-Rasterization-2-Antialiasing/</url>
+    
+    <content type="html"><![CDATA[<h1 id="rasterization-2-antialiasing-and-z-buffering">Rasterization 2(Antialiasing and Z-Buffering)</h1><h3 id="sampling-artifacts">1. Sampling Artifacts</h3><ul><li><p><strong>什么是 Artifacts ？</strong></p><p>在计算机图形中的错误（Errors）、错误（Mistakes）、不准确（Inaccuracies）。</p></li><li><p><strong>常见的 Artifacts 有哪些？</strong></p><ul><li>锯齿（Jaggies）：空间采样</li><li>摩尔纹（Moire）：图形欠采样</li><li>车轮效应（Wagon wheel effect）：及时采样</li><li>还有很多......</li></ul></li><li><p><strong>为什么会产生这些 Artifacts ?</strong></p><p>信号变化太快（高频）但是采样速度太慢。</p></li><li><p><strong>如何解决这些问题？</strong></p><p><img src="Snipaste_2023-11-30_11-07-29.png" style="zoom: 67%;" /></p><p>在<strong>进行采样之前，对信号进行处理</strong>可以达到解决问题的效果。</p></li></ul><hr /><h3 id="frequency-domain">2. Frequency Domain</h3><ul><li><p><strong>什么是走样？</strong></p><p><img src="Snipaste_2023-11-30_16-44-30.png" style="zoom: 67%;" /></p><p>图示两个截然不同的函数，在相同采样方式下的采样结果却完全相同。</p><p><strong>同样的一种采样方法，采样两种频率不同的函数，得出的结果我们无法区分，这就是走样。</strong></p><p><img src="Snipaste_2023-11-30_17-31-09.png" style="zoom: 67%;" /></p><p>图示5个周期函数中我们可以看到，当函数频率越高时，采样后的结果与原函数的区别越明显。</p><p>也就是说，越高的频率需要越快的采样。</p></li><li><p><strong>什么是傅里叶展开？</strong></p><p>任何一个周期函数，都可以将其写成一系列正弦与余弦函数的线性组合以及一个常数项。</p><p><img src="Snipaste_2023-11-30_11-18-50.png" style="zoom: 50%;" /><img src="Snipaste_2023-11-30_11-19-51.png" style="zoom: 50%;" /></p><p>图示函数使用傅里叶展开： <span class="math display">\[f(x)=\frac{A}{2}+\frac{2A\cos{t\omega} }{\pi}+\frac{2A\cos{3t\omega} }{3\pi}+\frac{2A\cos{5t\omega} }{5\pi}+\frac{2A\cos{7t\omega} }{7\pi}+ ...\]</span> 每添加一项，都能更加逼近原函数。</p><p><img src="Snipaste_2023-11-30_16-57-10.png" style="zoom: 67%;" /></p><p>使用傅里叶变换可以得到这些展开的项。</p></li><li><p><strong>什么是傅里叶变换？</strong></p><p>所谓傅里叶变换，就是将函数分解为不同频率的段，并将这些段显示出来。</p><p>简单地讲，傅里叶变换可以将一个函数从时域变换到频域。</p><p>通过傅里叶变换，我们可以看到任何信号在不同的频域长什么样，也就是频谱。</p></li></ul><hr /><h3 id="filtering-convolution-averaging">3. Filtering = Convolution ( =Averaging)</h3><ul><li><p><strong>什么是滤波？</strong></p><p>将信号中特定的频段抹除后，对应的信号应发生什么变化。</p><ul><li><p>一张图片与其对应的频谱：</p><p><img src="Snipaste_2023-12-01_14-35-52.png" style="zoom: 50%;" /></p></li><li><p>经过高通滤波后的图像，仅保留了高频的信息（物体边界）：</p><p><img src="Snipaste_2023-12-01_14-38-44.png" style="zoom: 50%;" /></p></li></ul></li><li><p><strong>什么是卷积？</strong></p><ul><li><p>如何做卷积（图形学上）：</p><p><img src="Snipaste_2023-12-01_14-46-50.png" style="zoom: 67%;" /></p><p>将每个信号对应的段与滤波进行点乘，点乘的结果是该段的中心卷积后的值。</p></li><li><p>卷积的定理</p><ul><li>两个信号在时域上的卷积等于这两个信号在频域上的乘积，反之亦然；</li><li>卷积的结果等于将信号傅里叶变换到频域上乘积后再逆傅里叶变换到时域的结果；</li></ul></li></ul></li><li><p><strong>卷积的使用</strong></p><ul><li><p>模糊处理</p><p><img src="Snipaste_2023-12-01_14-58-50.png" style="zoom: 67%;" /></p><p>模糊处理的卷积核是一个低通滤波器，卷积核越大，模糊处理效果越明显。</p></li></ul></li></ul><hr /><h3 id="sampling-in-frequency-domaitn">4. Sampling in FrequencyDomaItn</h3><ul><li><p><strong>什么是采样（从频域上看）？</strong></p><p>采样就是在重复频域上的内容。</p><p><img src="Snipaste_2023-12-01_15-11-11.png"  /></p><p>​将信号与冲激函数进行傅里叶变换后，计算二者的乘积，可以看出采样就是在重复频域上的内容，这是因为在时域中以固定间隔采样相当于在频域中以相邻频率间隔复制原始频谱。</p></li><li><p><strong>什么是走样（从频域上看）？</strong></p><p><img src="Snipaste_2023-12-01_15-22-35.png" /></p><p>因为采样的速度不够快，采样时复制原始频谱的间隔太小，复制的频谱之间太密集导致频谱混叠在一起。</p></li></ul><hr /><h3 id="antialiasing">5. Antialiasing</h3><ul><li><p><strong>终极办法——增加采样率</strong></p><p>​当屏幕上的像素点越密集，像素越多，采样率越快，频谱上表现为相邻复制频谱的间隔变大，就可以从根本上解决走样问题，但也受到物理限制。</p></li><li><p><strong>反走样（抗锯齿）</strong></p><ul><li><p>MSAA（Antialiasing By Supersampling）</p><p><img src="Snipaste_2023-12-01_15-49-15.png" /></p><p>将原始图像进行模糊处理，即将原始频谱变短（去掉高频），可以有效地防止发生混叠。</p><p><img src="Snipaste_2023-11-30_11-07-29.png" /></p><p>那么如何对图像进行模糊处理呢？</p><ul><li><p>模糊操作（卷积）：用每一个像素对应的box做卷积操作，根据得到平均值填充该像素</p><p><img src="Snipaste_2023-12-01_15-57-30.png" /></p><p>将一个像素内部划分为很多个小像素，增加其采样点，通过计算小像素被三角形覆盖的数量，计算三角形在每个像素中的覆盖率：</p><p><img src="Snipaste_2023-12-01_16-12-08.png" style="zoom:50%;" /><img src="Snipaste_2023-12-01_16-08-53.png" style="zoom:50%;" /></p><p><img src="Snipaste_2023-12-01_16-17-23.png" style="zoom:80%;" /></p><p><strong>通过MSAA只能提高三角形在每个像素中的覆盖率的计算精确度，并没有实际提高采样率。</strong></p></li><li><p>使用MSAA的代价：将像素细分必将带来很多的计算量。但MSAA在实际应用中并不会只是单纯细分为规则的像素点，相邻的像素点间也可能复用，因此MSAA的效率也并不是那么低。</p></li></ul></li><li><p>FXAA（Fast Approximate AA）</p><p>快速近似抗锯齿的方法是先得到一幅带锯齿的图像，再通过图像匹配的方式找到有锯齿的边界，再将其换成不带锯齿的边界。FXAA与采样无关，是一种在图像层面的抗锯齿方法。</p></li><li><p>TAA（Temporal AA）</p><p>TAA的方法是在同一像素的不同帧内采用不同位置的采样，并在后来的帧内复用这些采样。相当于将MSAA对应的样本给分布到了时间上，并且当前帧不做额外操作（静态）。</p></li></ul></li><li><p>超分辨率</p><p>将一副采样率不足的高分辨率图像缺失的采样恢复出来。</p><p>DLSS（Deep Learning SuperSampling）：采用深度学习将缺失的采样恢复。</p></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>计算机图形学</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Games101</tag>
+      
+      <tag>计算机图形学</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Games101 - Lecture05 Rasterization 1 (Triangles)</title>
     <link href="/2023/12/05/Games101-Lecture-05-Rasterization-1-Triangles/"/>
     <url>/2023/12/05/Games101-Lecture-05-Rasterization-1-Triangles/</url>
