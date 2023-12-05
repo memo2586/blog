@@ -33,7 +33,7 @@
 <meta property="og:image" content="https://memo2586.github.io/2023/12/05/Games101-Lecture-02-Review-of-Linear-Algebra/image-20231124152224648.png">
 <meta property="og:image" content="https://memo2586.github.io/2023/12/05/Games101-Lecture-02-Review-of-Linear-Algebra/image-20231124152552096.png">
 <meta property="article:published_time" content="2023-12-05T09:57:46.000Z">
-<meta property="article:modified_time" content="2023-12-05T10:55:56.209Z">
+<meta property="article:modified_time" content="2023-12-05T10:58:05.083Z">
 <meta property="article:author" content="memo2586">
 <meta property="article:tag" content="Games101 , 计算机图形学">
 <meta name="twitter:card" content="summary_large_image">
@@ -403,19 +403,19 @@ class="math inline">\(\overrightarrow{a}\)</span>
 \tag1
 \]</span></p>
 <p><span class="math display">\[
-\|\overrightarrow{a}\cross\overrightarrow{b}\|=\|\overrightarrow{a}\|\|\overrightarrow{b}\|\sin{\phi}
+\|\overrightarrow{a}\times\overrightarrow{b}\|=\|\overrightarrow{a}\|\|\overrightarrow{b}\|\sin{\phi}
 \tag2
 \]</span></p>
 <p>​
 利用叉乘可以建立一个在三维空间中的直角坐标系（使用右手螺旋定则可以确定运算结果的向量的方向）：
 <span class="math display">\[
-\overrightarrow{x}\cross\overrightarrow{y}=+\overrightarrow{z} \tag1
+\overrightarrow{x}\times\overrightarrow{y}=+\overrightarrow{z} \tag1
 \]</span></p>
 <p><span class="math display">\[
-\overrightarrow{y}\cross\overrightarrow{x}=-\overrightarrow{z} \tag2
+\overrightarrow{y}\times\overrightarrow{x}=-\overrightarrow{z} \tag2
 \]</span></p>
 <p><span class="math display">\[
-\overrightarrow{y}\cross\overrightarrow{z}=+\overrightarrow{x} \tag3
+\overrightarrow{y}\times\overrightarrow{z}=+\overrightarrow{x} \tag3
 \]</span></p>
 <p><span class="math display">\[
 ......
@@ -434,7 +434,7 @@ class="math inline">\(\overrightarrow{a}\times(k\overrightarrow{b})=k(\overright
 </ul></li>
 <li><p><strong>笛卡尔坐标系下的叉乘运算</strong> <span
 class="math display">\[
-\overrightarrow{a}\cross\overrightarrow{b}=
+\overrightarrow{a}\times\overrightarrow{b}=
 \begin{pmatrix}
   y_az_b-y_bz_a \\
   z_ax_b-x_az_b \\
@@ -471,7 +471,7 @@ and coordinate frames</h3>
 \tag2
 \]</span></p>
 <p><span class="math display">\[
-\overrightarrow{w}=\overrightarrow{u}\cross\overrightarrow{v} \tag3
+\overrightarrow{w}=\overrightarrow{u}\times\overrightarrow{v} \tag3
 \]</span></p>
 <p>可以使用投影将任意向量分解，如： <span class="math display">\[
 \overrightarrow{p}=(\overrightarrow{p}\cdot\overrightarrow{u})\overrightarrow{v}+(\overrightarrow{p}\cdot\overrightarrow{v})\overrightarrow{v}+(\overrightarrow{p}\cdot\overrightarrow{w})\overrightarrow{w}
@@ -497,7 +497,7 @@ A^\intercal\)</span></li>
 <li>单位矩阵是只在对角线上有非零的元素，定义以下单位矩阵：</li>
 </ul>
 <p><span class="math display">\[
-I_{2\cross2}=
+I_{2\times2}=
 \begin{pmatrix}
   1 &amp; 0 \\
   0 &amp; 1 \\
@@ -514,7 +514,7 @@ AA^{-1}=A^{-1}A=I
 <li><p><strong>将向量的乘积写成矩阵形式</strong></p>
 <ul>
 <li><p>点乘： <span class="math display">\[
-\overrightarrow{a}\cross\overrightarrow{b}=\overrightarrow{a}^T\overrightarrow{b}=
+\overrightarrow{a}\times\overrightarrow{b}=\overrightarrow{a}^T\overrightarrow{b}=
 \begin{pmatrix}
 x_a &amp; y_a &amp; z_a
 \end{pmatrix}
@@ -526,7 +526,7 @@ z_a
 (x_ax_b+y_ay_b+z_az_b)
 \]</span></p></li>
 <li><p>叉乘： <span class="math display">\[
-\overrightarrow{a}\cross\overrightarrow{b}=A^*b=
+\overrightarrow{a}\times\overrightarrow{b}=A^*b=
 \begin{pmatrix}
     0 &amp; -z_a &amp; y_a \\
     z_a &amp; 0 &amp; -x_a \\
