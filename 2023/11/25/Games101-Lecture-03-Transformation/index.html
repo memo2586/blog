@@ -16,33 +16,33 @@
   <meta name="author" content="memo2586">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Review of Linear Algebra 1. Vector Addition  平行四边形法则与三角形法则    坐标系   ​ 缺省时一般认为向量为列向量: \[ \mathbf{A}&#x3D; \begin{pmatrix}     x \\     y \end{pmatrix} \tag1 \] \[ \mathbf{A^T}&#x3D; \begin{pm">
+    <meta name="description" content="Transformation 1. MVP Transformation  什么是MVP变换？ Modeling Transformation + Viewing Transformation + Projection Transformation   2. 2D modeling transformations  使用矩阵表示线性变换  缩放  \[ \begin{">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Games101 - Lecture02 Review of Linear Algebra">
-<meta property="og:url" content="https://memo2586.github.io/2023/12/05/Games101-Lecture-02-Review-of-Linear-Algebra/index.html">
+<meta property="og:title" content="Games101 - Lecture03 Transformation">
+<meta property="og:url" content="https://memo2586.github.io/2023/11/25/Games101-Lecture-03-Transformation/index.html">
 <meta property="og:site_name" content="memo&#39;s blog">
-<meta property="og:description" content="Review of Linear Algebra 1. Vector Addition  平行四边形法则与三角形法则    坐标系   ​ 缺省时一般认为向量为列向量: \[ \mathbf{A}&#x3D; \begin{pmatrix}     x \\     y \end{pmatrix} \tag1 \] \[ \mathbf{A^T}&#x3D; \begin{pm">
+<meta property="og:description" content="Transformation 1. MVP Transformation  什么是MVP变换？ Modeling Transformation + Viewing Transformation + Projection Transformation   2. 2D modeling transformations  使用矩阵表示线性变换  缩放  \[ \begin{">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://memo2586.github.io/2023/12/05/Games101-Lecture-02-Review-of-Linear-Algebra/image-20231122225034808.png">
-<meta property="og:image" content="https://memo2586.github.io/2023/12/05/Games101-Lecture-02-Review-of-Linear-Algebra/image-20231122232540795.png">
-<meta property="og:image" content="https://memo2586.github.io/2023/12/05/Games101-Lecture-02-Review-of-Linear-Algebra/image-20231122230307232.png">
-<meta property="og:image" content="https://memo2586.github.io/2023/12/05/Games101-Lecture-02-Review-of-Linear-Algebra/image-20231123172442079.png">
-<meta property="og:image" content="https://memo2586.github.io/2023/12/05/Games101-Lecture-02-Review-of-Linear-Algebra/image-20231123184130756.png">
-<meta property="og:image" content="https://memo2586.github.io/2023/12/05/Games101-Lecture-02-Review-of-Linear-Algebra/image-20231123195107566.png">
-<meta property="og:image" content="https://memo2586.github.io/2023/12/05/Games101-Lecture-02-Review-of-Linear-Algebra/image-20231123200453651.png">
-<meta property="og:image" content="https://memo2586.github.io/2023/12/05/Games101-Lecture-02-Review-of-Linear-Algebra/image-20231124152224648.png">
-<meta property="og:image" content="https://memo2586.github.io/2023/12/05/Games101-Lecture-02-Review-of-Linear-Algebra/image-20231124152552096.png">
-<meta property="article:published_time" content="2023-12-05T09:57:46.000Z">
-<meta property="article:modified_time" content="2023-12-05T15:13:21.897Z">
+<meta property="og:image" content="https://memo2586.github.io/2023/11/25/Games101-Lecture-03-Transformation/Snipaste_2023-11-25_18-12-06.png">
+<meta property="og:image" content="https://memo2586.github.io/2023/11/25/Games101-Lecture-03-Transformation/image-20231125181622307.png">
+<meta property="og:image" content="https://memo2586.github.io/2023/11/25/Games101-Lecture-03-Transformation/image-20231125181820508.png">
+<meta property="og:image" content="https://memo2586.github.io/2023/11/25/Games101-Lecture-03-Transformation/image-20231125182005285.png">
+<meta property="og:image" content="https://memo2586.github.io/2023/11/25/Games101-Lecture-03-Transformation/image-20231125190114296.png">
+<meta property="og:image" content="https://memo2586.github.io/2023/11/25/Games101-Lecture-03-Transformation/image-20231125193639426.png">
+<meta property="og:image" content="https://memo2586.github.io/2023/11/25/Games101-Lecture-03-Transformation/Snipaste_2023-11-26_15-12-28.png">
+<meta property="og:image" content="https://memo2586.github.io/2023/11/25/Games101-Lecture-03-Transformation/Snipaste_2023-11-26_15-13-26.png">
+<meta property="og:image" content="https://memo2586.github.io/2023/11/25/Games101-Lecture-03-Transformation/Snipaste_2023-11-27_08-18-45.png">
+<meta property="article:published_time" content="2023-11-25T05:17:02.000Z">
+<meta property="article:modified_time" content="2023-12-06T11:52:04.910Z">
 <meta property="article:author" content="memo2586">
 <meta property="article:tag" content="Games101">
 <meta property="article:tag" content="计算机图形学">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://memo2586.github.io/2023/12/05/Games101-Lecture-02-Review-of-Linear-Algebra/image-20231122225034808.png">
+<meta name="twitter:image" content="https://memo2586.github.io/2023/11/25/Games101-Lecture-03-Transformation/Snipaste_2023-11-25_18-12-06.png">
   
   
   
-  <title>Games101 - Lecture02 Review of Linear Algebra - memo&#39;s blog</title>
+  <title>Games101 - Lecture03 Transformation - memo&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -208,7 +208,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Games101 - Lecture02 Review of Linear Algebra"></span>
+            <span id="subtitle" data-typed-text="Games101 - Lecture03 Transformation"></span>
           
         </div>
 
@@ -219,8 +219,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-12-05 17:57" pubdate>
-          2023年12月5日 下午
+        <time datetime="2023-11-25 13:17" pubdate>
+          2023年11月25日 下午
         </time>
       </span>
     
@@ -231,7 +231,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4.3k 字
+          3k 字
         
       </span>
     
@@ -242,7 +242,7 @@
         
         
         
-          36 分钟
+          25 分钟
         
       </span>
     
@@ -279,270 +279,290 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Games101 - Lecture02 Review of Linear Algebra</h1>
+            <h1 id="seo-header">Games101 - Lecture03 Transformation</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="review-of-linear-algebra">Review of Linear Algebra</h1>
-<h3 id="vector-addition">1. Vector Addition</h3>
+                <h1 id="transformation">Transformation</h1>
+<h3 id="mvp-transformation">1. MVP Transformation</h3>
 <ul>
-<li><strong>平行四边形法则与三角形法则</strong></li>
+<li><p><strong>什么是MVP变换？</strong></p>
+<p>Modeling Transformation + Viewing Transformation + Projection
+Transformation</p></li>
 </ul>
-<p><img src="image-20231122225034808.png" srcset="/img/loading.gif" lazyload alt="image-20231122225034808" style="zoom: 67%;" /></p>
+<hr />
+<h3 id="d-modeling-transformations">2. 2D modeling transformations</h3>
 <ul>
-<li><p><strong>坐标系</strong></p>
-<p><img src="image-20231122232540795.png" srcset="/img/loading.gif" lazyload alt="image-20231122232540795" style="zoom:67%;" /></p></li>
-</ul>
-<p>​ 缺省时一般认为向量为列向量: <span class="math display">\[
-\mathbf{A}=
-\begin{pmatrix}
+<li><p><strong>使用矩阵表示线性变换</strong></p>
+<ul>
+<li><p>缩放</p>
+<p><img src="Snipaste_2023-11-25_18-12-06.png" srcset="/img/loading.gif" lazyload alt="Snipaste_2023-11-25_18-12-06" style="zoom: 33%;" />
+<span class="math display">\[
+\begin{bmatrix}
+    x&#39; \\
+    y&#39;
+\end{bmatrix}
+=
+\begin{bmatrix}
+    s &amp; 0 \\
+    0 &amp; s
+\end{bmatrix}
+\begin{bmatrix}
     x \\
     y
-\end{pmatrix}
-\tag1
-\]</span></p>
-<p><span class="math display">\[
-\mathbf{A^T}=
-\begin{pmatrix}
-    x &amp; y
-\end{pmatrix} \tag2
-\]</span></p>
-<p><span class="math display">\[
-\|\mathbf{A}\|=\sqrt{x^2+y^2} \tag3
-\]</span></p>
-<hr />
-<h3 id="vector-multiplication-dot-product">2. Vector Multiplication (Dot
-Product)</h3>
-<ul>
-<li><p><strong>点乘的计算</strong></p>
-<p><img src="image-20231122230307232.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p>
-<p><strong>向量点乘的结果是一个数。</strong></p></li>
-</ul>
-<p><span class="math display">\[
-\overrightarrow{a}\cdot\overrightarrow{b}=\|\overrightarrow{a}\|\|\overrightarrow{b}\|\cos\theta
-\tag1
-\]</span></p>
-<p><span class="math display">\[
-\cos\theta=\frac{\overrightarrow{a}\cdot\overrightarrow{b}}{\|\overrightarrow{a}\|\|\overrightarrow{b}\|}
-\tag2
-\]</span></p>
-<p>​ 当两个向量都是单位向量时（长度都为1）： <span
+\end{bmatrix}
+\]</span></p></li>
+<li><p>缩放（非对称）</p>
+<p><img src="image-20231125181622307.png" srcset="/img/loading.gif" lazyload style="zoom:33%;" /> <span
 class="math display">\[
-\cos\theta=\hat{a}\cdot\hat{b}
-\]</span></p>
-<ul>
-<li><p><strong>点乘的性质</strong></p>
-<ul>
-<li><p><span
-class="math inline">\(\overrightarrow{a}\cdot\overrightarrow{b}=\overrightarrow{b}\cdot\overrightarrow{a}\)</span></p></li>
-<li><p><span
-class="math inline">\(\overrightarrow{a}\cdot(\overrightarrow{b}+\overrightarrow{c})
+\begin{bmatrix}
+    x&#39; \\
+    y&#39;
+\end{bmatrix}
 =
-\overrightarrow{a}\cdot\overrightarrow{b}+\overrightarrow{a}\cdot\overrightarrow{c}\)</span></p></li>
-<li><p><span
-class="math inline">\((k\overrightarrow{a})\cdot=\overrightarrow{a}\cdot(k\overrightarrow{a})=k(\overrightarrow{a}\cdot\overrightarrow{b})\)</span></p></li>
-</ul></li>
-<li><p><strong>笛卡尔坐标系下的点乘运算</strong></p></li>
-</ul>
-<p><span class="math display">\[
-\overrightarrow{a}\cdot\overrightarrow{b}=
-\begin{pmatrix}
-    x_a \\
-    y_a
-\end{pmatrix}
-\cdot
-\begin{pmatrix}
-    x_b \\
-    y_b
-\end{pmatrix}
-=x_ax_b+y_ay_b
-\]</span></p>
-<p>​ <strong>点乘最大的作用在于找到两个向量之间的夹角大小。</strong></p>
-<ul>
-<li><strong>通过点乘求向量在另一个向量上的投影</strong></li>
-</ul>
-<p>​
-点乘的另一个作用是用于<strong>找到一个向量在另一个向量上的投影</strong>：</p>
-<p><img src="image-20231123172442079.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p>
-<p>​ <span class="math inline">\(\overrightarrow{b}_\bot\)</span> 是
-<span class="math inline">\(\overrightarrow{b}\)</span> 在 <span
-class="math inline">\(\overrightarrow{a}\)</span> 方向上的投影，因此：
-<span class="math display">\[
-\overrightarrow{b_\bot}=k\hat{a}
-\]</span> ​ 其中 k 的大小为： <span class="math display">\[
-k=\|\overrightarrow{b_\bot}\|=\|\overrightarrow{b}\|\cos{\theta}
-\]</span> ​ 利用点乘计算出 <span
-class="math inline">\(\cos{\theta}\)</span> 后便可以求出 <span
-class="math inline">\(\overrightarrow{b_\bot}\)</span> 。</p>
-<p>​
-<strong>已知向量在另一个向量上的投影后，可以对该向量任意地进行平行与垂直的分解</strong>：</p>
-<p><img src="image-20231123184130756.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p>
-<ul>
-<li><p><strong>通过点乘计算向量间的位置关系</strong></p>
-<p><img src="image-20231123195107566.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p>
-<p>​ 以向量 <span class="math inline">\(\overrightarrow{a}\)</span>
-的方向为基准定义前与后，当一个向量与向量 <span
-class="math inline">\(\overrightarrow{a}\)</span>
-的点乘大于0时，称该向量位于前方。反之，当一个向量与向量 <span
-class="math inline">\(\overrightarrow{a}\)</span>
-的点乘小于0时，称该向量位于后方。</p>
-<p>​
-<strong>两个向量的单位向量的点乘越接近1，则这两个向量在方向上越接近。</strong></p></li>
-</ul>
-<hr />
-<h3 id="vector-multiplication-times-product">3 Vector Multiplication
-(times Product)</h3>
-<ul>
-<li><p><strong>叉乘的计算</strong></p>
-<p><img src="image-20231123200453651.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p></li>
-</ul>
-<p>​
-<strong>两个向量叉乘的计算结果是一个垂直于这两个向量所在平面的向量。</strong>
-<span class="math display">\[
-\overrightarrow{a}\times\overrightarrow{b}=-\overrightarrow{b}\times\overrightarrow{a}
-\tag1
-\]</span></p>
-<p><span class="math display">\[
-\|\overrightarrow{a}\times\overrightarrow{b}\|=\|\overrightarrow{a}\|\|\overrightarrow{b}\|\sin{\phi}
-\tag2
-\]</span></p>
-<p>​
-利用叉乘可以建立一个在三维空间中的直角坐标系（使用右手螺旋定则可以确定运算结果的向量的方向）：
-<span class="math display">\[
-\overrightarrow{x}\times\overrightarrow{y}=+\overrightarrow{z} \tag1
-\]</span></p>
-<p><span class="math display">\[
-\overrightarrow{y}\times\overrightarrow{x}=-\overrightarrow{z} \tag2
-\]</span></p>
-<p><span class="math display">\[
-\overrightarrow{y}\times\overrightarrow{z}=+\overrightarrow{x} \tag3
-\]</span></p>
-<p><span class="math display">\[
-......
-\]</span></p>
-<ul>
-<li><p><strong>叉乘的性质</strong></p>
-<ul>
-<li><p><span
-class="math inline">\(\overrightarrow{a}\times\overrightarrow{b}=-\overrightarrow{b}\times\overrightarrow{a}\)</span></p></li>
-<li><p><span
-class="math inline">\(\overrightarrow{a}\times\overrightarrow{a}=\overrightarrow{0}\)</span></p></li>
-<li><p><span
-class="math inline">\(\overrightarrow{a}\times(\overrightarrow{b}+\overrightarrow{c})=\overrightarrow{a}\times\overrightarrow{b}+\overrightarrow{a}\times\overrightarrow{c}\)</span></p></li>
-<li><p><span
-class="math inline">\(\overrightarrow{a}\times(k\overrightarrow{b})=k(\overrightarrow{a}\times\overrightarrow{b})\)</span></p></li>
-</ul></li>
-<li><p><strong>笛卡尔坐标系下的叉乘运算</strong> <span
+\begin{bmatrix}
+    s_x &amp; 0 \\
+    0 &amp; s_y
+\end{bmatrix}
+\begin{bmatrix}
+    x \\
+    y
+\end{bmatrix}
+\]</span></p></li>
+<li><p>镜像（反射）</p>
+<p><img src="image-20231125181820508.png" srcset="/img/loading.gif" lazyload style="zoom:33%;" /> <span
 class="math display">\[
-\overrightarrow{a}\times\overrightarrow{b}=
-\begin{pmatrix}
-  y_az_b-y_bz_a \\
-  z_ax_b-x_az_b \\
-  x_ay_b-y_ax_b
-\end{pmatrix}
+\begin{bmatrix}
+    x&#39; \\
+    y&#39;
+\end{bmatrix}
+=
+\begin{bmatrix}
+    -1 &amp; 0 \\
+    0 &amp; 1
+\end{bmatrix}
+\begin{bmatrix}
+    x \\
+    y
+\end{bmatrix}
 \]</span></p></li>
-<li><p><strong>叉乘的作用</strong></p></li>
+<li><p>切变</p>
+<p><img src="image-20231125182005285.png" srcset="/img/loading.gif" lazyload style="zoom:33%;" /> <span
+class="math display">\[
+\begin{bmatrix}
+    x&#39; \\
+    y&#39;
+\end{bmatrix}
+=
+\begin{bmatrix}
+    1 &amp; a \\
+    0 &amp; 1
+\end{bmatrix}
+\begin{bmatrix}
+    x \\
+    y
+\end{bmatrix}
+\]</span></p></li>
+<li><p>旋转</p>
+<p><img src="image-20231125190114296.png" srcset="/img/loading.gif" lazyload style="zoom:33%;" /> <span
+class="math display">\[
+\begin{bmatrix}
+    x&#39; \\
+    y&#39;
+\end{bmatrix}
+=
+\begin{bmatrix}
+    \cos\theta &amp; -\sin\theta \\
+    \sin\theta &amp; \cos\theta
+\end{bmatrix}
+\begin{bmatrix}
+    x \\
+    y
+\end{bmatrix}
+\]</span> 当旋转 <span class="math inline">\(-\theta\)</span>
+角度时，容易发现： <span class="math display">\[
+\begin{bmatrix}
+    x&#39; \\
+    y&#39;
+\end{bmatrix}
+=
+R_{-45}\cdot
+\begin{bmatrix}
+    x&#39; \\
+    y&#39;
+\end{bmatrix}
+=
+\begin{bmatrix}
+    \cos\theta &amp; \sin\theta \\
+    -\sin\theta &amp; \cos\theta
+\end{bmatrix}
+\begin{bmatrix}
+    x \\
+    y
+\end{bmatrix}
+=
+{R_{45}}^T\cdot
+\begin{bmatrix}
+    x&#39; \\
+    y&#39;
+\end{bmatrix}
+\]</span> 又因 $ R_{-45}={R_{45}}^{-1}$,</p>
+<p>因此 $ R_{-45}={R_{45}}<sup>{-1}={R_{45}}</sup>T$ ,
+该变换矩阵为正交矩阵。</p></li>
+</ul></li>
 </ul>
-<p>​ <strong>判断某一点是否在图形的内部</strong>。</p>
-<p>​ <img src="image-20231124152224648.png" srcset="/img/loading.gif" lazyload style="zoom:33%;" /></p>
-<p>​ 如图，<span
-class="math inline">\(\overrightarrow{a}\times\overrightarrow{b}\)</span>
-的值为正，可得 <span class="math inline">\(\overrightarrow{b}\)</span>
-在 <span class="math inline">\(\overrightarrow{a}\)</span>
-的左侧，反之同理，可以判断两个向量的相对左右位置。</p>
-<p><img src="image-20231124152552096.png" srcset="/img/loading.gif" lazyload style="zoom: 33%;" /></p>
-<p>​
-要判断点P是否在顺序的，首尾相接的三个向量组成的三角形内部，则只需要计算
-<span
-class="math inline">\(\overrightarrow{AB}\times\overrightarrow{AP}\)</span>、<span
-class="math inline">\(\overrightarrow{BC}\times\overrightarrow{BP}\)</span>、<span
-class="math inline">\(\overrightarrow{CA}\times\overrightarrow{CP}\)</span>
-的值是否都为正值或负值，即点P都在三个向量的左侧或右侧。</p>
 <hr />
-<h3 id="orthonormal-bases-and-coordinate-frames">4. Orthonormal bases
-and coordinate frames</h3>
+<h3 id="homogeneous-coordinates">3. Homogeneous coordinates</h3>
 <ul>
-<li><p>建立一个直角坐标系，定义： <span class="math display">\[
-\|\overrightarrow{u}\|=\|\overrightarrow{v}\|=\|\overrightarrow{w}\|=1
-\tag1
-\]</span></p>
-<p><span class="math display">\[
-\overrightarrow{u}\cdot\overrightarrow{v}=\overrightarrow{v}\cdot\overrightarrow{w}=\overrightarrow{u}\cdot\overrightarrow{w}=0
-\tag2
-\]</span></p>
-<p><span class="math display">\[
-\overrightarrow{w}=\overrightarrow{u}\times\overrightarrow{v} \tag3
-\]</span></p>
-<p>可以使用投影将任意向量分解，如： <span class="math display">\[
-\overrightarrow{p}=(\overrightarrow{p}\cdot\overrightarrow{u})\overrightarrow{v}+(\overrightarrow{p}\cdot\overrightarrow{v})\overrightarrow{v}+(\overrightarrow{p}\cdot\overrightarrow{w})\overrightarrow{w}
+<li><p><strong>为什么要引入齐次坐标？</strong></p>
+<p><img src="image-20231125193639426.png" srcset="/img/loading.gif" lazyload style="zoom:33%;" /></p>
+<p>这是一个简单的平移操作 ，我们知道移动后的图像各点坐标为： <span
+class="math display">\[
+x&#39;=x+t_x \\
+y&#39;=y+t_y
+\]</span>
+但在将其写成矩阵的表示方式时就会发现，不能将其像其他线性变换一样表示出来：
+<span class="math display">\[
+\begin{bmatrix}
+  x&#39; \\
+  y&#39;
+\end{bmatrix}
+=
+\begin{bmatrix}
+  a &amp; -b \\
+  c &amp; d
+\end{bmatrix}
+\begin{bmatrix}
+  x \\
+  y
+\end{bmatrix}
++
+\begin{bmatrix}
+  t_x \\
+  t_y
+\end{bmatrix}
+\]</span>
+那么有没有一种办法可以<strong>将缩放、旋转等线性变换与平移等非线性变换用一种简单的变换表示</strong>呢？</p>
+<p>为了解决这个问题，我们引入了齐次坐标。</p></li>
+<li><p><strong>什么是齐次坐标？</strong></p>
+<p>在原本坐标的基础上添加一个维度：</p>
+<ul>
+<li>2D的点 <span class="math inline">\(=(x,y,1)^T\)</span></li>
+<li>2D向量 <span class="math inline">\(=(x,y,0)^T\)</span></li>
+</ul>
+<p>因为向量在空间中的位置不同并不会对向量的值产生任何变化，因此向量的新的一维值为0。</p>
+<p><strong>新增的维度的值使得齐次坐标的运算结果依旧满足以下等式</strong></p>
+<ul>
+<li><p><span class="math inline">\(vector + vector =
+vector\)</span></p></li>
+<li><p><span class="math inline">\(point - point =
+vector\)</span></p></li>
+<li><p><span class="math inline">\(point + vector =
+point\)</span></p></li>
+</ul></li>
+<li><p><strong>齐次坐标的扩充定义</strong></p>
+<ul>
+<li><p>在齐次坐标中，当 <span class="math inline">\(w\neq0\)</span>
+时，<span class="math inline">\(\begin{pmatrix} x \\ y \\ w
+\end{pmatrix}\)</span> 表示一个坐标为 <span
+class="math inline">\(\begin{pmatrix} x/w \\ y/w \\ 1
+\end{pmatrix}\)</span> 的二维的点。</p>
+<p>则 <span class="math inline">\(point + point\)</span>
+的值为两个点的中点。</p></li>
+</ul></li>
+<li><p><strong>使用齐次坐标表示变换</strong></p>
+<ul>
+<li><p>平移 <span class="math display">\[
+\begin{pmatrix}
+    x&#39; \\
+    y&#39; \\
+    1
+\end{pmatrix} =
+\begin{pmatrix}
+    a &amp; b &amp; t_x \\
+    c &amp; d &amp; t_y \\
+    0 &amp; 0 &amp; 1
+\end{pmatrix}
+\begin{pmatrix}
+    x \\
+    y \\
+    1
+\end{pmatrix}
+\]</span> 通过改变 <span class="math inline">\(a、b、c、d\)</span>
+的值，可以做到表示线性变换，例如：</p></li>
+<li><p>旋转 <span class="math display">\[
+\begin{pmatrix}
+    x&#39; \\
+    y&#39; \\
+    1
+\end{pmatrix} =
+\begin{pmatrix}
+    \cos\theta &amp; -\sin\theta &amp; 0 \\
+    \sin\theta &amp; \cos\theta &amp; 0 \\
+    0 &amp; 0 &amp; 1
+\end{pmatrix}
+\begin{pmatrix}
+    x \\
+    y \\
+    1
+\end{pmatrix}
 \]</span></p></li>
+</ul></li>
 </ul>
 <hr />
-<h3 id="matrix">5. Matrix</h3>
+<h3 id="composite-transformation">4. Composite Transformation</h3>
 <ul>
-<li><p><strong>矩阵乘法</strong></p>
-<p>设 <span class="math inline">\(A\times B=C\)</span> ，则有 <span
-class="math inline">\(C_{ij}=A_i\cdot B_j\)</span></p></li>
-<li><p><strong>矩阵乘法的性质</strong></p>
+<li><p><strong>表示变换的合成时遇到的问题？</strong></p>
+<p><img src="Snipaste_2023-11-26_15-12-28.png" srcset="/img/loading.gif" lazyload alt="Snipaste_2023-11-26_15-12-28" style="zoom:33%;" /></p>
+<p><img src="Snipaste_2023-11-26_15-13-26.png" srcset="/img/loading.gif" lazyload alt="Snipaste_2023-11-26_15-13-26" style="zoom:33%;" /></p>
+<p>由图可知，相同的变换在使用不同变换顺序的情况下，得到的结果并不相同，即：
+<span class="math display">\[
+R_{45}\cdot T_{(1,0)} \neq T_{(1,0)}\cdot R_{45}
+\]</span>
+所以，在合成多个变换时，应该注意计算的顺序，顺序为<strong>从向量的左侧最近的变换矩阵开始运算</strong>。</p>
+<p>例如，进行先旋转 <span class="math inline">\(45\degree\)</span>
+后向右平移 <span class="math inline">\(1\)</span> 个单位距离应表示为：
+<span class="math display">\[
+T_{(1,0)}\cdot R_{45} \cdot
+\begin{bmatrix}
+  x \\
+  y \\
+  1
+\end{bmatrix}
+\]</span></p>
+<p>另外，当平移与线性变换表示为同一个矩阵，计算时先进性线性变换，再进行平移变换。</p></li>
+<li><p><strong>合成变换的推广</strong></p>
+<p>对向量 <span class="math inline">\(\overrightarrow{S}\)</span>
+应用n个变换 <span
+class="math inline">\(A_1,A_2,A_3,...,A_n\)</span>，可以表示为： <span
+class="math display">\[
+A_n ...A_2\cdot A_1\cdot\overrightarrow{S}
+\]</span>
+虽然矩阵的乘法不满足交换律，但满足结合律。即我们可以先将n个变换 <span
+class="math inline">\(A_1,A_2,A_3,...,A_n\)</span>
+相乘得到一个复杂的矩阵，这个矩阵可以表示一种十分复杂的变换。</p></li>
+<li><p><strong>变换的分解</strong></p>
+<p><img src="Snipaste_2023-11-27_08-18-45.png" srcset="/img/loading.gif" lazyload alt="Snipaste_2023-11-27_08-18-45" style="zoom:38%;" /></p>
+<p>有些变换可能是不常规的，无法用简单的变换进行转换。对此，我们需要对变换进行分解，例如将以上图形绕
+<span class="math inline">\(c\)</span> 点旋转，该变换可以分解为：</p>
 <ul>
-<li>不满足任何交换律</li>
-<li><span class="math inline">\((AB)C = A(BC)\)</span></li>
-<li><span class="math inline">\(A(B+C)=AB+AC\)</span></li>
-<li><span class="math inline">\((A+B)C=AC+BC\)</span></li>
-<li><span class="math inline">\((AB)^\intercal=B^\intercal
-A^\intercal\)</span></li>
-</ul></li>
-<li><p><strong>矩阵的逆</strong></p>
-<ul>
-<li>单位矩阵是只在对角线上有非零的元素，定义以下单位矩阵：</li>
+<li>将图形平移 <span class="math inline">\(-c\)</span></li>
+<li>旋转图形</li>
+<li>将图形平移 <span class="math inline">\(c\)</span></li>
 </ul>
-<p><span class="math display">\[
-I_{2\times2}=
-\begin{pmatrix}
-  1 &amp; 0 \\
-  0 &amp; 1 \\
-\end{pmatrix}
-\]</span></p>
-<p>​ 则有： <span class="math display">\[
-AA^{-1}=A^{-1}A=I
-\]</span></p>
+<p>即 <span class="math inline">\(T(c)R(\alpha)T(-c)\)</span></p></li>
+</ul>
+<hr />
+<h3 id="d-modeling-transformation">5. 3D Modeling Transformation</h3>
 <ul>
-<li>矩阵的逆的性质： <span class="math display">\[
-(AB)^{-1}=B^{-1}A^{-1}
-\]</span></li>
-</ul></li>
-<li><p><strong>将向量的乘积写成矩阵形式</strong></p>
+<li><p><strong>三维中的齐次坐标</strong></p>
+<p>同二维的齐次坐标，添加第四维：</p>
 <ul>
-<li><p>点乘： <span class="math display">\[
-\overrightarrow{a}\times\overrightarrow{b}=\overrightarrow{a}^T\overrightarrow{b}=
-\begin{pmatrix}
-x_a &amp; y_a &amp; z_a
-\end{pmatrix}
-\begin{pmatrix}
-x_a \\
-y_a \\
-z_a
-\end{pmatrix}=
-(x_ax_b+y_ay_b+z_az_b)
-\]</span></p></li>
-<li><p>叉乘： <span class="math display">\[
-\overrightarrow{a}\times\overrightarrow{b}=A^*b=
-\begin{pmatrix}
-    0 &amp; -z_a &amp; y_a \\
-    z_a &amp; 0 &amp; -x_a \\
-    -y_a &amp; x_a &amp; 0
-\end{pmatrix}
-\begin{pmatrix}
-    x_b \\
-    y_b \\
-    z_b
-\end{pmatrix}
-\]</span></p></li>
+<li>3D的点 $ =(x,y,z,1)$</li>
+<li>3D向量 <span class="math inline">\(=(x,y,z,0)\)</span></li>
 </ul></li>
 </ul>
-<p>​</p>
-<p>​</p>
 
                 
               </div>
@@ -590,8 +610,8 @@ z_a
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Games101 - Lecture02 Review of Linear Algebra</div>
-      <div>https://memo2586.github.io/2023/12/05/Games101-Lecture-02-Review-of-Linear-Algebra/</div>
+      <div>Games101 - Lecture03 Transformation</div>
+      <div>https://memo2586.github.io/2023/11/25/Games101-Lecture-03-Transformation/</div>
     </div>
     <div class="license-meta">
       
@@ -603,7 +623,7 @@ z_a
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年12月5日</div>
+          <div>2023年11月25日</div>
         </div>
       
       
@@ -635,9 +655,9 @@ z_a
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/12/05/Games101-Lecture-03-Transformation/" title="Games101 - Lecture03 Transformation">
+                      <a href="/2023/11/27/Games101-Lecture-04-Transformation-Cont/" title="Games101 - Lecture04 Transformation Cont">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Games101 - Lecture03 Transformation</span>
+                        <span class="hidden-mobile">Games101 - Lecture04 Transformation Cont</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -645,8 +665,8 @@ z_a
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/10/21/%E5%9F%BA%E4%BA%8Eopencv%E4%B8%8Epyautogui%E7%BC%96%E5%86%99%E7%9A%84%E5%A4%A9%E7%BF%BC%E6%A0%A1%E5%9B%AD%E6%8E%89%E7%BA%BF%E8%87%AA%E5%8A%A8%E9%87%8D%E8%BF%9E%E8%84%9A%E6%9C%AC/" title="基于opencv与pyautogui编写的天翼校园掉线自动重连脚本">
-                        <span class="hidden-mobile">基于opencv与pyautogui编写的天翼校园掉线自动重连脚本</span>
+                      <a href="/2023/11/22/Games101-Lecture-02-Review-of-Linear-Algebra/" title="Games101 - Lecture02 Review of Linear Algebra">
+                        <span class="hidden-mobile">Games101 - Lecture02 Review of Linear Algebra</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
