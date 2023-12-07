@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>Games101-Lecture_08_Shading_2</title>
+    <link href="/2023/12/08/Games101-Lecture-08-Shading-2/"/>
+    <url>/2023/12/08/Games101-Lecture-08-Shading-2/</url>
+    
+    <content type="html"><![CDATA[<h1 id="shading-2">Shading 2</h1><h3 id="shading-frequencies">1. Shading Frequencies</h3><ul><li><p><strong>不同着色频率的着色方法</strong></p><p><img src="Snipaste_2023-12-07_11-22-42.png" style="zoom: 33%;" /></p><p>​ 上图三种着色频率不同的着色方法分别是flat shading、Gouraud shading 与Phong shading；</p><ul><li><p>flat shading</p><p>​对每一个三角形求出其法线方向，根据法线、光照等得出三角形内部的一种着色方案并应用到整个三角形所覆盖的像素上，三角形内部的着色不会有任何变化。很明显flatshading的效果并不好。</p></li><li><p>Gouraud shading</p><p>​在任意一个顶点上，求出顶点的法线方向然后对顶点做一次着色。得出三角形三个顶点的着色后，利用插值将三角形内部覆盖的像素的着色计算出来。</p></li><li><p>Phong shading</p><p>​求出三角形三个顶点的法线方向后，对三角形所覆盖的每一个像素使用插值计算出它的法线方向，在对这个像素进行着色。</p></li></ul><p><img src="Snipaste_2023-12-07_17-18-15.png" style="zoom: 67%;" /></p><p>​ 当模型内三角形的数量接近像素的数量时，可以看出flatshading的效果也并不差。也就是说，着色频率本身也取决于模型内点或面出现的频率，当模型面数很高的情况下，不必要使用复杂的方式。但是在模型足够复杂的情况下，flatshading并不一定比其他模型快。</p></li><li><p><strong>如何计算顶点的法线？</strong></p><p><img src="Snipaste_2023-12-07_17-45-57.png" style="zoom:75%;" /></p><p>​一个简单的办法：一个顶点必定会是相邻多个三角形共同的顶点，那我们认为该顶点的法线就是相邻三角形的法线和求加权平均，权重可以是三角形的面积。</p></li><li><p><strong>如何计算逐像素的法线？</strong></p><p>​假设已经求出三角形顶点的法线，使用重心坐标计算出逐像素的法线（后面讲）。</p></li></ul><hr /><h3 id="graphics-real-time-rendering-pipeline">2. Graphics (Real-timeRendering) Pipeline</h3><ul><li><p><strong>什么是实时渲染管线?</strong></p><p><img src="Snipaste_2023-12-07_20-30-04.png" style="zoom:67%;" /></p><p>​从场景到最后的一张图片中间经历的过程就是实时渲染管线(前面学过的所有过程)，他一般是被显卡等硬件定义好的，显卡会提供可编程的接口，可以自定义如何去着色。</p><p>​决定如何运作将这些顶点或像素着色的代码称为shader（着色器）。</p></li><li><p><strong>Shader Programs</strong></p><p>根据着色器的着色方法不同，可以将其分为 vertex shader 或 fragmentshader 等。</p><p>一个 openGL 的 GLSL fragment shader 示例程序：</p><figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs glsl">unifrom <span class="hljs-type">sampler2D</span> myTexture;<br>unifrom <span class="hljs-type">vec3</span> lightDir;<br><span class="hljs-keyword">varying</span> <span class="hljs-type">vec2</span> uv;<br><span class="hljs-keyword">varying</span> <span class="hljs-type">vec3</span> norm;<br><br><span class="hljs-type">void</span> diffuseShader()&#123;<br><span class="hljs-type">vec3</span> kd;<br>kd = texture2d(myTexture, uv);<span class="hljs-comment">//纹理</span><br>kd *= <span class="hljs-built_in">clamp</span>(<span class="hljs-built_in">dot</span>(-lightDir, norm), <span class="hljs-number">0.0</span>, <span class="hljs-number">1.0</span>);<span class="hljs-comment">//简化的Phong模型</span><br><span class="hljs-built_in">gl_FragColor</span> = <span class="hljs-type">vec4</span>(kd, <span class="hljs-number">1.0</span>);<br>&#125;<br></code></pre></td></tr></table></figure></li></ul><hr /><h3 id="texture-mapping">3. Texture Mapping</h3><ul><li><p><strong>什么是纹理映射？</strong></p><p><img src="Snipaste_2023-12-07_23-37-12.png" style="zoom:75%;" /></p><p>​图中如何物体显示出不同的颜色？他们的基本区别是共用一个着色模型，但它们本身的漫反射模型系数发生了改变。为此我们希望有一种方法能够定义一个物体上的任何一个点它的属性。</p><p>​ <img src="Snipaste_2023-12-07_23-41-13.png" /></p><p>​任何一个三维物体的表面都可以定义为一个二维的图。我们将物体表面任何一个点的属性映射到一张图中。反过来说，如果我们有一张纹理图，我们就可以定义一个物体上的任何一个点它的属性。</p><p><img src="Snipaste_2023-12-07_23-44-05.png" /></p><p>为此，我们需要在纹理上定义一个坐标系。通常来说会定义 u 与 v两个坐标方向，并且都在 [0,1] 之间。</p><p><img src="Snipaste_2023-12-07_23-50-38.png" style="zoom:67%;" /></p><p>有些纹理图可以被不断复制且四个方向都可以无缝衔接，这种纹理图被称为tiled textures 。</p><p><img src="Snipaste_2023-12-07_23-57-38.png" /></p><p>知道了每一个顶点对应的纹理图坐标后，我们如何知道三角形内部像素的属性呢？下节插值算法。</p></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>计算机图形学</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Games101</tag>
+      
+      <tag>计算机图形学</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Games101 - Lecture07 Shading 1</title>
     <link href="/2023/12/07/Games101-Lecture-07-Shading-1/"/>
     <url>/2023/12/07/Games101-Lecture-07-Shading-1/</url>
