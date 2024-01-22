@@ -1,0 +1,732 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/avatar.png">
+  <link rel="icon" href="/img/avatar.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="memo2586">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="作业1做的是完成 get_model_matrix() 和 get_projection_matrix() 函数，只要计算和返回两个变换矩阵就可以了  12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Games101 - 作业1代码及框架分析">
+<meta property="og:url" content="https://memo2586.github.io/2023/12/05/Games101-%E4%BD%9C%E4%B8%9A1/index.html">
+<meta property="og:site_name" content="memo&#39;s blog">
+<meta property="og:description" content="作业1做的是完成 get_model_matrix() 和 get_projection_matrix() 函数，只要计算和返回两个变换矩阵就可以了  12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-12-05T15:23:01.000Z">
+<meta property="article:modified_time" content="2024-01-22T13:15:58.019Z">
+<meta property="article:author" content="memo2586">
+<meta property="article:tag" content="Games101">
+<meta property="article:tag" content="计算机图形学">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Games101 - 作业1代码及框架分析 - memo&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"memo2586.github.io","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>memo&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://raw.githubusercontent.com/memo2586/Image-repo/master/109453178_1240x800.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Games101 - 作业1代码及框架分析"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-12-05 23:23" pubdate>
+          2023年12月5日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          71 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Games101 - 作业1代码及框架分析</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <ul>
+<li>作业1做的是完成 get_model_matrix() 和 get_projection_matrix()
+函数，只要计算和返回两个变换矩阵就可以了</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function">Eigen::Matrix4f <span class="hljs-title">get_model_matrix</span><span class="hljs-params">(<span class="hljs-type">float</span> rotation_angle)</span></span><br><span class="hljs-function"></span>&#123;<br>    Eigen::Matrix4f model = Eigen::Matrix4f::<span class="hljs-built_in">Identity</span>();<br><br>    <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> Implement this function</span><br>    <span class="hljs-comment">// Create the model matrix for rotating the triangle around the Z axis.</span><br>    <span class="hljs-comment">// Then return it.</span><br><br>    <span class="hljs-type">float</span> sin_rotation_angle = <span class="hljs-built_in">sin</span>(rotation_angle / <span class="hljs-number">180.0</span> * <span class="hljs-built_in">acos</span>(<span class="hljs-number">-1</span>));<br>    <span class="hljs-type">float</span> cos_rotation_angle = <span class="hljs-built_in">cos</span>(rotation_angle / <span class="hljs-number">180.0</span> * <span class="hljs-built_in">acos</span>(<span class="hljs-number">-1</span>));<br>    model &lt;&lt;<br>    cos_rotation_angle, -sin_rotation_angle, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>,<br>    sin_rotation_angle, cos_rotation_angle, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>,<br>    <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>,<br>    <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>;<br><br>    <span class="hljs-keyword">return</span> model;<br>&#125;<br><br><span class="hljs-function">Eigen::Matrix4f <span class="hljs-title">get_projection_matrix</span><span class="hljs-params">(<span class="hljs-type">float</span> eye_fov, <span class="hljs-type">float</span> aspect_ratio,<span class="hljs-type">float</span> zNear, <span class="hljs-type">float</span> zFar)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-comment">// Students will implement this function</span><br><br>    Eigen::Matrix4f projection = Eigen::Matrix4f::<span class="hljs-built_in">Identity</span>();<br><br>    <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> Implement this function</span><br>    <span class="hljs-comment">// Create the projection matrix for the given parameters.</span><br>    <span class="hljs-comment">// Then return it.</span><br><br>    <span class="hljs-comment">// Matrix for M_persp -&gt; M_troho</span><br>    Eigen::Matrix4f M_persp_troth = Eigen::Matrix4f::<span class="hljs-built_in">Identity</span>();<br>    M_persp_troth &lt;&lt; zNear, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>,<br>    <span class="hljs-number">0</span>, zNear, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>,<br>    <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, zNear + zFar, -(zNear * zFar),<br>    <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>;<br><br>    <span class="hljs-comment">// value of l,f,t,b;</span><br>    <span class="hljs-type">float</span> top, bottom, left, right;<br>    top = <span class="hljs-built_in">tan</span>(eye_fov / <span class="hljs-number">2</span>) * <span class="hljs-built_in">abs</span>(zNear);<br>    bottom = (<span class="hljs-number">-1</span>) * top;<br>    right = aspect_ratio * top;<br>    left = (<span class="hljs-number">-1</span>) *right;<br><br>    <span class="hljs-comment">// Matrix for move to origin.</span><br>    Eigen::Matrix4f M_move = Eigen::Matrix4f::<span class="hljs-built_in">Identity</span>();<br>    M_move &lt;&lt; <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, (<span class="hljs-number">-1</span>) * (left + right) / <span class="hljs-number">2</span>,<br>    <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, (<span class="hljs-number">-1</span>) * (top + bottom) / <span class="hljs-number">2</span>,<br>    <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, (<span class="hljs-number">-1</span>) * (zNear +  zFar) / <span class="hljs-number">2</span>,<br>    <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>;<br><br>    <span class="hljs-comment">// Matrix for scale.</span><br>    Eigen::Matrix4f M_scale = Eigen::Matrix4f::<span class="hljs-built_in">Identity</span>();<br>    M_scale &lt;&lt;<br>    <span class="hljs-number">2</span> / (right - left), <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>,<br>    <span class="hljs-number">0</span>, <span class="hljs-number">2</span> / (top - bottom), <span class="hljs-number">0</span>, <span class="hljs-number">0</span>,<br>    <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">2</span> / (zNear - zFar), <span class="hljs-number">0</span>,<br>    <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>;<br><br>    <span class="hljs-comment">// Matrix for ortho transformation.</span><br>    Eigen::Matrix4f M_ortho = Eigen::Matrix4f::<span class="hljs-built_in">Identity</span>();<br>    M_ortho = M_scale * M_move;<br><br>    projection = M_ortho * M_persp_troth;<br><br>    <span class="hljs-keyword">return</span> projection;<br>&#125;<br></code></pre></td></tr></table></figure>
+<ul>
+<li>再来简单分析一下光栅器的代码，先从main入手：</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">const</span> <span class="hljs-type">char</span>** argv)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-type">float</span> angle = <span class="hljs-number">0</span>;<br>    <span class="hljs-type">bool</span> command_line = <span class="hljs-literal">false</span>;<br>    std::string filename = <span class="hljs-string">&quot;output.png&quot;</span>;<br><br>    <span class="hljs-keyword">if</span> (argc &gt;= <span class="hljs-number">3</span>) &#123;<br>        command_line = <span class="hljs-literal">true</span>;<br>        angle = std::<span class="hljs-built_in">stof</span>(argv[<span class="hljs-number">2</span>]); <span class="hljs-comment">// -r by default</span><br>        <span class="hljs-keyword">if</span> (argc == <span class="hljs-number">4</span>) &#123;<br>            filename = std::<span class="hljs-built_in">string</span>(argv[<span class="hljs-number">3</span>]);<br>        &#125;<br>        <span class="hljs-keyword">else</span><br>            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>    &#125;<br><br><br>    <span class="hljs-comment">// 定义一个700x700的光栅器，构造函数会根据参数创建二维数组frame_buf和deepth_buf</span><br>    <span class="hljs-function">rst::rasterizer <span class="hljs-title">r</span><span class="hljs-params">(<span class="hljs-number">700</span>, <span class="hljs-number">700</span>)</span></span>;<br>    <span class="hljs-comment">// 相机朝向的向量</span><br>    Eigen::Vector3f eye_pos = &#123;<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">5</span>&#125;;<br><br>    <span class="hljs-comment">// 三角形的三个顶点坐标</span><br>    std::vector&lt;Eigen::Vector3f&gt; pos&#123;&#123;<span class="hljs-number">2</span>, <span class="hljs-number">0</span>, <span class="hljs-number">-2</span>&#125;, &#123;<span class="hljs-number">0</span>, <span class="hljs-number">2</span>, <span class="hljs-number">-2</span>&#125;, &#123;<span class="hljs-number">-2</span>, <span class="hljs-number">0</span>, <span class="hljs-number">-2</span>&#125;&#125;;<br><br>    <span class="hljs-comment">// 应该是三角形的id，值的意义是对应的三个顶点在向量中的下标</span><br>    std::vector&lt;Eigen::Vector3i&gt; ind&#123;&#123;<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>&#125;&#125;;<br><br>    <span class="hljs-comment">/* </span><br><span class="hljs-comment">    rst::pos_buf_id rst::rasterizer::load_positions(const std::vector&lt;Eigen::Vector3f&gt; &amp;positions)</span><br><span class="hljs-comment">    &#123;</span><br><span class="hljs-comment">        auto id = get_next_id();</span><br><span class="hljs-comment">        pos_buf.emplace(id, positions);</span><br><span class="hljs-comment">        return &#123;id&#125;;</span><br><span class="hljs-comment">    &#125;</span><br><span class="hljs-comment">    pos_buf是一个map，这个函数作用是为每个三角形坐标的顶点信息指定一个id，并存到下标为id的map中，最后返回该id</span><br><span class="hljs-comment">    */</span><br>    <span class="hljs-keyword">auto</span> pos_id = r.<span class="hljs-built_in">load_positions</span>(pos);<br><br>    <span class="hljs-comment">/*</span><br><span class="hljs-comment">    rst::ind_buf_id rst::rasterizer::load_indices(const std::vector&lt;Eigen::Vector3i&gt; &amp;indices)</span><br><span class="hljs-comment">    &#123;</span><br><span class="hljs-comment">        auto id = get_next_id();</span><br><span class="hljs-comment">        ind_buf.emplace(id, indices);</span><br><span class="hljs-comment">        return &#123;id&#125;;</span><br><span class="hljs-comment">    &#125;</span><br><span class="hljs-comment">    迷惑，为什么要这么写</span><br><span class="hljs-comment">    功能和load_positions类似，只不过换成了存储和标记下标</span><br><span class="hljs-comment">    */</span><br>   <span class="hljs-comment">//关于这两个函数如何工作详见draw方法</span><br>    <span class="hljs-keyword">auto</span> ind_id = r.<span class="hljs-built_in">load_indices</span>(ind);<br><br><br>    <span class="hljs-type">int</span> key = <span class="hljs-number">0</span>;<br>    <span class="hljs-type">int</span> frame_count = <span class="hljs-number">0</span>;<br><br>    <span class="hljs-keyword">if</span> (command_line) &#123;<br>        <span class="hljs-comment">/*</span><br><span class="hljs-comment">        void rst::rasterizer::clear(rst::Buffers buff)</span><br><span class="hljs-comment">        &#123;</span><br><span class="hljs-comment">            if ((buff &amp; rst::Buffers::Color) == rst::Buffers::Color)</span><br><span class="hljs-comment">            &#123;</span><br><span class="hljs-comment">                std::fill(frame_buf.begin(), frame_buf.end(), Eigen::Vector3f&#123;0, 0, 0&#125;);</span><br><span class="hljs-comment">            &#125;</span><br><span class="hljs-comment">            if ((buff &amp; rst::Buffers::Depth) == rst::Buffers::Depth)</span><br><span class="hljs-comment">            &#123;</span><br><span class="hljs-comment">                std::fill(depth_buf.begin(), depth_buf.end(), std::numeric_limits&lt;float&gt;::infinity());</span><br><span class="hljs-comment">            &#125;</span><br><span class="hljs-comment">        &#125;</span><br><span class="hljs-comment">        Buffers是一个枚举类型，clear函数的功能是如果深度或颜色参数与该枚举类中的值一样，则将深度无限大或颜色设置为(0,0,0)</span><br><span class="hljs-comment">        使用这个枚举类型以达到初始化frame_buf与depth_buf的目的</span><br><span class="hljs-comment">        */</span><br>        r.<span class="hljs-built_in">clear</span>(rst::Buffers::Color | rst::Buffers::Depth);<br><br>        <span class="hljs-comment">// 设置变换矩阵</span><br>        r.<span class="hljs-built_in">set_model</span>(<span class="hljs-built_in">get_model_matrix</span>(angle));<br>        r.<span class="hljs-built_in">set_view</span>(<span class="hljs-built_in">get_view_matrix</span>(eye_pos));<br>        <span class="hljs-comment">// 这里设置了光锥的fovY为45，aspect为1(700x700)，n为0.1与f为50，可以尝试修改观察变化</span><br>        r.<span class="hljs-built_in">set_projection</span>(<span class="hljs-built_in">get_projection_matrix</span>(<span class="hljs-number">45</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0.1</span>, <span class="hljs-number">50</span>));<br><br>        <span class="hljs-comment">// draw函数绘制三角形</span><br>        r.<span class="hljs-built_in">draw</span>(pos_id, ind_id, rst::Primitive::Triangle);<br>        <span class="hljs-function">cv::Mat <span class="hljs-title">image</span><span class="hljs-params">(<span class="hljs-number">700</span>, <span class="hljs-number">700</span>, CV_32FC3, r.frame_buffer().data())</span></span>;<br>        image.<span class="hljs-built_in">convertTo</span>(image, CV_8UC3, <span class="hljs-number">1.0f</span>);<br><br>        cv::<span class="hljs-built_in">imwrite</span>(filename, image);<br><br>        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>    &#125;<br><br>    <span class="hljs-comment">// 与上面的方法一样</span><br>    <span class="hljs-keyword">while</span> (key != <span class="hljs-number">27</span>) &#123;<br><br>        r.<span class="hljs-built_in">clear</span>(rst::Buffers::Color | rst::Buffers::Depth);<br><br>        r.<span class="hljs-built_in">set_model</span>(<span class="hljs-built_in">get_model_matrix</span>(angle));<br>        r.<span class="hljs-built_in">set_view</span>(<span class="hljs-built_in">get_view_matrix</span>(eye_pos));<br>        r.<span class="hljs-built_in">set_projection</span>(<span class="hljs-built_in">get_projection_matrix</span>(<span class="hljs-number">45</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0.1</span>, <span class="hljs-number">50</span>));<br><br>        r.<span class="hljs-built_in">draw</span>(pos_id, ind_id, rst::Primitive::Triangle);<br><br>        <span class="hljs-function">cv::Mat <span class="hljs-title">image</span><span class="hljs-params">(<span class="hljs-number">700</span>, <span class="hljs-number">700</span>, CV_32FC3, r.frame_buffer().data())</span></span>;<br>        image.<span class="hljs-built_in">convertTo</span>(image, CV_8UC3, <span class="hljs-number">1.0f</span>);<br>        cv::<span class="hljs-built_in">imshow</span>(<span class="hljs-string">&quot;T_image&quot;</span>, image);<br>        key = cv::<span class="hljs-built_in">waitKey</span>(<span class="hljs-number">10</span>);<br><br>        std::cout &lt;&lt; <span class="hljs-string">&quot;frame count: &quot;</span> &lt;&lt; frame_count++ &lt;&lt; <span class="hljs-string">&#x27;\n&#x27;</span>;<br><br>        <span class="hljs-keyword">if</span> (key == <span class="hljs-string">&#x27;a&#x27;</span>) &#123;<br>            angle += <span class="hljs-number">10</span>;<br>        &#125;<br>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (key == <span class="hljs-string">&#x27;d&#x27;</span>) &#123;<br>            angle -= <span class="hljs-number">10</span>;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<ul>
+<li>draw函数功能是绘制三角形线框</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-type">void</span> rst::rasterizer::<span class="hljs-built_in">draw</span>(rst::pos_buf_id pos_buffer, rst::ind_buf_id ind_buffer, rst::Primitive type)<br>&#123;<br>    <span class="hljs-keyword">if</span> (type != rst::Primitive::Triangle)<br>    &#123;<br>        <span class="hljs-keyword">throw</span> std::<span class="hljs-built_in">runtime_error</span>(<span class="hljs-string">&quot;Drawing primitives other than triangle is not implemented yet!&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-comment">// 根据参数获得id</span><br>    <span class="hljs-keyword">auto</span>&amp; buf = pos_buf[pos_buffer.pos_id];<br>    <span class="hljs-keyword">auto</span>&amp; ind = ind_buf[ind_buffer.ind_id];<br><br>    <span class="hljs-comment">// 没用到不知道是干什么的</span><br>    <span class="hljs-type">float</span> f1 = (<span class="hljs-number">100</span> - <span class="hljs-number">0.1</span>) / <span class="hljs-number">2.0</span>;<br>    <span class="hljs-type">float</span> f2 = (<span class="hljs-number">100</span> + <span class="hljs-number">0.1</span>) / <span class="hljs-number">2.0</span>;<br><br>    <span class="hljs-comment">// 计算mvp变换矩阵</span><br>    Eigen::Matrix4f mvp = projection * view * model;<br>    <span class="hljs-comment">// 遍历每一个存储的ind</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span>&amp; i : ind)<br>    &#123;<br>        Triangle t;<br><br>        <span class="hljs-comment">// 每个点做mvp变换</span><br>        Eigen::Vector4f v[] = &#123;<br>                mvp * <span class="hljs-built_in">to_vec4</span>(buf[i[<span class="hljs-number">0</span>]], <span class="hljs-number">1.0f</span>),<br>                mvp * <span class="hljs-built_in">to_vec4</span>(buf[i[<span class="hljs-number">1</span>]], <span class="hljs-number">1.0f</span>),<br>                mvp * <span class="hljs-built_in">to_vec4</span>(buf[i[<span class="hljs-number">2</span>]], <span class="hljs-number">1.0f</span>)<br>        &#125;;<br><br>        <span class="hljs-comment">// 归一化</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span>&amp; vec : v) &#123;<br>            vec /= vec.<span class="hljs-built_in">w</span>();<br>        &#125;<br><br>        <span class="hljs-comment">// 变换到屏幕空间</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> &amp; vert : v)<br>        &#123;<br>            vert.<span class="hljs-built_in">x</span>() = <span class="hljs-number">0.5</span>*width*(vert.<span class="hljs-built_in">x</span>()+<span class="hljs-number">1.0</span>);<br>            vert.<span class="hljs-built_in">y</span>() = <span class="hljs-number">0.5</span>*height*(vert.<span class="hljs-built_in">y</span>()+<span class="hljs-number">1.0</span>);<br>            vert.<span class="hljs-built_in">z</span>() = vert.<span class="hljs-built_in">z</span>() * f1 + f2;<br>        &#125;<br><br>        <span class="hljs-comment">// 设置三个顶点的坐标，从每个齐次坐标中取前三个值</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">3</span>; ++i)<br>        &#123;<br>            t.<span class="hljs-built_in">setVertex</span>(i, v[i].<span class="hljs-built_in">head</span>&lt;<span class="hljs-number">3</span>&gt;());<br>            t.<span class="hljs-built_in">setVertex</span>(i, v[i].<span class="hljs-built_in">head</span>&lt;<span class="hljs-number">3</span>&gt;());<br>            t.<span class="hljs-built_in">setVertex</span>(i, v[i].<span class="hljs-built_in">head</span>&lt;<span class="hljs-number">3</span>&gt;());<br>        &#125;<br><br><br>        t.<span class="hljs-built_in">setColor</span>(<span class="hljs-number">0</span>, <span class="hljs-number">255.0</span>,  <span class="hljs-number">0.0</span>,  <span class="hljs-number">0.0</span>);<br>        t.<span class="hljs-built_in">setColor</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0.0</span>  ,<span class="hljs-number">255.0</span>,  <span class="hljs-number">0.0</span>);<br>        t.<span class="hljs-built_in">setColor</span>(<span class="hljs-number">2</span>, <span class="hljs-number">0.0</span>  ,  <span class="hljs-number">0.0</span>,<span class="hljs-number">255.0</span>);<br><br><br>        <span class="hljs-comment">/*</span><br><span class="hljs-comment">        void rst::rasterizer::rasterize_wireframe(const Triangle&amp; t)</span><br><span class="hljs-comment">        &#123;</span><br><span class="hljs-comment">            draw_line(t.c(), t.a());</span><br><span class="hljs-comment">            draw_line(t.c(), t.b());</span><br><span class="hljs-comment">            draw_line(t.b(), t.a());</span><br><span class="hljs-comment">        &#125;</span><br><span class="hljs-comment">        */</span><br>        <span class="hljs-comment">// 光栅化三条线段，这个应该很好算</span><br>        <span class="hljs-built_in">rasterize_wireframe</span>(t);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<ul>
+<li>光栅器中使用了draw_line方法绘制线段，使用了由Bresenham提出的一种精确而有效的光栅线生成算法<strong>Bresenham's
+linealgorithm</strong>，可用于显示线、圆和其他曲线的整数增量运算，是目前最有效的线段生成算法，推导可见：<a
+target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm">Bresenham's
+linealgorithm wiki</a></li>
+</ul>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-type">void</span> rst::rasterizer::<span class="hljs-built_in">draw_line</span>(Eigen::Vector3f begin, Eigen::Vector3f end)<br>&#123;<br>    <span class="hljs-keyword">auto</span> x1 = begin.<span class="hljs-built_in">x</span>();<br>    <span class="hljs-keyword">auto</span> y1 = begin.<span class="hljs-built_in">y</span>();<br>    <span class="hljs-keyword">auto</span> x2 = end.<span class="hljs-built_in">x</span>();<br>    <span class="hljs-keyword">auto</span> y2 = end.<span class="hljs-built_in">y</span>();<br><br>    Eigen::Vector3f line_color = &#123;<span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>&#125;;<br><br>    <span class="hljs-type">int</span> x,y,dx,dy,dx1,dy1,px,py,xe,ye,i;<br><br>    dx=x2-x1;<br>    dy=y2-y1;<br>    dx1=<span class="hljs-built_in">fabs</span>(dx);<br>    dy1=<span class="hljs-built_in">fabs</span>(dy);<br>    px=<span class="hljs-number">2</span>*dy1-dx1;<br>    py=<span class="hljs-number">2</span>*dx1-dy1;<br><br>    <span class="hljs-keyword">if</span>(dy1&lt;=dx1)<br>    &#123;<br>        <span class="hljs-keyword">if</span>(dx&gt;=<span class="hljs-number">0</span>)<br>        &#123;<br>            x=x1;<br>            y=y1;<br>            xe=x2;<br>        &#125;<br>        <span class="hljs-keyword">else</span><br>        &#123;<br>            x=x2;<br>            y=y2;<br>            xe=x1;<br>        &#125;<br>        Eigen::Vector3f point = Eigen::<span class="hljs-built_in">Vector3f</span>(x, y, <span class="hljs-number">1.0f</span>);<br>        <span class="hljs-built_in">set_pixel</span>(point,line_color);<br>        <span class="hljs-keyword">for</span>(i=<span class="hljs-number">0</span>;x&lt;xe;i++)<br>        &#123;<br>            x=x+<span class="hljs-number">1</span>;<br>            <span class="hljs-keyword">if</span>(px&lt;<span class="hljs-number">0</span>)<br>            &#123;<br>                px=px+<span class="hljs-number">2</span>*dy1;<br>            &#125;<br>            <span class="hljs-keyword">else</span><br>            &#123;<br>                <span class="hljs-keyword">if</span>((dx&lt;<span class="hljs-number">0</span> &amp;&amp; dy&lt;<span class="hljs-number">0</span>) || (dx&gt;<span class="hljs-number">0</span> &amp;&amp; dy&gt;<span class="hljs-number">0</span>))<br>                &#123;<br>                    y=y+<span class="hljs-number">1</span>;<br>                &#125;<br>                <span class="hljs-keyword">else</span><br>                &#123;<br>                    y=y<span class="hljs-number">-1</span>;<br>                &#125;<br>                px=px+<span class="hljs-number">2</span>*(dy1-dx1);<br>            &#125;<br><span class="hljs-comment">//            delay(0);</span><br>            Eigen::Vector3f point = Eigen::<span class="hljs-built_in">Vector3f</span>(x, y, <span class="hljs-number">1.0f</span>);<br>            <span class="hljs-built_in">set_pixel</span>(point,line_color);<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">else</span><br>    &#123;<br>        <span class="hljs-keyword">if</span>(dy&gt;=<span class="hljs-number">0</span>)<br>        &#123;<br>            x=x1;<br>            y=y1;<br>            ye=y2;<br>        &#125;<br>        <span class="hljs-keyword">else</span><br>        &#123;<br>            x=x2;<br>            y=y2;<br>            ye=y1;<br>        &#125;<br>        Eigen::Vector3f point = Eigen::<span class="hljs-built_in">Vector3f</span>(x, y, <span class="hljs-number">1.0f</span>);<br>        <span class="hljs-built_in">set_pixel</span>(point,line_color);<br>        <span class="hljs-keyword">for</span>(i=<span class="hljs-number">0</span>;y&lt;ye;i++)<br>        &#123;<br>            y=y+<span class="hljs-number">1</span>;<br>            <span class="hljs-keyword">if</span>(py&lt;=<span class="hljs-number">0</span>)<br>            &#123;<br>                py=py+<span class="hljs-number">2</span>*dx1;<br>            &#125;<br>            <span class="hljs-keyword">else</span><br>            &#123;<br>                <span class="hljs-keyword">if</span>((dx&lt;<span class="hljs-number">0</span> &amp;&amp; dy&lt;<span class="hljs-number">0</span>) || (dx&gt;<span class="hljs-number">0</span> &amp;&amp; dy&gt;<span class="hljs-number">0</span>))<br>                &#123;<br>                    x=x+<span class="hljs-number">1</span>;<br>                &#125;<br>                <span class="hljs-keyword">else</span><br>                &#123;<br>                    x=x<span class="hljs-number">-1</span>;<br>                &#125;<br>                py=py+<span class="hljs-number">2</span>*(dx1-dy1);<br>            &#125;<br><span class="hljs-comment">//            delay(0);</span><br>            Eigen::Vector3f point = Eigen::<span class="hljs-built_in">Vector3f</span>(x, y, <span class="hljs-number">1.0f</span>);<br>            <span class="hljs-built_in">set_pixel</span>(point,line_color);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<ul>
+<li><p><strong>提高</strong></p>
+<p>直接套用讲过的<strong>罗德里格斯旋转公式</strong>： <span
+class="math display">\[
+\mathbf{R}(\mathbf{n},\alpha)=
+\cos(\alpha)~\mathbf{I} + (1-\cos(\alpha))~\mathbf{n}\mathbf{n}^T +
+\sin\alpha~
+\underbrace{\begin{pmatrix}
+  0 &amp; -n_z &amp; -n_y \\
+  n_z &amp; 0 &amp; -n_x \\
+  -n_y &amp; n_x &amp; 0
+\end{pmatrix} }_{\mathbf{N} }
+\]</span></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function">Eigen::Matrix4f <span class="hljs-title">get_model_matrix</span><span class="hljs-params">(Eigen::Vector4f rotation_axis, <span class="hljs-type">float</span> rotation_angle)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-type">float</span> sin_rotation_angle = <span class="hljs-built_in">sin</span>(rotation_angle / <span class="hljs-number">180.0</span> * <span class="hljs-built_in">acos</span>(<span class="hljs-number">-1</span>));<br>    <span class="hljs-type">float</span> cos_rotation_angle = <span class="hljs-built_in">cos</span>(rotation_angle / <span class="hljs-number">180.0</span> * <span class="hljs-built_in">acos</span>(<span class="hljs-number">-1</span>));<br>    Eigen::Matrix4f model = Eigen::Matrix4f::<span class="hljs-built_in">Identity</span>();<br>    Eigen::Matrix4f I = Eigen::Matrix4f::<span class="hljs-built_in">Identity</span>();<br>    Eigen::Matrix4f N;<br>    N &lt;&lt; <span class="hljs-number">0</span>, <span class="hljs-number">-1</span> * rotation_axis.<span class="hljs-built_in">z</span>(), rotation_axis.<span class="hljs-built_in">y</span>(), <span class="hljs-number">0</span>,<br>        rotation_axis.<span class="hljs-built_in">z</span>(), <span class="hljs-number">0</span>, <span class="hljs-number">-1</span> * rotation_axis.<span class="hljs-built_in">x</span>(), <span class="hljs-number">0</span>,<br>        <span class="hljs-number">-1</span> * rotation_axis.<span class="hljs-built_in">y</span>(), rotation_axis.<span class="hljs-built_in">x</span>(), <span class="hljs-number">0</span>, <span class="hljs-number">0</span>,<br>        <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>;<br>    <br>    model = cos_rotation_angle * I + (<span class="hljs-number">1</span> - cos_rotation_angle) * rotation_axis * rotation_axis.<span class="hljs-built_in">transpose</span>() + sin_rotation_angle * N;<br>    <span class="hljs-built_in">model</span>(<span class="hljs-number">3</span>, <span class="hljs-number">3</span>) = <span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">return</span> model;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/" class="category-chain-item">计算机图形学</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Games101/" class="print-no-link">#Games101</a>
+      
+        <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/" class="print-no-link">#计算机图形学</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Games101 - 作业1代码及框架分析</div>
+      <div>https://memo2586.github.io/2023/12/05/Games101-作业1/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>memo2586</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年12月5日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/12/07/Games101-Lecture-07-Shading-1/" title="Games101 - Lecture07 Shading 1">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Games101 - Lecture07 Shading 1</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/12/05/hexo-debug/" title="hexo_debug">
+                        <span class="hidden-mobile">hexo_debug</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
