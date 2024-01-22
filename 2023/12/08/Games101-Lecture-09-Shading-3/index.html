@@ -16,37 +16,21 @@
   <meta name="author" content="memo2586">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Shading 3 1. Barycentric Coordinates  为什么要使用重心坐标在三角形内部进行插值？ 我们在前面所学的内容中，很多操作都是在三角形的顶点上计算完成的，同时，我们又希望这些操作能在三角形内部有一个平滑的过度。为此，我们需要使用重心坐标进行插值。 对什么进行重心插值？ 插值的内容可以有很多，例如三角形内部的纹理、深度、逐顶点的颜色与法线、Phong sh">
+    <meta name="description" content="Shading 3   朝日x里想奈-small  1. Barycentric Coordinates  为什么要使用重心坐标在三角形内部进行插值？ 我们在前面所学的内容中，很多操作都是在三角形的顶点上计算完成的，同时，我们又希望这些操作能在三角形内部有一个平滑的过度。为此，我们需要使用重心坐标进行插值。 对什么进行重心插值？ 插值的内容可以有很多，例如三角形内部的纹理、深度">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Gmaes101 - Lecture09 Shading 3">
 <meta property="og:url" content="https://memo2586.github.io/2023/12/08/Games101-Lecture-09-Shading-3/index.html">
 <meta property="og:site_name" content="memo&#39;s blog">
-<meta property="og:description" content="Shading 3 1. Barycentric Coordinates  为什么要使用重心坐标在三角形内部进行插值？ 我们在前面所学的内容中，很多操作都是在三角形的顶点上计算完成的，同时，我们又希望这些操作能在三角形内部有一个平滑的过度。为此，我们需要使用重心坐标进行插值。 对什么进行重心插值？ 插值的内容可以有很多，例如三角形内部的纹理、深度、逐顶点的颜色与法线、Phong sh">
+<meta property="og:description" content="Shading 3   朝日x里想奈-small  1. Barycentric Coordinates  为什么要使用重心坐标在三角形内部进行插值？ 我们在前面所学的内容中，很多操作都是在三角形的顶点上计算完成的，同时，我们又希望这些操作能在三角形内部有一个平滑的过度。为此，我们需要使用重心坐标进行插值。 对什么进行重心插值？ 插值的内容可以有很多，例如三角形内部的纹理、深度">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/Snipaste_2023-12-08_14-48-02.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/Snipaste_2023-12-08_15-03-02.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/Snipaste_2023-12-08_15-25-22.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/Snipaste_2023-12-08_16-01-39.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/Snipaste_2023-12-08_16-49-30.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/Snipaste_2023-12-08_17-01-38.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/Snipaste_2023-12-08_17-16-13.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/Snipaste_2023-12-08_17-20-29.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/Snipaste_2023-12-08_17-38-16.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/Snipaste_2023-12-08_17-55-46.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/Snipaste_2023-12-08_18-03-17.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/Snipaste_2023-12-08_18-40-37.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/Snipaste_2023-12-08_19-26-29.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/Snipaste_2023-12-08_19-28-22.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/Snipaste_2023-12-19_20-10-28.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/Snipaste_2023-12-22_14-34-19.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/Snipaste_2023-12-22_14-43-01.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/%E6%9C%9D%E6%97%A5x%E9%87%8C%E6%83%B3%E5%A5%88-small.jpg">
 <meta property="article:published_time" content="2023-12-08T11:45:45.000Z">
-<meta property="article:modified_time" content="2024-01-22T12:45:32.831Z">
+<meta property="article:modified_time" content="2024-01-22T13:21:34.502Z">
 <meta property="article:author" content="memo2586">
 <meta property="article:tag" content="Games101">
 <meta property="article:tag" content="计算机图形学">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/Snipaste_2023-12-08_14-48-02.png">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/%E6%9C%9D%E6%97%A5x%E9%87%8C%E6%83%B3%E5%A5%88-small.jpg">
   
   
   
@@ -293,6 +277,12 @@
               <div class="markdown-body">
                 
                 <h1 id="shading-3">Shading 3</h1>
+<figure>
+<img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/朝日x里想奈-small.png" srcset="/img/loading.gif" lazyload
+alt="朝日x里想奈-small" />
+<figcaption aria-hidden="true">朝日x里想奈-small</figcaption>
+</figure>
 <h3 id="barycentric-coordinates">1. Barycentric Coordinates</h3>
 <ul>
 <li><p><strong>为什么要使用重心坐标在三角形内部进行插值？</strong></p>
