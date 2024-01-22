@@ -16,12 +16,12 @@
   <meta name="author" content="memo2586">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Shading 3 1. Barycentric Coordinates  为什么要使用重心坐标在三角形内部进行插值？ 我们在前面所学的内容中，很多操作都是在三角形的顶点上计算完成的，同时，我们又希望这些操作能在三角形内部有一个平滑的过度。为此，我们需要使用重心坐标进行插值。 对什么进行重心插值？ 插值的内容可以有很多，例如三角形内部的纹理、深度、逐顶点的颜色与法线、Phong">
+    <meta name="description" content="Shading 3 1. Barycentric Coordinates  为什么要使用重心坐标在三角形内部进行插值？ 我们在前面所学的内容中，很多操作都是在三角形的顶点上计算完成的，同时，我们又希望这些操作能在三角形内部有一个平滑的过度。为此，我们需要使用重心坐标进行插值。 对什么进行重心插值？ 插值的内容可以有很多，例如三角形内部的纹理、深度、逐顶点的颜色与法线、Phong sh">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Gmaes101 - Lecture09 Shading 3">
 <meta property="og:url" content="https://memo2586.github.io/2023/12/08/Gmaes101-Lecture-09-Shading-3/index.html">
 <meta property="og:site_name" content="memo&#39;s blog">
-<meta property="og:description" content="Shading 3 1. Barycentric Coordinates  为什么要使用重心坐标在三角形内部进行插值？ 我们在前面所学的内容中，很多操作都是在三角形的顶点上计算完成的，同时，我们又希望这些操作能在三角形内部有一个平滑的过度。为此，我们需要使用重心坐标进行插值。 对什么进行重心插值？ 插值的内容可以有很多，例如三角形内部的纹理、深度、逐顶点的颜色与法线、Phong">
+<meta property="og:description" content="Shading 3 1. Barycentric Coordinates  为什么要使用重心坐标在三角形内部进行插值？ 我们在前面所学的内容中，很多操作都是在三角形的顶点上计算完成的，同时，我们又希望这些操作能在三角形内部有一个平滑的过度。为此，我们需要使用重心坐标进行插值。 对什么进行重心插值？ 插值的内容可以有很多，例如三角形内部的纹理、深度、逐顶点的颜色与法线、Phong sh">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/Snipaste_2023-12-08_14-48-02.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/Snipaste_2023-12-08_15-03-02.png">
@@ -35,7 +35,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/Snipaste_2023-12-08_17-55-46.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/Snipaste_2023-12-08_18-03-17.png">
 <meta property="article:published_time" content="2023-12-08T11:45:45.000Z">
-<meta property="article:modified_time" content="2024-01-22T11:27:10.743Z">
+<meta property="article:modified_time" content="2024-01-22T12:21:48.713Z">
 <meta property="article:author" content="memo2586">
 <meta property="article:tag" content="Games101">
 <meta property="article:tag" content="计算机图形学">
@@ -286,8 +286,7 @@
             
               <div class="markdown-body">
                 
-                <ul>
-<li><p>Shading 3</p>
+                <h1 id="shading-3">Shading 3</h1>
 <h3 id="barycentric-coordinates">1. Barycentric Coordinates</h3>
 <ul>
 <li><p><strong>为什么要使用重心坐标在三角形内部进行插值？</strong></p>
@@ -325,8 +324,7 @@ class="math inline">\((x,y)\)</span>，都可以用三个顶点的坐标的线�
 \\
 &amp; \\
 &amp; \beta =
-\frac{-(x-x_C)(y_A-y_C)+(y-y_C)(x_A-x_C)}{-(x_B-x_C)(y_A-y_C)+(y_B-y_C)(x_A-x_C)}
-\\
+\frac{-(x-x_C)(y_A-y_C)+(y-y_C)(x_A-x_C)}{-(x_B-x_C)(y_A-y_C)+(y_B-y_C)(x_A-x_C)}   \\
 &amp; \\
 &amp; \gamma = 1 - \alpha - \beta
 \end{align*}
@@ -404,9 +402,8 @@ class="math inline">\(\log{n}\)</span> 层。为了存储这些层，会产生�
 的texel会在第二层被Mipmap合并为一个texel。也就是说，对于一个 LxL
 的方形，他会在第 <span class="math inline">\(\log_2{L}\)</span>
 层被合并。</p>
-<p>那么边长 L 与 平均值 D 的计算方法是： $$ \begin{align*} &amp; D =
+<p>那么边长 L 与 平均值 D 的计算方法是： $$ \begin{gather*} &amp; D =
 _2{L} \ &amp; L = ( </p></li>
-</ul></li>
 </ul></li>
 </ul></li>
 </ul>
