@@ -16,28 +16,21 @@
   <meta name="author" content="memo2586">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Review of Linear Algebra 1. Vector Addition  平行四边形法则与三角形法则    坐标系    缺省时一般认为向量为列向量: \[ \mathbf{A}&#x3D; \begin{pmatrix}   x \\   y \end{pmatrix} \tag1 \]  \[ \mathbf{A^T}&#x3D; \begin{pmatr">
+    <meta name="description" content="向量与矩阵基础知识">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Games101 - Lecture02 Review of Linear Algebra">
 <meta property="og:url" content="https://memo2586.github.io/2023/11/22/Games101-Lecture-02-Review-of-Linear-Algebra/index.html">
 <meta property="og:site_name" content="memo&#39;s blog">
-<meta property="og:description" content="Review of Linear Algebra 1. Vector Addition  平行四边形法则与三角形法则    坐标系    缺省时一般认为向量为列向量: \[ \mathbf{A}&#x3D; \begin{pmatrix}   x \\   y \end{pmatrix} \tag1 \]  \[ \mathbf{A^T}&#x3D; \begin{pmatr">
+<meta property="og:description" content="向量与矩阵基础知识">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20231122225034808.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20231122232540795.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20231122230307232.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20231123172442079.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20231123184130756.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20231123195107566.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20231123200453651.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20231124152552096.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/%E9%B3%B3%E3%81%A1%E3%81%AF%E3%82%8401-title.jpg">
 <meta property="article:published_time" content="2023-11-22T10:39:46.000Z">
-<meta property="article:modified_time" content="2024-01-22T10:49:28.120Z">
+<meta property="article:modified_time" content="2024-01-23T03:16:49.877Z">
 <meta property="article:author" content="memo2586">
 <meta property="article:tag" content="Games101">
 <meta property="article:tag" content="计算机图形学">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20231122225034808.png">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/%E9%B3%B3%E3%81%A1%E3%81%AF%E3%82%8401-title.jpg">
   
   
   
@@ -230,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4.6k 字
+          4.3k 字
         
       </span>
     
@@ -241,7 +234,7 @@
         
         
         
-          39 分钟
+          36 分钟
         
       </span>
     
@@ -283,7 +276,9 @@
             
               <div class="markdown-body">
                 
-                <h1 id="review-of-linear-algebra">Review of Linear Algebra</h1>
+                <p><img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/鳳ちはや01-samll.png" srcset="/img/loading.gif" lazyload /></p>
+<h1 id="review-of-linear-algebra">Review of Linear Algebra</h1>
 <h3 id="vector-addition">1. Vector Addition</h3>
 <ul>
 <li><strong>平行四边形法则与三角形法则</strong></li>
@@ -291,17 +286,16 @@
 <p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20231122225034808.png" srcset="/img/loading.gif" lazyload alt="image-20231122225034808" style="zoom: 67%;" /></p>
 <ul>
 <li><p><strong>坐标系</strong></p>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20231122232540795.png" srcset="/img/loading.gif" lazyload alt="image-20231122232540795" style="zoom:67%;" /></p>
-<pre><code class="hljs">  缺省时一般认为向量为列向量:</code></pre>
-<p><span class="math display">\[
+<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20231122232540795.png" srcset="/img/loading.gif" lazyload alt="image-20231122232540795" style="zoom:67%;" /></p></li>
+</ul>
+<p>​ 缺省时一般认为向量为列向量: <span class="math display">\[
 \mathbf{A}=
 \begin{pmatrix}
-  x \\
-  y
+    x \\
+    y
 \end{pmatrix}
 \tag1
-\]</span></p></li>
-</ul>
+\]</span></p>
 <p><span class="math display">\[
 \mathbf{A^T}=
 \begin{pmatrix}
@@ -327,8 +321,8 @@ Product)</h3>
 \cos\theta=\frac{\overrightarrow{a}\cdot\overrightarrow{b}}{\|\overrightarrow{a}\|\|\overrightarrow{b}\|}
 \tag2
 \]</span></p>
-<pre><code class="hljs">    当两个向量都是单位向量时（长度都为1）：</code></pre>
-<p><span class="math display">\[
+<p>​ 当两个向量都是单位向量时（长度都为1）： <span
+class="math display">\[
 \cos\theta=\hat{a}\cdot\hat{b}
 \]</span></p>
 <ul>
@@ -357,50 +351,57 @@ class="math inline">\((k\overrightarrow{a})\cdot=\overrightarrow{a}\cdot(k\overr
     y_b
 \end{pmatrix}
 =x_ax_b+y_ay_b
-\]</span>
+\]</span> ​
 <strong>点乘最大的作用在于找到两个向量之间的夹角大小。</strong></p>
 <ul>
-<li><p><strong>通过点乘求向量在另一个向量上的投影</strong></p>
-<pre><code class="hljs">  点乘的另一个作用是用于**找到一个向量在另一个向量上的投影**：</code></pre></li>
+<li><strong>通过点乘求向量在另一个向量上的投影</strong></li>
 </ul>
+<p>​
+点乘的另一个作用是用于<strong>找到一个向量在另一个向量上的投影</strong>：</p>
 <p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20231123172442079.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p>
-<pre><code class="hljs">    $\overrightarrow&#123;b&#125;_\bot$ 是 $\overrightarrow&#123;b&#125;$ 在 $\overrightarrow&#123;a&#125;$ 方向上的投影，因此：</code></pre>
-<p><span class="math display">\[
+<p>​ <span class="math inline">\(\overrightarrow{b}_\bot\)</span> 是
+<span class="math inline">\(\overrightarrow{b}\)</span> 在 <span
+class="math inline">\(\overrightarrow{a}\)</span> 方向上的投影，因此：
+<span class="math display">\[
 \overrightarrow{b_\bot}=k\hat{a}
-\]</span> 其中 k 的大小为： <span class="math display">\[
+\]</span> ​ 其中 k 的大小为： <span class="math display">\[
 k=\|\overrightarrow{b_\bot}\|=\|\overrightarrow{b}\|\cos{\theta}
-\]</span> 利用点乘计算出 <span
+\]</span> ​ 利用点乘计算出 <span
 class="math inline">\(\cos{\theta}\)</span> 后便可以求出 <span
 class="math inline">\(\overrightarrow{b_\bot}\)</span> 。</p>
-<pre><code class="hljs">    **已知向量在另一个向量上的投影后，可以对该向量任意地进行平行与垂直的分解**：</code></pre>
+<p><strong>已知向量在另一个向量上的投影后，可以对该向量任意地进行平行与垂直的分解</strong>：</p>
 <p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20231123184130756.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p>
 <ul>
 <li><p><strong>通过点乘计算向量间的位置关系</strong></p>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20231123195107566.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p>
-<pre><code class="hljs">  以向量 $\overrightarrow&#123;a&#125;$ 的方向为基准定义前与后，当一个向量与向量 $\overrightarrow&#123;a&#125;$ 的点乘大于0时，称该向量位于前方。反之，当一个向量与向量 $\overrightarrow&#123;a&#125;$ 的点乘小于0时，称该向量位于后方。
-
-
-
-  **两个向量的单位向量的点乘越接近1，则这两个向量在方向上越接近。**</code></pre></li>
+<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20231123195107566.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p></li>
 </ul>
+<p>以向量 <span class="math inline">\(\overrightarrow{a}\)</span>
+的方向为基准定义前与后，当一个向量与向量 <span
+class="math inline">\(\overrightarrow{a}\)</span>
+的点乘大于0时，称该向量位于前方。反之，当一个向量与向量 <span
+class="math inline">\(\overrightarrow{a}\)</span>
+的点乘小于0时，称该向量位于后方。</p>
+<p><strong>两个向量的单位向量的点乘越接近1，则这两个向量在方向上越接近。</strong></p>
 <hr />
 <h3 id="vector-multiplication-cross-product">3 Vector Multiplication
 (Cross Product)</h3>
 <ul>
 <li><p><strong>叉乘的计算</strong></p>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20231123200453651.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p>
-<pre><code class="hljs">  **两个向量叉乘的计算结果是一个垂直于这两个向量所在平面的向量。**</code></pre>
-<p><span class="math display">\[
+<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20231123200453651.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p></li>
+</ul>
+<p>​
+<strong>两个向量叉乘的计算结果是一个垂直于这两个向量所在平面的向量。</strong>
+<span class="math display">\[
 \overrightarrow{a}\cross\overrightarrow{b}=-\overrightarrow{b}\cross\overrightarrow{a}
 \tag1
-\]</span></p></li>
-</ul>
+\]</span></p>
 <p><span class="math display">\[
 \|\overrightarrow{a}\cross\overrightarrow{b}\|=\|\overrightarrow{a}\|\|\overrightarrow{b}\|\sin{\phi}
 \tag2
 \]</span></p>
-<pre><code class="hljs">    利用叉乘可以建立一个在三维空间中的直角坐标系（使用右手螺旋定则可以确定运算结果的向量的方向）：</code></pre>
-<p><span class="math display">\[
+<p>​
+利用叉乘可以建立一个在三维空间中的直角坐标系（使用右手螺旋定则可以确定运算结果的向量的方向）：
+<span class="math display">\[
 \overrightarrow{x}\cross\overrightarrow{y}=+\overrightarrow{z} \tag1
 \]</span></p>
 <p><span class="math display">\[
@@ -433,15 +434,23 @@ class="math display">\[
   x_ay_b-y_ax_b
 \end{pmatrix}
 \]</span></p></li>
-<li><p><strong>叉乘的作用</strong></p>
-<pre><code class="hljs">  **判断某一点是否在图形的内部**。
-
-  &lt;img src=&quot;https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20231124152224648.png&quot; style=&quot;zoom:33%;&quot; /&gt;
-
-  如图，$\overrightarrow&#123;a&#125;\cross\overrightarrow&#123;b&#125;$ 的值为正，可得 $\overrightarrow&#123;b&#125;$ 在 $\overrightarrow&#123;a&#125;$ 的左侧，反之同理，可以判断两个向量的相对左右位置。</code></pre></li>
+<li><p><strong>叉乘的作用</strong></p></li>
 </ul>
+<p>​ <strong>判断某一点是否在图形的内部</strong>。 ​</p>
+<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20231124152224648.png" srcset="/img/loading.gif" lazyload style="zoom:33%;" /></p>
+<p>​ 如图，<span
+class="math inline">\(\overrightarrow{a}\cross\overrightarrow{b}\)</span>
+的值为正，可得 <span class="math inline">\(\overrightarrow{b}\)</span>
+在 <span class="math inline">\(\overrightarrow{a}\)</span>
+的左侧，反之同理，可以判断两个向量的相对左右位置。</p>
 <p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20231124152552096.png" srcset="/img/loading.gif" lazyload style="zoom: 33%;" /></p>
-<pre><code class="hljs">    要判断点P是否在顺序的，首尾相接的三个向量组成的三角形内部，则只需要计算 $\overrightarrow&#123;AB&#125;\cross\overrightarrow&#123;AP&#125;$、$\overrightarrow&#123;BC&#125;\cross\overrightarrow&#123;BP&#125;$、$\overrightarrow&#123;CA&#125;\cross\overrightarrow&#123;CP&#125;$ 的值是否都为正值或负值，即点P都在三个向量的左侧或右侧。</code></pre>
+<p>​
+要判断点P是否在顺序的，首尾相接的三个向量组成的三角形内部，则只需要计算
+<span
+class="math inline">\(\overrightarrow{AB}\cross\overrightarrow{AP}\)</span>、<span
+class="math inline">\(\overrightarrow{BC}\cross\overrightarrow{BP}\)</span>、<span
+class="math inline">\(\overrightarrow{CA}\cross\overrightarrow{CP}\)</span>
+的值是否都为正值或负值，即点P都在三个向量的左侧或右侧。</p>
 <hr />
 <h3 id="orthonormal-bases-and-coordinate-frames">4. Orthonormal bases
 and coordinate frames</h3>
@@ -487,8 +496,7 @@ I_{2\cross2}=
   0 &amp; 1 \\
 \end{pmatrix}
 \]</span></p>
-<pre><code class="hljs">  则有：</code></pre>
-<p><span class="math display">\[
+<p>​ 则有： <span class="math display">\[
 AA^{-1}=A^{-1}A=I
 \]</span></p>
 <ul>
