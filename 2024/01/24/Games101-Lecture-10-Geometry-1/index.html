@@ -16,26 +16,26 @@
   <meta name="author" content="memo2586">
   <meta name="keywords" content="">
   
-    <meta name="description" content="向量与矩阵基础知识">
+    <meta name="description" content="几何基础：隐式表示与显示表示">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Games101 - Lecture02 Review of Linear Algebra">
-<meta property="og:url" content="https://memo2586.github.io/2023/11/22/Games101-Lecture-02-Review-of-Linear-Algebra/index.html">
+<meta property="og:title" content="Games101-Lecture-10-Geometry-1">
+<meta property="og:url" content="https://memo2586.github.io/2024/01/24/Games101-Lecture-10-Geometry-1/index.html">
 <meta property="og:site_name" content="memo&#39;s blog">
-<meta property="og:description" content="向量与矩阵基础知识">
+<meta property="og:description" content="几何基础：隐式表示与显示表示">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/%E9%B3%B3%E3%81%A1%E3%81%AF%E3%82%8401-title_h160.jpg">
-<meta property="article:published_time" content="2023-11-22T10:39:46.000Z">
-<meta property="article:modified_time" content="2024-01-24T15:06:11.356Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/%E7%A5%9E%E6%88%B8%E5%B0%8F%E9%B3%A501-small-title_h160.png">
+<meta property="article:published_time" content="2024-01-24T15:01:18.000Z">
+<meta property="article:modified_time" content="2024-01-24T15:08:10.315Z">
 <meta property="article:author" content="memo2586">
 <meta property="article:tag" content="Games101">
 <meta property="article:tag" content="计算机图形学">
 <meta property="article:tag" content="笔记">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/%E9%B3%B3%E3%81%A1%E3%81%AF%E3%82%8401-title_h160.jpg">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/%E7%A5%9E%E6%88%B8%E5%B0%8F%E9%B3%A501-small-title_h160.png">
   
   
   
-  <title>Games101 - Lecture02 Review of Linear Algebra - memo&#39;s blog</title>
+  <title>Games101-Lecture-10-Geometry-1 - memo&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -230,7 +230,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Games101 - Lecture02 Review of Linear Algebra"></span>
+            <span id="subtitle" data-typed-text="Games101-Lecture-10-Geometry-1"></span>
           
         </div>
 
@@ -241,8 +241,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-11-22 18:39" pubdate>
-          2023年11月22日 晚上
+        <time datetime="2024-01-24 23:01" pubdate>
+          2024年1月24日 晚上
         </time>
       </span>
     
@@ -253,7 +253,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4.3k 字
+          1.8k 字
         
       </span>
     
@@ -264,7 +264,7 @@
         
         
         
-          36 分钟
+          16 分钟
         
       </span>
     
@@ -309,7 +309,7 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Games101 - Lecture02 Review of Linear Algebra</h1>
+            <h1 id="seo-header">Games101-Lecture-10-Geometry-1</h1>
             
               <p class="note note-info">
                 
@@ -323,263 +323,122 @@
               <div class="markdown-body">
                 
                 <p><img
-src="https://raw.githubusercontent.com/memo2586/Image-repo/master/鳳ちはや01-samll.png" srcset="/img/loading.gif" lazyload /></p>
-<h1 id="review-of-linear-algebra">Review of Linear Algebra</h1>
-<h3 id="vector-addition">1. Vector Addition</h3>
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/神戸小鳥01-small.png" srcset="/img/loading.gif" lazyload />
+# Geometry 1 (Introduction)</p>
+<p>​
+计算机图形中用隐式与显示两种不同的方式来描述几何，根据需要选择不同的表示方法。</p>
+<h3 id="implicit-representations-of-geometry">1. Implicit
+Representations of Geometry</h3>
+<h5 id="什么是隐式表示">什么是隐式表示？</h5>
+<p>​
+通俗的讲，隐式表示不记录几何在空间中有哪些点，而是描述几何上的点在空间中都满足一个什么样的关系，只要满足这个关系的点都在几何的表面上。</p>
+<figure>
+<img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240124163409280.png" srcset="/img/loading.gif" lazyload
+alt="隐式表示" />
+<figcaption aria-hidden="true">隐式表示</figcaption>
+</figure>
+<p>​ <strong>定义一个函数 <span class="math inline">\(f(x,y,z)=0\)</span>
+，只要能找到任意一个点满足该函数
+，就认为该点在该函数表示的几何面上。</strong></p>
+<h5 id="隐式表示的优缺点">隐式表示的优缺点</h5>
 <ul>
-<li><strong>平行四边形法则与三角形法则</strong></li>
+<li><p>优点：给定一个点 <span class="math inline">\(P(x,y,z)\)</span>
+，很容易就能判断该点是不是在某个隐式表示的几何内，只要带入三个维度的坐标看函数值是不是等于零就可以。</p></li>
+<li><p>缺点：<strong>不直观</strong>，给定一个隐式表示的几何，我们很难找到所有满足该隐式表示的点。也就是说，对于一个隐式表示的几何，我们很难判断它究竟是一个什么样的形状。</p>
+<figure>
+<img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240124165136754.png" srcset="/img/loading.gif" lazyload
+alt="看到表达式就头晕" />
+<figcaption aria-hidden="true">看到表达式就头晕</figcaption>
+</figure></li>
 </ul>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20231122225034808.png" srcset="/img/loading.gif" lazyload alt="image-20231122225034808" style="zoom: 67%;" /></p>
-<ul>
-<li><p><strong>坐标系</strong></p>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20231122232540795.png" srcset="/img/loading.gif" lazyload alt="image-20231122232540795" style="zoom:67%;" /></p></li>
-</ul>
-<p>​ 缺省时一般认为向量为列向量: <span class="math display">\[
-\mathbf{A}=
-\begin{pmatrix}
-    x \\
-    y
-\end{pmatrix}
-\tag1
-\]</span></p>
-<p><span class="math display">\[
-\mathbf{A^T}=
-\begin{pmatrix}
-    x &amp; y
-\end{pmatrix} \tag2
-\]</span></p>
-<p><span class="math display">\[
-\|\mathbf{A}\|=\sqrt{x^2+y^2} \tag3
-\]</span></p>
-<hr />
-<h3 id="vector-multiplication-dot-product">2. Vector Multiplication (Dot
-Product)</h3>
-<ul>
-<li><p><strong>点乘的计算</strong></p>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20231122230307232.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p>
-<p><strong>向量点乘的结果是一个数。</strong></p></li>
-</ul>
-<p><span class="math display">\[
-\overrightarrow{a}\cdot\overrightarrow{b}=\|\overrightarrow{a}\|\|\overrightarrow{b}\|\cos\theta
-\tag1
-\]</span></p>
-<p><span class="math display">\[
-\cos\theta=\frac{\overrightarrow{a}\cdot\overrightarrow{b}}{\|\overrightarrow{a}\|\|\overrightarrow{b}\|}
-\tag2
-\]</span></p>
-<p>​ 当两个向量都是单位向量时（长度都为1）： <span
+<h3 id="explicit-representations-of-geometry">2. Explicit
+Representations of Geometry</h3>
+<p>​
+相对的，显示表示会给出几何在空间中有哪些点，要么直接给出，要么通过<strong>参数映射</strong>的方式给出。</p>
+<h5 id="什么是参数映射">什么是参数映射？</h5>
+<figure>
+<img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240124164800393.png" srcset="/img/loading.gif" lazyload
+alt="通过参数映射显示表示的马鞍面" />
+<figcaption aria-hidden="true">通过参数映射显示表示的马鞍面</figcaption>
+</figure>
+<p>​ 定义一个函数 <span class="math inline">\(f(u,v)\)</span>
+，该函数将二维空间上的坐标 <span class="math inline">\((u,v)\)</span>
+映射到三维空间中几何的坐标上。</p>
+<h5 id="参数映射的优缺点">参数映射的优缺点</h5>
+<p>​ 使用参数映射，前面那个看了头晕的甜甜圈表达式可以写成： <span
 class="math display">\[
-\cos\theta=\hat{a}\cdot\hat{b}
-\]</span></p>
-<ul>
-<li><p><strong>点乘的性质</strong></p>
-<ul>
-<li><p><span
-class="math inline">\(\overrightarrow{a}\cdot\overrightarrow{b}=\overrightarrow{b}\cdot\overrightarrow{a}\)</span></p></li>
-<li><p><span
-class="math inline">\(\overrightarrow{a}\cdot(\overrightarrow{b}+\overrightarrow{c})
-=
-\overrightarrow{a}\cdot\overrightarrow{b}+\overrightarrow{a}\cdot\overrightarrow{c}\)</span></p></li>
-<li><p><span
-class="math inline">\((k\overrightarrow{a})\cdot=\overrightarrow{a}\cdot(k\overrightarrow{a})=k(\overrightarrow{a}\cdot\overrightarrow{b})\)</span></p></li>
-</ul></li>
-<li><p><strong>笛卡尔坐标系下的点乘运算</strong></p></li>
-</ul>
-<p><span class="math display">\[
-\overrightarrow{a}\cdot\overrightarrow{b}=
-\begin{pmatrix}
-    x_a \\
-    y_a
-\end{pmatrix}
-\cdot
-\begin{pmatrix}
-    x_b \\
-    y_b
-\end{pmatrix}
-=x_ax_b+y_ay_b
-\]</span> ​
-<strong>点乘最大的作用在于找到两个向量之间的夹角大小。</strong></p>
-<ul>
-<li><strong>通过点乘求向量在另一个向量上的投影</strong></li>
-</ul>
+f(u,v)=((2+\cos{u})\cos{v},(2+\cos{u})\sin{v},\sin{u})
+\]</span> ​ 还是看不出这个几何是个什么形状？现在只要把二维空间中的坐标
+<span class="math inline">\((u,v)\)</span> 全部遍历一遍。</p>
 <p>​
-点乘的另一个作用是用于<strong>找到一个向量在另一个向量上的投影</strong>：</p>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20231123172442079.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p>
-<p>​ <span class="math inline">\(\overrightarrow{b}_\bot\)</span> 是
-<span class="math inline">\(\overrightarrow{b}\)</span> 在 <span
-class="math inline">\(\overrightarrow{a}\)</span> 方向上的投影，因此：
-<span class="math display">\[
-\overrightarrow{b_\bot}=k\hat{a}
-\]</span> ​ 其中 k 的大小为： <span class="math display">\[
-k=\|\overrightarrow{b_\bot}\|=\|\overrightarrow{b}\|\cos{\theta}
-\]</span> ​ 利用点乘计算出 <span
-class="math inline">\(\cos{\theta}\)</span> 后便可以求出 <span
-class="math inline">\(\overrightarrow{b_\bot}\)</span> 。</p>
-<p><strong>已知向量在另一个向量上的投影后，可以对该向量任意地进行平行与垂直的分解</strong>：</p>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20231123184130756.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p>
-<ul>
-<li><p><strong>通过点乘计算向量间的位置关系</strong></p>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20231123195107566.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p></li>
-</ul>
-<p>以向量 <span class="math inline">\(\overrightarrow{a}\)</span>
-的方向为基准定义前与后，当一个向量与向量 <span
-class="math inline">\(\overrightarrow{a}\)</span>
-的点乘大于0时，称该向量位于前方。反之，当一个向量与向量 <span
-class="math inline">\(\overrightarrow{a}\)</span>
-的点乘小于0时，称该向量位于后方。</p>
-<p><strong>两个向量的单位向量的点乘越接近1，则这两个向量在方向上越接近。</strong></p>
-<hr />
-<h3 id="vector-multiplication-cross-product">3 Vector Multiplication
-(Cross Product)</h3>
-<ul>
-<li><p><strong>叉乘的计算</strong></p>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20231123200453651.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p></li>
-</ul>
+有了以上优点，那么代价是什么？假设有一个参数映射表示的几何和一个三维空间中的点，如何才能知道这个点在不在几何里面呢？除非把这个几何画出来知道它是一个什么形状，不然不好判断。显示表示的优缺点和隐式表示恰恰相反。</p>
+<figure>
+<img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240124171353907.png" srcset="/img/loading.gif" lazyload
+alt="显示表示的缺点示例" />
+<figcaption aria-hidden="true">显示表示的缺点示例</figcaption>
+</figure>
+<h3 id="constructive-solid-geometrycsg-implicit">3. Constructive Solid
+Geometry，CSG (Implicit)</h3>
 <p>​
-<strong>两个向量叉乘的计算结果是一个垂直于这两个向量所在平面的向量。</strong>
-<span class="math display">\[
-\overrightarrow{a}\cross\overrightarrow{b}=-\overrightarrow{b}\cross\overrightarrow{a}
-\tag1
-\]</span></p>
-<p><span class="math display">\[
-\|\overrightarrow{a}\cross\overrightarrow{b}\|=\|\overrightarrow{a}\|\|\overrightarrow{b}\|\sin{\phi}
-\tag2
-\]</span></p>
+普通的隐式表示方法很直接，但也很复杂、不直观。只是表示一些比较规则的几何的话还能接受，但如果要它来表示复杂物体，那表达式得很有多夸张。但是我们还有另外的隐式表示方式，叫做<strong>构造实体几何（CSG）</strong>。</p>
+<h5 id="什么是csg">什么是CSG ？</h5>
 <p>​
-利用叉乘可以建立一个在三维空间中的直角坐标系（使用右手螺旋定则可以确定运算结果的向量的方向）：
-<span class="math display">\[
-\overrightarrow{x}\cross\overrightarrow{y}=+\overrightarrow{z} \tag1
-\]</span></p>
-<p><span class="math display">\[
-\overrightarrow{y}\cross\overrightarrow{x}=-\overrightarrow{z} \tag2
-\]</span></p>
-<p><span class="math display">\[
-\overrightarrow{y}\cross\overrightarrow{z}=+\overrightarrow{x} \tag3
-\]</span></p>
-<p><span class="math display">\[
-......
-\]</span></p>
-<ul>
-<li><p><strong>叉乘的性质</strong></p>
-<ul>
-<li><p><span
-class="math inline">\(\overrightarrow{a}\cross\overrightarrow{b}=-\overrightarrow{b}\cross\overrightarrow{a}\)</span></p></li>
-<li><p><span
-class="math inline">\(\overrightarrow{a}\cross\overrightarrow{a}=\overrightarrow{0}\)</span></p></li>
-<li><p><span
-class="math inline">\(\overrightarrow{a}\cross(\overrightarrow{b}+\overrightarrow{c})=\overrightarrow{a}\cross\overrightarrow{b}+\overrightarrow{a}\cross\overrightarrow{c}\)</span></p></li>
-<li><p><span
-class="math inline">\(\overrightarrow{a}\cross(k\overrightarrow{b})=k(\overrightarrow{a}\cross\overrightarrow{b})\)</span></p></li>
-</ul></li>
-<li><p><strong>笛卡尔坐标系下的叉乘运算</strong> <span
-class="math display">\[
-\overrightarrow{a}\cross\overrightarrow{b}=
-\begin{pmatrix}
-  y_az_b-y_bz_a \\
-  z_ax_b-x_az_b \\
-  x_ay_b-y_ax_b
-\end{pmatrix}
-\]</span></p></li>
-<li><p><strong>叉乘的作用</strong></p></li>
-</ul>
-<p>​ <strong>判断某一点是否在图形的内部</strong>。 ​</p>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20231124152224648.png" srcset="/img/loading.gif" lazyload style="zoom:33%;" /></p>
-<p>​ 如图，<span
-class="math inline">\(\overrightarrow{a}\cross\overrightarrow{b}\)</span>
-的值为正，可得 <span class="math inline">\(\overrightarrow{b}\)</span>
-在 <span class="math inline">\(\overrightarrow{a}\)</span>
-的左侧，反之同理，可以判断两个向量的相对左右位置。</p>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20231124152552096.png" srcset="/img/loading.gif" lazyload style="zoom: 33%;" /></p>
+简单的说，通过一系列基本几何的基本运算来定义新的几何的方法，叫做CSG，这种方法得到了很广泛的应用。</p>
+<figure>
+<img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240124172803752.png" srcset="/img/loading.gif" lazyload
+alt="CSG的简单示例" />
+<figcaption aria-hidden="true">CSG的简单示例</figcaption>
+</figure>
+<h3 id="distance-functions-implicit">4. Distance Functions
+(Implicit)</h3>
 <p>​
-要判断点P是否在顺序的，首尾相接的三个向量组成的三角形内部，则只需要计算
-<span
-class="math inline">\(\overrightarrow{AB}\cross\overrightarrow{AP}\)</span>、<span
-class="math inline">\(\overrightarrow{BC}\cross\overrightarrow{BP}\)</span>、<span
-class="math inline">\(\overrightarrow{CA}\cross\overrightarrow{CP}\)</span>
-的值是否都为正值或负值，即点P都在三个向量的左侧或右侧。</p>
-<hr />
-<h3 id="orthonormal-bases-and-coordinate-frames">4. Orthonormal bases
-and coordinate frames</h3>
-<ul>
-<li><p>建立一个直角坐标系，定义： <span class="math display">\[
-\|\overrightarrow{u}\|=\|\overrightarrow{v}\|=\|\overrightarrow{w}\|=1
-\tag1
-\]</span></p>
-<p><span class="math display">\[
-\overrightarrow{u}\cdot\overrightarrow{v}=\overrightarrow{v}\cdot\overrightarrow{w}=\overrightarrow{u}\cdot\overrightarrow{w}=0
-\tag2
-\]</span></p>
-<p><span class="math display">\[
-\overrightarrow{w}=\overrightarrow{u}\cross\overrightarrow{v} \tag3
-\]</span></p>
-<p>可以使用投影将任意向量分解，如： <span class="math display">\[
-\overrightarrow{p}=(\overrightarrow{p}\cdot\overrightarrow{u})\overrightarrow{v}+(\overrightarrow{p}\cdot\overrightarrow{v})\overrightarrow{v}+(\overrightarrow{p}\cdot\overrightarrow{w})\overrightarrow{w}
-\]</span></p></li>
-</ul>
-<hr />
-<h3 id="matrix">5. Matrix</h3>
-<ul>
-<li><p><strong>矩阵乘法</strong></p>
-<p>设 <span class="math inline">\(A\cross B=C\)</span> ，则有 <span
-class="math inline">\(C_{ij}=A_i\cdot B_j\)</span></p></li>
-<li><p><strong>矩阵乘法的性质</strong></p>
-<ul>
-<li>不满足任何交换律</li>
-<li><span class="math inline">\((AB)C = A(BC)\)</span></li>
-<li><span class="math inline">\(A(B+C)=AB+AC\)</span></li>
-<li><span class="math inline">\((A+B)C=AC+BC\)</span></li>
-<li><span class="math inline">\((AB)^\intercal=B^\intercal
-A^\intercal\)</span></li>
-</ul></li>
-<li><p><strong>矩阵的逆</strong></p>
-<ul>
-<li>单位矩阵是只在对角线上有非零的元素，定义以下单位矩阵：</li>
-</ul>
-<p><span class="math display">\[
-I_{2\cross2}=
-\begin{pmatrix}
-  1 &amp; 0 \\
-  0 &amp; 1 \\
-\end{pmatrix}
-\]</span></p>
-<p>​ 则有： <span class="math display">\[
-AA^{-1}=A^{-1}A=I
-\]</span></p>
-<ul>
-<li>矩阵的逆的性质： <span class="math display">\[
-(AB)^{-1}=B^{-1}A^{-1}
-\]</span></li>
-</ul></li>
-<li><p><strong>将向量的乘积写成矩阵形式</strong></p>
-<ul>
-<li><p>点乘： <span class="math display">\[
-\overrightarrow{a}\cross\overrightarrow{b}=\overrightarrow{a}^T\overrightarrow{b}=
-\begin{pmatrix}
-x_a &amp; y_a &amp; z_a
-\end{pmatrix}
-\begin{pmatrix}
-x_a \\
-y_a \\
-z_a
-\end{pmatrix}=
-(x_ax_b+y_ay_b+z_az_b)
-\]</span></p></li>
-<li><p>叉乘： <span class="math display">\[
-\overrightarrow{a}\cross\overrightarrow{b}=A^*b=
-\begin{pmatrix}
-    0 &amp; -z_a &amp; y_a \\
-    z_a &amp; 0 &amp; -x_a \\
-    -y_a &amp; x_a &amp; 0
-\end{pmatrix}
-\begin{pmatrix}
-    x_b \\
-    y_b \\
-    z_b
-\end{pmatrix}
-\]</span></p>
-<pre><code class="hljs">​   </code></pre></li>
-</ul></li>
-</ul>
+距离函数也是一种隐式表示的方式，它可以简单地计算出几何的两个状态之间的中间量。</p>
+<h5 id="什么是距离函数">什么是距离函数？</h5>
+<p>​
+对于任何一个几何，距离函数不直接去描述它的表面，而是去描述空间中任何一个点到这个几何的表面的最小距离。这个距离可以是正值，也可以是负值，即可以描述该点相对于几何的内外关系。例如，距离函数可以做到以下效果：</p>
+<p><img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240124221305599.png" srcset="/img/loading.gif" lazyload /></p>
+<p>​
+可以看到在上图两个小球互相融合的过程中，小球的几何形态、拓扑结构发生了改变。</p>
+<h5
+id="示例使用距离函数对移动边界作-blend">示例：使用距离函数对移动边界作
+blend</h5>
+<p>​ <img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240124222213361.png" srcset="/img/loading.gif" lazyload /></p>
+<p>​
+假设有如上图所示一前一后两个几何，斜线表示黑色的几何表面。A状态时，前面的几何挡住了后面的几何
+1/3
+的表面，A状态经过移动前面的几何后到达B状态，B状态时，前面的几何挡住了后面的几何
+2/3 的表面。我如何知道 A 与 B 之间任意一个时刻两个几何的状态？</p>
+<p>​ 如果我们简单地对 A 与 B 状态做一个线性的
+blend，我们的中间区域将会得到一个介于黑色与白色之间的结果，这显然是不对的。</p>
+<p><img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240124223330365.png" srcset="/img/loading.gif" lazyload /></p>
+<p>​ SDF 是符号距离函数，也就是 Sign Distance Function，如果使用 SDF
+表示这两个几何，中间的黑线（0所在的位置）表示几何的边界，红线的密集程度越大，表示该处距离边界的距离越小。将这两个
+SDF 进行 blend，显然我们可以在中间的某处得到一条新的值为 0
+的线，也就是新的边界。</p>
+<p>​ 简单的说，对两个对应的 SDF 进行 blend，就是在对它们的边界进行
+blend.</p>
+<h3 id="level-set-methods-implicit">5. Level Set Methods (Implicit)</h3>
+<p>​
+但一个几何的形态过于复杂，以至于不好用函数的方式对它进行表示的时候，我们可以采用另一种表示的方法——水平集。</p>
+<h5 id="什么是水平集">什么是水平集？</h5>
+<p>​
+水平集的想法与距离函数基本相同，但表示方式不同。水平集用一张图来描述几何，如：</p>
+<figure>
+<img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240124225357715.png" srcset="/img/loading.gif" lazyload
+alt="image-20240124225357715" />
+<figcaption aria-hidden="true">image-20240124225357715</figcaption>
+</figure>
+<p>​
+我只需要找到图上等于零的位置的集合，我就可以找到该水平集所表示的几何的边界，就像地理上的等高线。如果我们把这个图扩展到三维，同样可以表示三维空间中的几何的边界。</p>
 
                 
               </div>
@@ -629,8 +488,8 @@ z_a
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Games101 - Lecture02 Review of Linear Algebra</div>
-      <div>https://memo2586.github.io/2023/11/22/Games101-Lecture-02-Review-of-Linear-Algebra/</div>
+      <div>Games101-Lecture-10-Geometry-1</div>
+      <div>https://memo2586.github.io/2024/01/24/Games101-Lecture-10-Geometry-1/</div>
     </div>
     <div class="license-meta">
       
@@ -642,7 +501,7 @@ z_a
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年11月22日</div>
+          <div>2024年1月24日</div>
         </div>
       
       
@@ -674,18 +533,12 @@ z_a
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/11/25/Games101-Lecture-03-Transformation/" title="Games101 - Lecture03 Transformation">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Games101 - Lecture03 Transformation</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/10/21/%E5%9F%BA%E4%BA%8Eopencv%E4%B8%8Epyautogui%E7%BC%96%E5%86%99%E7%9A%84%E5%A4%A9%E7%BF%BC%E6%A0%A1%E5%9B%AD%E6%8E%89%E7%BA%BF%E8%87%AA%E5%8A%A8%E9%87%8D%E8%BF%9E%E8%84%9A%E6%9C%AC/" title="基于opencv与pyautogui编写的天翼校园掉线自动重连脚本">
-                        <span class="hidden-mobile">基于opencv与pyautogui编写的天翼校园掉线自动重连脚本</span>
+                      <a href="/2024/01/22/Games101-%E4%BD%9C%E4%B8%9A3/" title="Games101 - 作业3">
+                        <span class="hidden-mobile">Games101 - 作业3</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

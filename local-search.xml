@@ -4,6 +4,35 @@
   
   
   <entry>
+    <title>Games101-Lecture-10-Geometry-1</title>
+    <link href="/2024/01/24/Games101-Lecture-10-Geometry-1/"/>
+    <url>/2024/01/24/Games101-Lecture-10-Geometry-1/</url>
+    
+    <content type="html"><![CDATA[<p><imgsrc="https://raw.githubusercontent.com/memo2586/Image-repo/master/神戸小鳥01-small.png" /># Geometry 1 (Introduction)</p><p>​计算机图形中用隐式与显示两种不同的方式来描述几何，根据需要选择不同的表示方法。</p><h3 id="implicit-representations-of-geometry">1. ImplicitRepresentations of Geometry</h3><h5 id="什么是隐式表示">什么是隐式表示？</h5><p>​通俗的讲，隐式表示不记录几何在空间中有哪些点，而是描述几何上的点在空间中都满足一个什么样的关系，只要满足这个关系的点都在几何的表面上。</p><figure><imgsrc="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240124163409280.png"alt="隐式表示" /><figcaption aria-hidden="true">隐式表示</figcaption></figure><p>​ <strong>定义一个函数 <span class="math inline">\(f(x,y,z)=0\)</span>，只要能找到任意一个点满足该函数，就认为该点在该函数表示的几何面上。</strong></p><h5 id="隐式表示的优缺点">隐式表示的优缺点</h5><ul><li><p>优点：给定一个点 <span class="math inline">\(P(x,y,z)\)</span>，很容易就能判断该点是不是在某个隐式表示的几何内，只要带入三个维度的坐标看函数值是不是等于零就可以。</p></li><li><p>缺点：<strong>不直观</strong>，给定一个隐式表示的几何，我们很难找到所有满足该隐式表示的点。也就是说，对于一个隐式表示的几何，我们很难判断它究竟是一个什么样的形状。</p><figure><imgsrc="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240124165136754.png"alt="看到表达式就头晕" /><figcaption aria-hidden="true">看到表达式就头晕</figcaption></figure></li></ul><h3 id="explicit-representations-of-geometry">2. ExplicitRepresentations of Geometry</h3><p>​相对的，显示表示会给出几何在空间中有哪些点，要么直接给出，要么通过<strong>参数映射</strong>的方式给出。</p><h5 id="什么是参数映射">什么是参数映射？</h5><figure><imgsrc="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240124164800393.png"alt="通过参数映射显示表示的马鞍面" /><figcaption aria-hidden="true">通过参数映射显示表示的马鞍面</figcaption></figure><p>​ 定义一个函数 <span class="math inline">\(f(u,v)\)</span>，该函数将二维空间上的坐标 <span class="math inline">\((u,v)\)</span>映射到三维空间中几何的坐标上。</p><h5 id="参数映射的优缺点">参数映射的优缺点</h5><p>​ 使用参数映射，前面那个看了头晕的甜甜圈表达式可以写成： <spanclass="math display">\[f(u,v)=((2+\cos{u})\cos{v},(2+\cos{u})\sin{v},\sin{u})\]</span> ​ 还是看不出这个几何是个什么形状？现在只要把二维空间中的坐标<span class="math inline">\((u,v)\)</span> 全部遍历一遍。</p><p>​有了以上优点，那么代价是什么？假设有一个参数映射表示的几何和一个三维空间中的点，如何才能知道这个点在不在几何里面呢？除非把这个几何画出来知道它是一个什么形状，不然不好判断。显示表示的优缺点和隐式表示恰恰相反。</p><figure><imgsrc="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240124171353907.png"alt="显示表示的缺点示例" /><figcaption aria-hidden="true">显示表示的缺点示例</figcaption></figure><h3 id="constructive-solid-geometrycsg-implicit">3. Constructive SolidGeometry，CSG (Implicit)</h3><p>​普通的隐式表示方法很直接，但也很复杂、不直观。只是表示一些比较规则的几何的话还能接受，但如果要它来表示复杂物体，那表达式得很有多夸张。但是我们还有另外的隐式表示方式，叫做<strong>构造实体几何（CSG）</strong>。</p><h5 id="什么是csg">什么是CSG ？</h5><p>​简单的说，通过一系列基本几何的基本运算来定义新的几何的方法，叫做CSG，这种方法得到了很广泛的应用。</p><figure><imgsrc="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240124172803752.png"alt="CSG的简单示例" /><figcaption aria-hidden="true">CSG的简单示例</figcaption></figure><h3 id="distance-functions-implicit">4. Distance Functions(Implicit)</h3><p>​距离函数也是一种隐式表示的方式，它可以简单地计算出几何的两个状态之间的中间量。</p><h5 id="什么是距离函数">什么是距离函数？</h5><p>​对于任何一个几何，距离函数不直接去描述它的表面，而是去描述空间中任何一个点到这个几何的表面的最小距离。这个距离可以是正值，也可以是负值，即可以描述该点相对于几何的内外关系。例如，距离函数可以做到以下效果：</p><p><imgsrc="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240124221305599.png" /></p><p>​可以看到在上图两个小球互相融合的过程中，小球的几何形态、拓扑结构发生了改变。</p><h5id="示例使用距离函数对移动边界作-blend">示例：使用距离函数对移动边界作blend</h5><p>​ <imgsrc="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240124222213361.png" /></p><p>​假设有如上图所示一前一后两个几何，斜线表示黑色的几何表面。A状态时，前面的几何挡住了后面的几何1/3的表面，A状态经过移动前面的几何后到达B状态，B状态时，前面的几何挡住了后面的几何2/3 的表面。我如何知道 A 与 B 之间任意一个时刻两个几何的状态？</p><p>​ 如果我们简单地对 A 与 B 状态做一个线性的blend，我们的中间区域将会得到一个介于黑色与白色之间的结果，这显然是不对的。</p><p><imgsrc="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240124223330365.png" /></p><p>​ SDF 是符号距离函数，也就是 Sign Distance Function，如果使用 SDF表示这两个几何，中间的黑线（0所在的位置）表示几何的边界，红线的密集程度越大，表示该处距离边界的距离越小。将这两个SDF 进行 blend，显然我们可以在中间的某处得到一条新的值为 0的线，也就是新的边界。</p><p>​ 简单的说，对两个对应的 SDF 进行 blend，就是在对它们的边界进行blend.</p><h3 id="level-set-methods-implicit">5. Level Set Methods (Implicit)</h3><p>​但一个几何的形态过于复杂，以至于不好用函数的方式对它进行表示的时候，我们可以采用另一种表示的方法——水平集。</p><h5 id="什么是水平集">什么是水平集？</h5><p>​水平集的想法与距离函数基本相同，但表示方式不同。水平集用一张图来描述几何，如：</p><figure><imgsrc="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240124225357715.png"alt="image-20240124225357715" /><figcaption aria-hidden="true">image-20240124225357715</figcaption></figure><p>​我只需要找到图上等于零的位置的集合，我就可以找到该水平集所表示的几何的边界，就像地理上的等高线。如果我们把这个图扩展到三维，同样可以表示三维空间中的几何的边界。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>计算机图形学</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Games101</tag>
+      
+      <tag>计算机图形学</tag>
+      
+      <tag>笔记</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Games101 - 作业3</title>
     <link href="/2024/01/22/Games101-%E4%BD%9C%E4%B8%9A3/"/>
     <url>/2024/01/22/Games101-%E4%BD%9C%E4%B8%9A3/</url>
@@ -78,6 +107,8 @@
       
       <tag>计算机图形学</tag>
       
+      <tag>笔记</tag>
+      
     </tags>
     
   </entry>
@@ -105,6 +136,8 @@
       
       <tag>计算机图形学</tag>
       
+      <tag>笔记</tag>
+      
     </tags>
     
   </entry>
@@ -131,6 +164,8 @@
       <tag>Games101</tag>
       
       <tag>计算机图形学</tag>
+      
+      <tag>笔记</tag>
       
     </tags>
     
@@ -213,6 +248,8 @@
       
       <tag>计算机图形学</tag>
       
+      <tag>笔记</tag>
+      
     </tags>
     
   </entry>
@@ -239,6 +276,8 @@
       <tag>Games101</tag>
       
       <tag>计算机图形学</tag>
+      
+      <tag>笔记</tag>
       
     </tags>
     
@@ -267,6 +306,8 @@
       
       <tag>计算机图形学</tag>
       
+      <tag>笔记</tag>
+      
     </tags>
     
   </entry>
@@ -294,6 +335,8 @@
       
       <tag>计算机图形学</tag>
       
+      <tag>笔记</tag>
+      
     </tags>
     
   </entry>
@@ -320,6 +363,8 @@
       <tag>Games101</tag>
       
       <tag>计算机图形学</tag>
+      
+      <tag>笔记</tag>
       
     </tags>
     
