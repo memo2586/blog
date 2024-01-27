@@ -16,31 +16,22 @@
   <meta name="author" content="memo2586">
   <meta name="keywords" content="">
   
-    <meta name="description" content="施工中..">
+    <meta name="description" content="几何的显示表示扩展：点云、多边形面、贝塞尔曲线、样条和贝塞尔曲面">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Games101 - Lecture11 Geometry 2">
 <meta property="og:url" content="https://memo2586.github.io/2024/01/26/Games101-Lecture-11-Geometry-2/index.html">
 <meta property="og:site_name" content="memo&#39;s blog">
-<meta property="og:description" content="施工中..">
+<meta property="og:description" content="几何的显示表示扩展：点云、多边形面、贝塞尔曲线、样条和贝塞尔曲面">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240126161152602.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240126161302091.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240126162202171.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240126162732744.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240126163302375.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240126165049622.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240126165832698.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240126171028709.png">
-<meta property="og:image" content="https://hczhcz.github.io/images/2014-07-16-bezier-curve.gif">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240126165832698.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/imocyo01-title_h160.png">
 <meta property="article:published_time" content="2024-01-26T10:15:36.000Z">
-<meta property="article:modified_time" content="2024-01-27T03:57:09.516Z">
+<meta property="article:modified_time" content="2024-01-27T11:02:27.506Z">
 <meta property="article:author" content="memo2586">
 <meta property="article:tag" content="Games101">
 <meta property="article:tag" content="计算机图形学">
 <meta property="article:tag" content="笔记">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240126161152602.png">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/imocyo01-title_h160.png">
   
   
   
@@ -262,7 +253,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.6k 字
+          2.6k 字
         
       </span>
     
@@ -273,7 +264,7 @@
         
         
         
-          13 分钟
+          22 分钟
         
       </span>
     
@@ -323,7 +314,7 @@
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2024年1月27日 中午
+                    本文最后更新于：2024年1月27日 晚上
                   
                 
               </p>
@@ -331,24 +322,26 @@
             
               <div class="markdown-body">
                 
-                <h1 id="geometry-2-curves-and-surfaces">Geometry 2 (Curves and
+                <p><img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/imocyo01-small.png" srcset="/img/loading.gif" lazyload /></p>
+<h1 id="geometry-2-curves-and-surfaces">Geometry 2 (Curves and
 Surfaces)</h1>
-<h3 id="more-explicit-representations">1. More Explicit
-Representations</h3>
-<h4 id="point-cloud-explicit">1.1 Point Cloud (Explicit)</h4>
+<h2 id="more-explicit-representations">1. More Explicit
+Representations</h2>
+<h3 id="point-cloud-explicit">1.1 Point Cloud (Explicit)</h3>
 <p>点云，一种最简单的几何的显示表示方式。</p>
-<h5 id="什么是点云">什么是点云？</h5>
-<p>点云很简单，就是一个几何物体的表面的点的集合。只要集合中的点在三维空间中的密度足够小，我们就可以将其看作一个连续的表面。</p>
+<h4 id="什么是点云">什么是点云？</h4>
+<p>点云就是一个几何物体的表面的点的集合。只要集合中的点在三维空间中的密度足够小，我们就可以将其看作一个连续的表面。</p>
 <p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240126161152602.png" srcset="/img/loading.gif" lazyload style="zoom: 67%;" /></p>
 <p>理论上只要点云中点的密度足够小，就可以表示三位空间中的任何几何。</p>
 <p>点云在计算机图形中的性能不好，因此也不常用，多用于一些扫描得到的原始模型。</p>
-<h4 id="polygon-mesh-explicit">1.2 Polygon Mesh (Explicit)</h4>
+<h3 id="polygon-mesh-explicit">1.2 Polygon Mesh (Explicit)</h3>
 <p>多边形面，计算机图形学中使用最广泛的一种显示表示方法。</p>
 <p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240126161302091.png" srcset="/img/loading.gif" lazyload style="zoom: 67%;" /></p>
 <p>将几何表面进行划分成许多个多边形面的组合，大多是三角形或是四边形面，最后使用这些多边形面的组合近似表示原来的几何表面。</p>
-<h3 id="bézier-curves-贝塞尔曲线">2. Bézier Curves (贝塞尔曲线)</h3>
-<h4 id="什么是贝塞尔曲线">2.1 什么是贝塞尔曲线？</h4>
-<p>贝塞尔曲线用一系列的控制点去定义某一个曲线。</p>
+<h2 id="bézier-curves">2. Bézier Curves</h2>
+<h3 id="什么是贝塞尔曲线">2.1 什么是贝塞尔曲线？</h3>
+<p>贝塞尔曲线用一系列的控制点去定义某一个曲线，是一种显示的几何表示方法。</p>
 <p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240126162202171.png" srcset="/img/loading.gif" lazyload style="zoom: 50%;" /></p>
 <p>如图，通过定义四个（可以是任意个数）控制点 <span
 class="math inline">\(P_{0..3}\)</span>，我们规定曲线的起始切线与结束切线必须与
@@ -356,8 +349,8 @@ class="math inline">\(P_{0..3}\)</span>，我们规定曲线的起始切线与�
 class="math inline">\(P_2P_3\)</span> 相同。</p>
 <p>这样将可以得到唯一的一条曲线，可以看出，曲线不一定会经过控制点：</p>
 <p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240126162732744.png" srcset="/img/loading.gif" lazyload style="zoom:50%;" /></p>
-<h4 id="画出贝塞尔曲线de-casteljau-算法">2.1 画出贝塞尔曲线——de
-Casteljau 算法</h4>
+<h3 id="画出贝塞尔曲线de-casteljau-算法">2.1 画出贝塞尔曲线——de
+Casteljau 算法</h3>
 <p>考虑三个控制点（二次贝塞尔曲线）：</p>
 <p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240126163302375.png" srcset="/img/loading.gif" lazyload style="zoom: 80%;" /></p>
 <p>假设我在时间 0 从 <span class="math inline">\(b_0\)</span> 出发，时间
@@ -392,11 +385,11 @@ class="math inline">\(b_0^1b_1^1,b_1^1b_2^1\)</span>
 t 时刻的位置。</p>
 <figure>
 <img src="https://hczhcz.github.io/images/2014-07-16-bezier-curve.gif" srcset="/img/loading.gif" lazyload
-alt="作者hcz: hczhcz.github.io" />
-<figcaption aria-hidden="true">作者hcz: hczhcz.github.io</figcaption>
+alt="wikipedia：Bézier curve" />
+<figcaption aria-hidden="true">wikipedia：Bézier curve</figcaption>
 </figure>
-<h4 id="de-casteljau-算法的代数表示">2.3 de Casteljau
-算法的代数表示</h4>
+<h3 id="de-casteljau-算法的代数表示">2.3 de Casteljau
+算法的代数表示</h3>
 <p><img
 src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240126174803652.png" srcset="/img/loading.gif" lazyload /></p>
 <p>de Casteljau 算法是一个对相邻点间不断做位置上的线性插值的过程。</p>
@@ -417,13 +410,86 @@ class="math inline">\(b_0^2\)</span> 就是 <span
 class="math inline">\(b_0,b_1,b_2\)</span> 三个控制点的组合: <span
 class="math display">\[
 b_0^2(t) = (1-t)^2b_0 + 2t(1-t)b_1 + t^2b_2
-\]</span> 将贝塞尔曲线扩产到 n 阶，也就是 n+1
-个控制点时，可以表示成伯恩斯坦多项式的线性组合： <span
-class="math display">\[
+\]</span> 将贝塞尔曲线扩展到 n 阶，也就是 n+1 个控制点时，可以把 <span
+class="math inline">\(b^n(t)\)</span> 表示为伯恩斯坦多项式的线性组合：
+<span class="math display">\[
 b^n(t)=b_0^n(t)=\sum_{j=0}^{n}b_jB_j^n(t)
 \]</span> 其中伯恩斯坦多项式为: <span class="math display">\[
 B_i^n=\begin{pmatrix}n \\i\end{pmatrix}t^i(1-t)^{n-i}
 \]</span></p>
+<h3 id="贝塞尔曲线的性质">2.4 贝塞尔曲线的性质</h3>
+<ul>
+<li><p>n 阶贝塞尔曲线：<span class="math inline">\(b(0)=b_0\)</span> ;
+<span class="math inline">\(b(1)=b(n)\)</span> ；</p></li>
+<li><p>3 阶贝塞尔曲线：<span
+class="math inline">\(b&#39;(0)=3(b_1-b_0)\)</span> ; <span
+class="math inline">\(b&#39;(1)=3(b_3-b_2)\)</span>；</p></li>
+<li><p>贝塞尔曲线的控制点经过<strong>仿射变换</strong>后表示的曲线，与原控制点表示的曲线经过仿射变换后相同；</p></li>
+<li><p>贝塞尔曲线上任意一个点一定会在控制点所形成的凸包内；</p></li>
+</ul>
+<h3 id="分段贝塞尔曲线">2.5 分段贝塞尔曲线</h3>
+<figure>
+<img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240127163736620.png" srcset="/img/loading.gif" lazyload
+alt="10阶贝塞尔曲线" />
+<figcaption aria-hidden="true">10阶贝塞尔曲线</figcaption>
+</figure>
+<p>当贝塞尔曲线阶数太高，控制点太多时，会使得曲线不直观，难以控制。</p>
+<p>那干脆就不要用太多控制点，改用较少的控制点表示其中一段贝塞尔曲线，最后将这些贝塞尔曲线连起来。</p>
+<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240127163642256.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p>
+<p>通常，人们习惯把每四个控制点定义成一段贝塞尔曲线，也就是三次贝塞尔曲线（<a
+target="_blank" rel="noopener" href="https://math.hws.edu/eck/cs424/notes2013/canvas/bezier.html">Bezier
+Curve Demos</a>）。</p>
+<p>为了保证分段贝塞尔曲线的连续性，有以下关于连续性的规定：</p>
+<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240127165903461.png" srcset="/img/loading.gif" lazyload style="zoom:80%;" /></p>
+<ul>
+<li><span class="math inline">\(C^0\)</span> 连续：<span
+class="math inline">\(a_n=b_0\)</span>，前一段的终止点等于后一段的起点；</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240127170247915.png" srcset="/img/loading.gif" lazyload alt="image-20240127170247915" style="zoom:80%;" /></p>
+<ul>
+<li><span class="math inline">\(C^1\)</span> 连续：<span
+class="math inline">\(a_n=b_0=\frac{1}{2}(a_{n-1}+b_1)\)</span>，在满足
+<span class="math inline">\(C^0\)</span>
+连续的基础上，后一段的起始方向与长度应该与前一段的终止方向与长度相同；</li>
+</ul>
+<p>当然还有更加高阶的连续性，称为曲率连续，在此不讨论。</p>
+<h2 id="spline">3. Spline</h2>
+<h3 id="什么是样条">3.1 什么是样条？</h3>
+<p>构造为穿过给定点集并具有一定数量的连续导数的连续曲线，简而言之，一条受控的曲线。</p>
+<h3 id="b-spline">3.2 B-Spline</h3>
+<p>B样条是 basis
+splines，基函数样条的缩写，它是贝塞尔曲线的扩展，需要比贝塞尔曲线更多的信息，满足贝塞尔曲线具有的所有重要属性（即超集），有比贝塞尔曲线更好的能力（体现在局部性等等）。</p>
+<p>B样条极其复杂，不在此入门课深入讲。</p>
+<h2 id="bezier-surfaces">4. Bezier Surfaces</h2>
+<p>我们可以将贝塞尔曲线延伸到曲面。</p>
+<figure>
+<img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240127173803614.png" srcset="/img/loading.gif" lazyload
+alt="由4x4个点控制的贝塞尔曲面" />
+<figcaption aria-hidden="true">由4x4个点控制的贝塞尔曲面</figcaption>
+</figure>
+<p>只要在两个方向上应用贝塞尔曲线，就可以绘制一个贝塞尔曲面。</p>
+<figure>
+<img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/demo.gif" srcset="/img/loading.gif" lazyload
+alt="Steven Wittens, https://acko.net/blog/making-mathbox/" />
+<figcaption aria-hidden="true">Steven Wittens,
+https://acko.net/blog/making-mathbox/</figcaption>
+</figure>
+<p>首先，在平面上定义 4x4 的控制点，将其中的每一行的 4
+个控制点表示一条贝塞尔曲线，在不同的时间 t
+时，每条贝塞尔曲线所在的点会在不同的位置上：</p>
+<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240127180824129.png" srcset="/img/loading.gif" lazyload style="zoom:80%;" /></p>
+<p>如果我们将这 4
+个不同的点认为是新的贝塞尔曲线的控制点，我们可以画出一条新的贝塞尔曲线：</p>
+<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240127180956117.png" srcset="/img/loading.gif" lazyload style="zoom:80%;" /></p>
+<p>那么，这条线在另一个时间维度中扫过的空间会形成一个贝塞尔曲面：</p>
+<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240127181236844.png" srcset="/img/loading.gif" lazyload style="zoom:80%;" /></p>
+<p>很显然，形成一个贝塞尔曲面需要两个不同的时间，常用 uv 表示。遍历
+uv，就可以找到曲面上所有的点。</p>
+<p><img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240127181641023.png" srcset="/img/loading.gif" lazyload /></p>
 
                 
               </div>
