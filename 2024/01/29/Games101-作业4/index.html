@@ -16,26 +16,25 @@
   <meta name="author" content="memo2586">
   <meta name="keywords" content="">
   
-    <meta name="description" content="几何的显示表示扩展：点云、多边形面、贝塞尔曲线、样条和贝塞尔曲面">
+    <meta name="description" content="实现 de Casteljau 算法来绘制 Bézier 曲线，反走样方法待施工..">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Games101 - Lecture11 Geometry 2">
-<meta property="og:url" content="https://memo2586.github.io/2024/01/26/Games101-Lecture-11-Geometry-2/index.html">
+<meta property="og:title" content="Games101 - 作业4">
+<meta property="og:url" content="https://memo2586.github.io/2024/01/29/Games101-%E4%BD%9C%E4%B8%9A4/index.html">
 <meta property="og:site_name" content="memo&#39;s blog">
-<meta property="og:description" content="几何的显示表示扩展：点云、多边形面、贝塞尔曲线、样条和贝塞尔曲面">
+<meta property="og:description" content="实现 de Casteljau 算法来绘制 Bézier 曲线，反走样方法待施工..">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/imocyo01-title_h160.png">
-<meta property="article:published_time" content="2024-01-26T10:15:36.000Z">
-<meta property="article:modified_time" content="2024-01-27T11:02:27.506Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/shion6-title_h160.png">
+<meta property="article:published_time" content="2024-01-29T09:12:09.000Z">
+<meta property="article:modified_time" content="2024-01-29T09:45:53.109Z">
 <meta property="article:author" content="memo2586">
 <meta property="article:tag" content="Games101">
 <meta property="article:tag" content="计算机图形学">
-<meta property="article:tag" content="笔记">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/imocyo01-title_h160.png">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/shion6-title_h160.png">
   
   
   
-  <title>Games101 - Lecture11 Geometry 2 - memo&#39;s blog</title>
+  <title>Games101 - 作业4 - memo&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -230,7 +229,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Games101 - Lecture11 Geometry 2"></span>
+            <span id="subtitle" data-typed-text="Games101 - 作业4"></span>
           
         </div>
 
@@ -241,8 +240,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-01-26 18:15" pubdate>
-          2024年1月26日 晚上
+        <time datetime="2024-01-29 17:12" pubdate>
+          2024年1月29日 下午
         </time>
       </span>
     
@@ -253,7 +252,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.6k 字
+          2.9k 字
         
       </span>
     
@@ -264,7 +263,7 @@
         
         
         
-          22 分钟
+          24 分钟
         
       </span>
     
@@ -309,12 +308,12 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Games101 - Lecture11 Geometry 2</h1>
+            <h1 id="seo-header">Games101 - 作业4</h1>
             
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2024年1月27日 晚上
+                    本文最后更新于：2024年1月29日 下午
                   
                 
               </p>
@@ -323,173 +322,40 @@
               <div class="markdown-body">
                 
                 <p><img
-src="https://raw.githubusercontent.com/memo2586/Image-repo/master/imocyo01-small.png" srcset="/img/loading.gif" lazyload /></p>
-<h1 id="geometry-2-curves-and-surfaces">Geometry 2 (Curves and
-Surfaces)</h1>
-<h2 id="more-explicit-representations">1. More Explicit
-Representations</h2>
-<h3 id="point-cloud-explicit">1.1 Point Cloud (Explicit)</h3>
-<p>点云，一种最简单的几何的显示表示方式。</p>
-<h4 id="什么是点云">什么是点云？</h4>
-<p>点云就是一个几何物体的表面的点的集合。只要集合中的点在三维空间中的密度足够小，我们就可以将其看作一个连续的表面。</p>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240126161152602.png" srcset="/img/loading.gif" lazyload style="zoom: 67%;" /></p>
-<p>理论上只要点云中点的密度足够小，就可以表示三位空间中的任何几何。</p>
-<p>点云在计算机图形中的性能不好，因此也不常用，多用于一些扫描得到的原始模型。</p>
-<h3 id="polygon-mesh-explicit">1.2 Polygon Mesh (Explicit)</h3>
-<p>多边形面，计算机图形学中使用最广泛的一种显示表示方法。</p>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240126161302091.png" srcset="/img/loading.gif" lazyload style="zoom: 67%;" /></p>
-<p>将几何表面进行划分成许多个多边形面的组合，大多是三角形或是四边形面，最后使用这些多边形面的组合近似表示原来的几何表面。</p>
-<h2 id="bézier-curves">2. Bézier Curves</h2>
-<h3 id="什么是贝塞尔曲线">2.1 什么是贝塞尔曲线？</h3>
-<p>贝塞尔曲线用一系列的控制点去定义某一个曲线，是一种显示的几何表示方法。</p>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240126162202171.png" srcset="/img/loading.gif" lazyload style="zoom: 50%;" /></p>
-<p>如图，通过定义四个（可以是任意个数）控制点 <span
-class="math inline">\(P_{0..3}\)</span>，我们规定曲线的起始切线与结束切线必须与
-<span class="math inline">\(P_0P_1\)</span> 与 <span
-class="math inline">\(P_2P_3\)</span> 相同。</p>
-<p>这样将可以得到唯一的一条曲线，可以看出，曲线不一定会经过控制点：</p>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240126162732744.png" srcset="/img/loading.gif" lazyload style="zoom:50%;" /></p>
-<h3 id="画出贝塞尔曲线de-casteljau-算法">2.1 画出贝塞尔曲线——de
-Casteljau 算法</h3>
-<p>考虑三个控制点（二次贝塞尔曲线）：</p>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240126163302375.png" srcset="/img/loading.gif" lazyload style="zoom: 80%;" /></p>
-<p>假设我在时间 0 从 <span class="math inline">\(b_0\)</span> 出发，时间
-1 时到达 <span class="math inline">\(b_2\)</span>
-，在这段时间内我路过的点的集合就是所求曲线。</p>
-<p>那么定义一个时间 t ，我只要能知道任意 t
-时刻我的位置，就能得到这条曲线了。</p>
-<p>de Casteljau 算法可以找到任意 t 时刻的位置。</p>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240126165049622.png" srcset="/img/loading.gif" lazyload style="zoom:80%;" /></p>
-<p>如上图，先找到位于线段 <span class="math inline">\(b_0b_1\)</span> 的
-<span class="math inline">\(1/t\)</span> 处的点 <span
-class="math inline">\(b_0^1\)</span> ，与位于线段 <span
-class="math inline">\(b_1b_2\)</span> 的 <span
-class="math inline">\(1/t\)</span> 处的点 <span
-class="math inline">\(b_1^1\)</span>
-，然后根据这两个点的连线得到一条新的线段 <span
-class="math inline">\(b_0^1b_1^1\)</span> 。</p>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240126165832698.png" srcset="/img/loading.gif" lazyload style="zoom:80%;" /></p>
-<p>在新的线段 <span class="math inline">\(b_0^1b_1^1\)</span>
-上，再次找到位于其 <span class="math inline">\(1/t\)</span> 处的点 <span
-class="math inline">\(b_0^2\)</span>
-，此时发现已经没有剩下的线段了，找不到第二个点进行连线。那么，最后的这一个点就是
-t 时刻的位置。</p>
-<p>感觉挺简单，是个一看就挺递归的算法。</p>
-<p>对于更多控制点的贝塞尔曲线也是一样道理：</p>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240126171028709.png" srcset="/img/loading.gif" lazyload style="zoom:80%;" /></p>
-<p>先在 <span class="math inline">\(b_0b_1,b_1b_2,b_2b_3\)</span>
-上分别找到 <span class="math inline">\(b_0^1,b_1^1,b_2^1\)</span>
-，将找到的点相邻之间两两连线，得到两条新的线段 <span
-class="math inline">\(b_0^1b_1^1,b_1^1b_2^1\)</span>
-，继续在新的线段之间找点、连线，直到再无法得到新的连线时，最后剩下的点就是
-t 时刻的位置。</p>
-<figure>
-<img src="https://hczhcz.github.io/images/2014-07-16-bezier-curve.gif" srcset="/img/loading.gif" lazyload
-alt="wikipedia：Bézier curve" />
-<figcaption aria-hidden="true">wikipedia：Bézier curve</figcaption>
-</figure>
-<h3 id="de-casteljau-算法的代数表示">2.3 de Casteljau
-算法的代数表示</h3>
-<p><img
-src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240126174803652.png" srcset="/img/loading.gif" lazyload /></p>
-<p>de Casteljau 算法是一个对相邻点间不断做位置上的线性插值的过程。</p>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240126165832698.png" srcset="/img/loading.gif" lazyload style="zoom:80%;" /></p>
-<p>上面这个过程，我们可以用代数将其显示地表示出来。首先先找到点 <span
-class="math inline">\(b_0^1\)</span> 和 <span
-class="math inline">\(b_1^1\)</span> 的位置:</p>
-<p><span class="math display">\[
-\begin{gather*}
-    b_0^1(t) = (1-t)b_0 + tb_1 \\
-    b_1^1(t) = (1-t)b_1 + tb_2 \\
-\end{gather*}
-\]</span> 再找到点 <span class="math inline">\(b_0^2\)</span> 的位置：
-<span class="math display">\[
-b_0^2(t) = (1-t)b_0^1 + tb_1^1
-\]</span> 将过程展开，可以发现 <span
-class="math inline">\(b_0^2\)</span> 就是 <span
-class="math inline">\(b_0,b_1,b_2\)</span> 三个控制点的组合: <span
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/shion6-small.png" srcset="/img/loading.gif" lazyload /></p>
+<h1 id="作业-4bézier-曲线">作业 4：Bézier 曲线</h1>
+<p>来自作业的文档：</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs tex">De Casteljau 算法说明如下：<br>1. 考虑一个 p0, p1, ... pn 为控制点序列的 Bézier 曲线。首先，将相邻的点连接起来以形成线段。<br>2. 用 t : (1 − t) 的比例细分每个线段，并找到该分割点。<br>3. 得到的分割点作为新的控制点序列，新序列的长度会减少一。<br>4. 如果序列只包含一个点，则返回该点并终止。否则，使用新的控制点序列并转到步骤 1。<br>   使用 [0,1] 中的多个不同的 t 来执行上述算法，你就能得到相应的 Bézier 曲线。<br></code></pre></td></tr></table></figure>
+<p><a
+href="https://memo2586.github.io/2024/01/26/Games101-Lecture-11-Geometry-2/#%E7%94%BB%E5%87%BA%E8%B4%9D%E5%A1%9E%E5%B0%94%E6%9B%B2%E7%BA%BFde-casteljau-%E7%AE%97%E6%B3%95">De
+Casteljau 算法的详细步骤</a>。</p>
+<p>根据 <a
+href="https://memo2586.github.io/2024/01/26/Games101-Lecture-11-Geometry-2/#de-casteljau-%E7%AE%97%E6%B3%95%E7%9A%84%E4%BB%A3%E6%95%B0%E8%A1%A8%E7%A4%BA">De
+Casteljau 的代数表示</a>，第 2 步中分割点的坐标计算方法为： <span
 class="math display">\[
-b_0^2(t) = (1-t)^2b_0 + 2t(1-t)b_1 + t^2b_2
-\]</span> 将贝塞尔曲线扩展到 n 阶，也就是 n+1 个控制点时，可以把 <span
-class="math inline">\(b^n(t)\)</span> 表示为伯恩斯坦多项式的线性组合：
-<span class="math display">\[
-b^n(t)=b_0^n(t)=\sum_{j=0}^{n}b_jB_j^n(t)
-\]</span> 其中伯恩斯坦多项式为: <span class="math display">\[
-B_i^n=\begin{pmatrix}n \\i\end{pmatrix}t^i(1-t)^{n-i}
-\]</span></p>
-<h3 id="贝塞尔曲线的性质">2.4 贝塞尔曲线的性质</h3>
-<ul>
-<li><p>n 阶贝塞尔曲线：<span class="math inline">\(b(0)=b_0\)</span> ;
-<span class="math inline">\(b(1)=b(n)\)</span> ；</p></li>
-<li><p>3 阶贝塞尔曲线：<span
-class="math inline">\(b&#39;(0)=3(b_1-b_0)\)</span> ; <span
-class="math inline">\(b&#39;(1)=3(b_3-b_2)\)</span>；</p></li>
-<li><p>贝塞尔曲线的控制点经过<strong>仿射变换</strong>后表示的曲线，与原控制点表示的曲线经过仿射变换后相同；</p></li>
-<li><p>贝塞尔曲线上任意一个点一定会在控制点所形成的凸包内；</p></li>
-</ul>
-<h3 id="分段贝塞尔曲线">2.5 分段贝塞尔曲线</h3>
+b_i^j(t) = (1-t)b_i + tb_j
+\]</span> 使用递归的代码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;chrono&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;opencv2/opencv.hpp&gt;</span></span><br><br>std::vector&lt;cv::Point2f&gt; control_points;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">mouse_handler</span><span class="hljs-params">(<span class="hljs-type">int</span> event, <span class="hljs-type">int</span> x, <span class="hljs-type">int</span> y, <span class="hljs-type">int</span> flags, <span class="hljs-type">void</span> *userdata)</span> </span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">if</span> (event == cv::EVENT_LBUTTONDOWN &amp;&amp; control_points.<span class="hljs-built_in">size</span>() &lt; <span class="hljs-number">4</span>) <br>    &#123;<br>        std::cout &lt;&lt; <span class="hljs-string">&quot;Left button of the mouse is clicked - position (&quot;</span> &lt;&lt; x &lt;&lt; <span class="hljs-string">&quot;, &quot;</span><br>        &lt;&lt; y &lt;&lt; <span class="hljs-string">&quot;)&quot;</span> &lt;&lt; <span class="hljs-string">&#x27;\n&#x27;</span>;<br>        control_points.<span class="hljs-built_in">emplace_back</span>(x, y);<br>    &#125;     <br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">naive_bezier</span><span class="hljs-params">(<span class="hljs-type">const</span> std::vector&lt;cv::Point2f&gt; &amp;points, cv::Mat &amp;window)</span> </span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">auto</span> &amp;p_0 = points[<span class="hljs-number">0</span>];<br>    <span class="hljs-keyword">auto</span> &amp;p_1 = points[<span class="hljs-number">1</span>];<br>    <span class="hljs-keyword">auto</span> &amp;p_2 = points[<span class="hljs-number">2</span>];<br>    <span class="hljs-keyword">auto</span> &amp;p_3 = points[<span class="hljs-number">3</span>];<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">double</span> t = <span class="hljs-number">0.0</span>; t &lt;= <span class="hljs-number">1.0</span>; t += <span class="hljs-number">0.001</span>) <br>    &#123;<br>        <span class="hljs-keyword">auto</span> point = std::<span class="hljs-built_in">pow</span>(<span class="hljs-number">1</span> - t, <span class="hljs-number">3</span>) * p_0 + <span class="hljs-number">3</span> * t * std::<span class="hljs-built_in">pow</span>(<span class="hljs-number">1</span> - t, <span class="hljs-number">2</span>) * p_1 +<br>                 <span class="hljs-number">3</span> * std::<span class="hljs-built_in">pow</span>(t, <span class="hljs-number">2</span>) * (<span class="hljs-number">1</span> - t) * p_2 + std::<span class="hljs-built_in">pow</span>(t, <span class="hljs-number">3</span>) * p_3;<br><br>        window.<span class="hljs-built_in">at</span>&lt;cv::Vec3b&gt;(point.y, point.x)[<span class="hljs-number">2</span>] = <span class="hljs-number">255</span>;<br>    &#125;<br>&#125;<br><br><span class="hljs-function">cv::Point2f <span class="hljs-title">recursive_bezier</span><span class="hljs-params">(<span class="hljs-type">const</span> std::vector&lt;cv::Point2f&gt; &amp;control_points, <span class="hljs-type">float</span> t)</span> </span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> Implement de Casteljau&#x27;s algorithm</span><br>    <span class="hljs-keyword">if</span>(control_points.<span class="hljs-built_in">size</span>() == <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> control_points[<span class="hljs-number">0</span>];<br><br>    std::vector&lt;cv::Point2f&gt; new_control_points;<br>    <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt; control_points.<span class="hljs-built_in">size</span>(); i++)&#123;<br>        cv::Point2f u = control_points[i - <span class="hljs-number">1</span>], v = control_points[i];<br>        cv::Point2f b = (<span class="hljs-number">1.f</span> - t) * u + t * v;<br>        new_control_points.<span class="hljs-built_in">push_back</span>(b);<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">recursive_bezier</span>(new_control_points, t);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">bezier</span><span class="hljs-params">(<span class="hljs-type">const</span> std::vector&lt;cv::Point2f&gt; &amp;control_points, cv::Mat &amp;window)</span> </span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> Iterate through all t = 0 to t = 1 with small steps, and call de Casteljau&#x27;s </span><br>    <span class="hljs-comment">// recursive Bezier algorithm.</span><br>    <span class="hljs-keyword">for</span>(<span class="hljs-type">float</span> t = <span class="hljs-number">0</span>; t &lt;= <span class="hljs-number">1.f</span>; t += <span class="hljs-number">.001</span>)&#123;<br>        cv::Point2f point = <span class="hljs-built_in">recursive_bezier</span>(control_points, t);<br>        window.<span class="hljs-built_in">at</span>&lt;cv::Vec3b&gt;(point.y, point.x) += cv::<span class="hljs-built_in">Vec3b</span>(<span class="hljs-number">0</span>, <span class="hljs-number">255</span>, <span class="hljs-number">0</span>);<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    cv::Mat window = cv::<span class="hljs-built_in">Mat</span>(<span class="hljs-number">700</span>, <span class="hljs-number">700</span>, CV_8UC3, cv::<span class="hljs-built_in">Scalar</span>(<span class="hljs-number">0</span>));<br>    cv::<span class="hljs-built_in">cvtColor</span>(window, window, cv::COLOR_BGR2RGB);<br>    cv::<span class="hljs-built_in">namedWindow</span>(<span class="hljs-string">&quot;Bezier Curve&quot;</span>, cv::WINDOW_AUTOSIZE);<br><br>    cv::<span class="hljs-built_in">setMouseCallback</span>(<span class="hljs-string">&quot;Bezier Curve&quot;</span>, mouse_handler, <span class="hljs-literal">nullptr</span>);<br><br>    <span class="hljs-type">int</span> key = <span class="hljs-number">-1</span>;<br>    <span class="hljs-keyword">while</span> (key != <span class="hljs-number">27</span>) <br>    &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> &amp;point : control_points) <br>        &#123;<br>            cv::<span class="hljs-built_in">circle</span>(window, point, <span class="hljs-number">3</span>, &#123;<span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>&#125;, <span class="hljs-number">3</span>);<br>        &#125;<br><br>        <span class="hljs-keyword">if</span> (control_points.<span class="hljs-built_in">size</span>() == <span class="hljs-number">4</span>) <br>        &#123;<br>            <span class="hljs-built_in">naive_bezier</span>(control_points, window);<br>            <span class="hljs-built_in">bezier</span>(control_points, window);<br><br>            cv::<span class="hljs-built_in">imshow</span>(<span class="hljs-string">&quot;Bezier Curve&quot;</span>, window);<br>            cv::<span class="hljs-built_in">imwrite</span>(<span class="hljs-string">&quot;my_bezier_curve.png&quot;</span>, window);<br>            key = cv::<span class="hljs-built_in">waitKey</span>(<span class="hljs-number">0</span>);<br><br>            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>        &#125;<br><br>        cv::<span class="hljs-built_in">imshow</span>(<span class="hljs-string">&quot;Bezier Curve&quot;</span>, window);<br>        key = cv::<span class="hljs-built_in">waitKey</span>(<span class="hljs-number">20</span>);<br>    &#125;<br><br>	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>效果图：</p>
 <figure>
 <img
-src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240127163736620.png" srcset="/img/loading.gif" lazyload
-alt="10阶贝塞尔曲线" />
-<figcaption aria-hidden="true">10阶贝塞尔曲线</figcaption>
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240129174030303.png" srcset="/img/loading.gif" lazyload
+alt="绘制绿色曲线" />
+<figcaption aria-hidden="true">绘制绿色曲线</figcaption>
 </figure>
-<p>当贝塞尔曲线阶数太高，控制点太多时，会使得曲线不直观，难以控制。</p>
-<p>那干脆就不要用太多控制点，改用较少的控制点表示其中一段贝塞尔曲线，最后将这些贝塞尔曲线连起来。</p>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240127163642256.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p>
-<p>通常，人们习惯把每四个控制点定义成一段贝塞尔曲线，也就是三次贝塞尔曲线（<a
-target="_blank" rel="noopener" href="https://math.hws.edu/eck/cs424/notes2013/canvas/bezier.html">Bezier
-Curve Demos</a>）。</p>
-<p>为了保证分段贝塞尔曲线的连续性，有以下关于连续性的规定：</p>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240127165903461.png" srcset="/img/loading.gif" lazyload style="zoom:80%;" /></p>
-<ul>
-<li><span class="math inline">\(C^0\)</span> 连续：<span
-class="math inline">\(a_n=b_0\)</span>，前一段的终止点等于后一段的起点；</li>
-</ul>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240127170247915.png" srcset="/img/loading.gif" lazyload alt="image-20240127170247915" style="zoom:80%;" /></p>
-<ul>
-<li><span class="math inline">\(C^1\)</span> 连续：<span
-class="math inline">\(a_n=b_0=\frac{1}{2}(a_{n-1}+b_1)\)</span>，在满足
-<span class="math inline">\(C^0\)</span>
-连续的基础上，后一段的起始方向与长度应该与前一段的终止方向与长度相同；</li>
-</ul>
-<p>当然还有更加高阶的连续性，称为曲率连续，在此不讨论。</p>
-<h2 id="spline">3. Spline</h2>
-<h3 id="什么是样条">3.1 什么是样条？</h3>
-<p>构造为穿过给定点集并具有一定数量的连续导数的连续曲线，简而言之，一条受控的曲线。</p>
-<h3 id="b-spline">3.2 B-Spline</h3>
-<p>B样条是 basis
-splines，基函数样条的缩写，它是贝塞尔曲线的扩展，需要比贝塞尔曲线更多的信息，满足贝塞尔曲线具有的所有重要属性（即超集），有比贝塞尔曲线更好的能力（体现在局部性等等）。</p>
-<p>B样条极其复杂，不在此入门课深入讲。</p>
-<h2 id="bezier-surfaces">4. Bezier Surfaces</h2>
-<p>我们可以将贝塞尔曲线延伸到曲面。</p>
 <figure>
 <img
-src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240127173803614.png" srcset="/img/loading.gif" lazyload
-alt="由4x4个点控制的贝塞尔曲面" />
-<figcaption aria-hidden="true">由4x4个点控制的贝塞尔曲面</figcaption>
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240129174459712.png" srcset="/img/loading.gif" lazyload
+alt="绘制 7 阶贝塞尔曲线" />
+<figcaption aria-hidden="true">绘制 7 阶贝塞尔曲线</figcaption>
 </figure>
-<p>只要在两个方向上应用贝塞尔曲线，就可以绘制一个贝塞尔曲面。</p>
 <figure>
 <img
-src="https://raw.githubusercontent.com/memo2586/Image-repo/master/demo.gif" srcset="/img/loading.gif" lazyload
-alt="Steven Wittens, https://acko.net/blog/making-mathbox/" />
-<figcaption aria-hidden="true">Steven Wittens,
-https://acko.net/blog/making-mathbox/</figcaption>
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240129173618148.png" srcset="/img/loading.gif" lazyload
+alt="同时调用 naive_bezier 和 bezier 函数" />
+<figcaption aria-hidden="true">同时调用 naive_bezier 和 bezier
+函数</figcaption>
 </figure>
-<p>首先，在平面上定义 4x4 的控制点，将其中的每一行的 4
-个控制点表示一条贝塞尔曲线，在不同的时间 t
-时，每条贝塞尔曲线所在的点会在不同的位置上：</p>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240127180824129.png" srcset="/img/loading.gif" lazyload style="zoom:80%;" /></p>
-<p>如果我们将这 4
-个不同的点认为是新的贝塞尔曲线的控制点，我们可以画出一条新的贝塞尔曲线：</p>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240127180956117.png" srcset="/img/loading.gif" lazyload style="zoom:80%;" /></p>
-<p>那么，这条线在另一个时间维度中扫过的空间会形成一个贝塞尔曲面：</p>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240127181236844.png" srcset="/img/loading.gif" lazyload style="zoom:80%;" /></p>
-<p>很显然，形成一个贝塞尔曲面需要两个不同的时间，常用 uv 表示。遍历
-uv，就可以找到曲面上所有的点。</p>
-<p><img
-src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240127181641023.png" srcset="/img/loading.gif" lazyload /></p>
 
                 
               </div>
@@ -527,8 +393,6 @@ src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240127
       
         <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/" class="print-no-link">#计算机图形学</a>
       
-        <a href="/tags/%E7%AC%94%E8%AE%B0/" class="print-no-link">#笔记</a>
-      
     </div>
   
 </div>
@@ -539,8 +403,8 @@ src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240127
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Games101 - Lecture11 Geometry 2</div>
-      <div>https://memo2586.github.io/2024/01/26/Games101-Lecture-11-Geometry-2/</div>
+      <div>Games101 - 作业4</div>
+      <div>https://memo2586.github.io/2024/01/29/Games101-作业4/</div>
     </div>
     <div class="license-meta">
       
@@ -552,7 +416,7 @@ src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240127
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年1月26日</div>
+          <div>2024年1月29日</div>
         </div>
       
       
@@ -584,18 +448,12 @@ src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240127
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/01/29/Games101-%E4%BD%9C%E4%B8%9A4/" title="Games101 - 作业4">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Games101 - 作业4</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/01/24/Games101-Lecture-10-Geometry-1/" title="Games101 - Lecture10 Geometry 1">
-                        <span class="hidden-mobile">Games101 - Lecture10 Geometry 1</span>
+                      <a href="/2024/01/26/Games101-Lecture-11-Geometry-2/" title="Games101 - Lecture11 Geometry 2">
+                        <span class="hidden-mobile">Games101 - Lecture11 Geometry 2</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
