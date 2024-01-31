@@ -4,6 +4,19 @@
   
   
   <entry>
+    <title>Games101 - Lecture 12 Geometry 3</title>
+    <link href="/2024/01/31/Games101-Lecture-12-Geometry-3/"/>
+    <url>/2024/01/31/Games101-Lecture-12-Geometry-3/</url>
+    
+    <content type="html"><![CDATA[<h1 id="geometry-processing">1. Geometry Processing</h1><h3 id="mesh-subdivision">1.1 Mesh subdivision</h3><p><imgsrc="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240131172124465.png" /></p><h4 id="表面细分的规则">表面细分的规则</h4><p>表面细分可不仅仅是将一个多边形划分为更多的多边形这么简单，还要让划分后的模型表面更加光滑。</p><p>可以说，表面细分的步骤分为两步：</p><ul><li>创建更多的三角形（顶点）</li><li>调整他们的位置</li></ul><h4 id="loop-subdivision">Loop Subdivision</h4><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs tex">Loop 方法使用发明者 Charles Loop 的姓命名<br>绝不是该方法与循环有什么关系~<br></code></pre></td></tr></table></figure><ul><li><p>将三角形每条边的中点两两相连，将一个三角形划分成四个三角形 <imgsrc="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240131174211575.png" /></p></li><li><p>根据权重改变顶点的位置（新旧顶点的更新方式不同）</p><ul><li><p>对于新的顶点：</p><p>考虑两个相邻的三角形，一般来说，旧的三角形的边都会与相邻三角形共享（边界等特殊情况除外），而新的顶点又都定义在这些边的中点上。所以，新的顶点都会与相邻另一个三角形共享。</p><p>我们要做的是，找到新的顶点所在的共享边上的两个顶点，与另外的两个顶点的坐标，按照一定的权重对这些坐标取平均，用来决定这个新的顶点的坐标。</p><p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240131180046059.png" style="zoom: 50%;" /></p><p>比如上图的白点 P，它所在的共享边的两端端点为 A 与B，另外的两个顶点坐标为 C 与 D，可以按照以下方法计算该点的坐标： <spanclass="math display">\[P=3/8(A+B)+1/8(C+D)\]</span></p></li><li><p>对于旧的顶点：</p><p>与新的顶点相似，旧的顶点同样考虑采用临近点的加权平均值作为新的坐标。当此时，权重是根据顶点的度数决定的。</p><p>一个顶点的度数越低，那么该顶点对模型的整体外观中起到的决定性作用越强，例如一个尖锐的边缘、拐角或者是模型的凹凸点。那么这些点的原始坐标所占的权重旧越大，反之原始坐标所占的权重旧就越小。</p><p>综上，定义两个变量：</p><ul><li><p>n：顶点的度数</p></li><li><p>u：与顶点度数相关的一个常数，可以取作 <spanclass="math display">\[u =\begin{cases}    3/16 &amp; \text{if } n = 0 \\    3/(8n) &amp; \text{otherwise}\end{cases}\]</span></p></li></ul><p><imgsrc="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240131204621089.png" /></p></li></ul><p>如上图的度数为 6 的白点 P，它临近的点的和为 S，那么计算新的坐标为：<span class="math display">\[(1-nu)*P+u*S\]</span></p></li></ul><figure><imgsrc="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240131210604843.png"alt="Loop Subdivision" /><figcaption aria-hidden="true">Loop Subdivision</figcaption></figure>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Games101 - 作业4</title>
     <link href="/2024/01/29/Games101-%E4%BD%9C%E4%B8%9A4/"/>
     <url>/2024/01/29/Games101-%E4%BD%9C%E4%B8%9A4/</url>
