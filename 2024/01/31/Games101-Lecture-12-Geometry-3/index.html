@@ -16,19 +16,24 @@
   <meta name="author" content="memo2586">
   <meta name="keywords" content="">
   
-    <meta name="description" content="施工中..">
+    <meta name="description" content="几何处理：Catmull-Clark Subdivision, Loop Subdivision and Edge Collapsing">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Games101 - Lecture 12 Geometry 3">
 <meta property="og:url" content="https://memo2586.github.io/2024/01/31/Games101-Lecture-12-Geometry-3/index.html">
 <meta property="og:site_name" content="memo&#39;s blog">
-<meta property="og:description" content="施工中..">
+<meta property="og:description" content="几何处理：Catmull-Clark Subdivision, Loop Subdivision and Edge Collapsing">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240131180046059.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/FGRN13A%20(realesrgan-x4plus-anime%20x2)_h160.png">
 <meta property="article:published_time" content="2024-01-31T13:07:31.000Z">
-<meta property="article:modified_time" content="2024-01-31T13:09:07.850Z">
+<meta property="article:modified_time" content="2024-02-01T10:49:07.331Z">
 <meta property="article:author" content="memo2586">
+<meta property="article:tag" content="Games101">
+<meta property="article:tag" content="计算机图形学">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="几何">
+<meta property="article:tag" content="几何处理">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240131180046059.png">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/FGRN13A%20(realesrgan-x4plus-anime%20x2)_h160.png">
   
   
   
@@ -250,7 +255,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          805 字
+          1.8k 字
         
       </span>
     
@@ -261,7 +266,7 @@
         
         
         
-          7 分钟
+          15 分钟
         
       </span>
     
@@ -311,7 +316,7 @@
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2024年1月31日 晚上
+                    本文最后更新于：2024年2月1日 晚上
                   
                 
               </p>
@@ -319,8 +324,10 @@
             
               <div class="markdown-body">
                 
-                <h1 id="geometry-processing">1. Geometry Processing</h1>
-<h3 id="mesh-subdivision">1.1 Mesh subdivision</h3>
+                <p><img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/FGRN13A%20(realesrgan-x4plus-anime%20x2).png" srcset="/img/loading.gif" lazyload /></p>
+<h1 id="geometry-processing">Geometry Processing</h1>
+<h3 id="mesh-subdivision">1. Mesh subdivision</h3>
 <p><img
 src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240131172124465.png" srcset="/img/loading.gif" lazyload /></p>
 <h4 id="表面细分的规则">表面细分的规则</h4>
@@ -361,11 +368,10 @@ u =
 \end{cases}
 \]</span></p></li>
 </ul>
-<p><img
-src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240131204621089.png" srcset="/img/loading.gif" lazyload /></p></li>
+<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240131204621089.png" srcset="/img/loading.gif" lazyload style="zoom:50%;" /></p></li>
 </ul>
-<p>如上图的度数为 6 的白点 P，它临近的点的和为 S，那么计算新的坐标为：
-<span class="math display">\[
+<p>如上图的度数为 6 的白点 P，它临近的所有点的和为
+S，那么计算新的坐标为： <span class="math display">\[
 (1-nu)*P+u*S
 \]</span></p></li>
 </ul>
@@ -375,6 +381,59 @@ src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240131
 alt="Loop Subdivision" />
 <figcaption aria-hidden="true">Loop Subdivision</figcaption>
 </figure>
+<p>Loop Subdivision 只有在多边形全是三角形的情况下才能工作。</p>
+<h4 id="catmull-clark-subdivision">Catmull-Clark Subdivision</h4>
+<p>在学习 Catmull-Clark Subdivision 之前，定义两个概念：</p>
+<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240201151925127.png" srcset="/img/loading.gif" lazyload style="zoom: 50%;" /></p>
+<ol type="1">
+<li><p>Non-quad face：非四边形面</p></li>
+<li><p>Extraordinary vertex：奇异点，度数不为 4 的点</p></li>
+</ol>
+<ul>
+<li><p>表面细分的第一步自然是增加顶点的数量，取多边形面的每条边的中点，与多边形面内部的一个中心点，再把边上的中点与面上的中心点都连起来：</p>
+<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240201153757845.png" srcset="/img/loading.gif" lazyload style="zoom:50%;" /></p>
+<p>在划分非四边形面时，由于其中心点要连接其边数多的点，所以它会变成一个奇异点，且非四边形面会被划分成多个四边形面。</p>
+<p>也就是说在一次 Catmull-Clark Subdivision
+中，通过引入与非四边形面相同数量的奇异点，能够将所有面划分成四边形面。</p>
+<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240201155213466.png" srcset="/img/loading.gif" lazyload style="zoom:50%;" alt="第二次细分后奇异点数量不再增加"></p></li>
+<li><p>对顶点坐标进行更新，该方法把顶点分为三类，按照以下规则更新：</p>
+<ul>
+<li><p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240201162053717.png" srcset="/img/loading.gif" lazyload style="zoom: 67%;" />
+<span class="math display">\[
+f = \frac{v_1+v_2+v_3+v_4}{4}
+\]</span></p></li>
+<li><p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240201162248573.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" />
+<span class="math display">\[
+e=\frac{v_1+v_2+f_1+f_2}{4}
+\]</span></p></li>
+<li><p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240201162642475.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" />
+<span class="math display">\[
+v=\frac{f_1+f_2+f_3+f_4+2(m_1+m_2+m_3+m_4)+4p}{16}
+\]</span></p></li>
+</ul></li>
+</ul>
+<p><img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240201164342042.png" srcset="/img/loading.gif" lazyload /></p>
+<hr />
+<h3 id="mesh-simplification">2. Mesh Simplification</h3>
+<p><img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240201165257261.png" srcset="/img/loading.gif" lazyload /></p>
+<h4 id="edge-collapsing边坍缩">Edge Collapsing（边坍缩）</h4>
+<p>边坍缩：找到一条边，把这条边两端的顶点合为一个顶点。自然的这条边就消失了。</p>
+<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240201170102345.png" srcset="/img/loading.gif" lazyload style="zoom: 50%;" /></p>
+<h4 id="quadric-error-metrics二次误差度量">Quadric Error
+Metrics（二次误差度量）</h4>
+<p>在边坍缩后，我如何决定剩下的顶点的位置，使得边坍缩对模型外观的影响最小？</p>
+<p>如果只是简单地对该坍缩点有关系的面进行求和取平均，那么通常不能得到一个很好的效果。此时我们要用到二次误差度量，它与机器学习中的
+L2 距离十分相似。</p>
+<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240201170807947.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p>
+<p>找到一个位置，使得在该位置上坍缩点到原本的面的距离的平方和最小。</p>
+<p>那么对于一个模型，我们可以计算出其所有边坍缩后产生的二次误差度量后，对这些二次误差度量进行排序，然后从最小花费开始进行边坍缩？</p>
+<p>按照这种方法会有个小问题：坍缩一条边后，与这条边相邻的边的位置会产生变化，其二次误差度量也会跟着变化。我们无法保证经过变化后，当前排序的最小花费依旧正确。</p>
+<p>为此我们需要用小根堆，既可以快速查询，也可以动态更新。</p>
+<p>在上述方法中，我们通过不断求出局部的最优解，去试图找到全局的一个最优解，也就是典型的贪心算法，并不能保证全局的最优解（但是够用）。</p>
+<p><img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240201175126362.png" srcset="/img/loading.gif" lazyload /></p>
 
                 
               </div>
@@ -383,6 +442,42 @@ alt="Loop Subdivision" />
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/" class="category-chain-item">计算机图形学</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Games101/" class="print-no-link">#Games101</a>
+      
+        <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/" class="print-no-link">#计算机图形学</a>
+      
+        <a href="/tags/%E7%AC%94%E8%AE%B0/" class="print-no-link">#笔记</a>
+      
+        <a href="/tags/%E5%87%A0%E4%BD%95/" class="print-no-link">#几何</a>
+      
+        <a href="/tags/%E5%87%A0%E4%BD%95%E5%A4%84%E7%90%86/" class="print-no-link">#几何处理</a>
+      
+    </div>
   
 </div>
 
