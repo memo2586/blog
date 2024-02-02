@@ -4,6 +4,37 @@
   
   
   <entry>
+    <title>Games101 - Lecture 12.5 Shadows</title>
+    <link href="/2024/02/02/Games101-Lecture-12-5-Shadows/"/>
+    <url>/2024/02/02/Games101-Lecture-12-5-Shadows/</url>
+    
+    <content type="html"><![CDATA[<p><imgsrc="https://raw.githubusercontent.com/memo2586/Image-repo/master/FGKD01B%20(realesrgan-x4plus-anime%20x2).png" /></p><h2 id="shadow-mapping">Shadow Mapping</h2><p>模型在实际上存在遮挡关系，被遮挡的地方会产生阴影，之前学习的着色模型并未考虑到这一点。</p><p>Shadow Mapping是一种图像空间算法，是一种在计算阴影时不需要了解场景几何结构的方法。</p><p>Shadow Map理论上只能<strong>应用于点光源场景与渲染硬阴影</strong>，但不妨碍 ShadowMap 成为主流的技术。</p><p>该算法的主要思路是：<strong>不在阴影中的点，必须同时被光源和相机所看到</strong>。</p><h3 id="shadow-mapping-的步骤">Shadow Mapping 的步骤</h3><ol type="1"><li><p>从光源对整个场景做一个光栅化，不做着色，只记录下深度信息；</p><p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240202170456020.png" style="zoom: 67%;" /></p></li><li><p>从摄像机视角做光栅化，任何一个点只要将其投影到之前从光源记录下的深度图中，如果从摄像机到该点的深度信息与从光源到该点的深度信息一致，那么该点不在阴影中；</p><p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240202171311702.png" style="zoom:67%;" /></p><p>如果从摄像机到该点的深度信息与从光源到该点的深度信息不一致，那么该点在阴影中；</p><p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240202171553857.png" style="zoom:67%;" /></p></li></ol><h3 id="shadow-mapping-的问题">Shadow Mapping 的问题</h3><p><imgsrc="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240202171946800.png" /></p><p>从光源出发，可以得到像这样一个深度图：</p><p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240202172212285.png" style="zoom:67%;" /></p><p>当我从实际的相机看到的点，再将其投影到上面那张深度图时：</p><p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240202172520434.png" style="zoom:80%;" /></p><p>可以观察到存在走样与明显错误。</p><p>为什么会出现错误？因为几何在实际的场景中都是以浮点数计算的，那就容易出现精度问题，要做到“是否一致”这个判定条件本身就很困难。如果更改为判断大小或者添加误差范围，可以改善问题。</p><p>另外，如果 Shadow Map本身的分辨率太低，而场景渲染时使用的分辨率太高，自然就会产生走样（游戏中的阴影质量设置大部分是对Shadow Map 的分辨率作调整）。</p><h3 id="软阴影soft-shadows">软阴影（Soft Shadows）</h3><p><imgsrc="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240202174939857.png" /></p><p>软阴影的边缘频率低，有明显的过度，且越靠近物体的根部阴影就越“硬”。</p><p>软阴影就是物理上的半影，是指由于光源的扩散或光线经过不完全遮挡的物体表面而产生的较为柔和的阴影效果。当光源足够大时，从光源的不同位置向某点的遮挡情况不同。也就是说，从物体表面出发可以看到的光源大小不同，可以看到的光源越小，该点的阴影就越清晰。</p><p>从不产生阴影的点逐渐向朝向光源的物体背面移动，可以看到的光源大小是逐渐变小的，也就产生了自然柔和的，边缘不清晰的阴影效果。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>计算机图形学</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Games101</tag>
+      
+      <tag>计算机图形学</tag>
+      
+      <tag>笔记</tag>
+      
+      <tag>Shadows</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Games101 - Lecture 12 Geometry 3</title>
     <link href="/2024/01/31/Games101-Lecture-12-Geometry-3/"/>
     <url>/2024/01/31/Games101-Lecture-12-Geometry-3/</url>

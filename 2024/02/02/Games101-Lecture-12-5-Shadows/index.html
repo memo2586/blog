@@ -16,28 +16,27 @@
   <meta name="author" content="memo2586">
   <meta name="keywords" content="">
   
-    <meta name="description" content="几何处理：Catmull-Clark Subdivision, Loop Subdivision and Edge Collapsing">
+    <meta name="description" content="Shadow Mapping 方法、软阴影">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Games101 - Lecture 12 Geometry 3">
-<meta property="og:url" content="https://memo2586.github.io/2024/01/31/Games101-Lecture-12-Geometry-3/index.html">
+<meta property="og:title" content="Games101 - Lecture 12.5 Shadows">
+<meta property="og:url" content="https://memo2586.github.io/2024/02/02/Games101-Lecture-12-5-Shadows/index.html">
 <meta property="og:site_name" content="memo&#39;s blog">
-<meta property="og:description" content="几何处理：Catmull-Clark Subdivision, Loop Subdivision and Edge Collapsing">
+<meta property="og:description" content="Shadow Mapping 方法、软阴影">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/FGRN13A%20(realesrgan-x4plus-anime%20x2)_h160.png">
-<meta property="article:published_time" content="2024-01-31T13:07:31.000Z">
-<meta property="article:modified_time" content="2024-02-01T10:49:07.331Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/FGKD01B%20(realesrgan-x4plus-anime%20x2)_h160.png">
+<meta property="article:published_time" content="2024-02-02T10:04:55.000Z">
+<meta property="article:modified_time" content="2024-02-02T10:11:55.149Z">
 <meta property="article:author" content="memo2586">
 <meta property="article:tag" content="Games101">
 <meta property="article:tag" content="计算机图形学">
 <meta property="article:tag" content="笔记">
-<meta property="article:tag" content="几何">
-<meta property="article:tag" content="几何处理">
+<meta property="article:tag" content="Shadows">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/FGRN13A%20(realesrgan-x4plus-anime%20x2)_h160.png">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/FGKD01B%20(realesrgan-x4plus-anime%20x2)_h160.png">
   
   
   
-  <title>Games101 - Lecture 12 Geometry 3 - memo&#39;s blog</title>
+  <title>Games101 - Lecture 12.5 Shadows - memo&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -232,7 +231,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Games101 - Lecture 12 Geometry 3"></span>
+            <span id="subtitle" data-typed-text="Games101 - Lecture 12.5 Shadows"></span>
           
         </div>
 
@@ -243,8 +242,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-01-31 21:07" pubdate>
-          2024年1月31日 晚上
+        <time datetime="2024-02-02 18:04" pubdate>
+          2024年2月2日 晚上
         </time>
       </span>
     
@@ -255,7 +254,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.8k 字
+          823 字
         
       </span>
     
@@ -266,7 +265,7 @@
         
         
         
-          15 分钟
+          7 分钟
         
       </span>
     
@@ -311,12 +310,12 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Games101 - Lecture 12 Geometry 3</h1>
+            <h1 id="seo-header">Games101 - Lecture 12.5 Shadows</h1>
             
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2024年2月1日 晚上
+                    本文最后更新于：2024年2月2日 晚上
                   
                 
               </p>
@@ -325,115 +324,42 @@
               <div class="markdown-body">
                 
                 <p><img
-src="https://raw.githubusercontent.com/memo2586/Image-repo/master/FGRN13A%20(realesrgan-x4plus-anime%20x2).png" srcset="/img/loading.gif" lazyload /></p>
-<h1 id="geometry-processing">Geometry Processing</h1>
-<h3 id="mesh-subdivision">1. Mesh subdivision</h3>
-<p><img
-src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240131172124465.png" srcset="/img/loading.gif" lazyload /></p>
-<h4 id="表面细分的规则">表面细分的规则</h4>
-<p>表面细分可不仅仅是将一个多边形划分为更多的多边形这么简单，还要让划分后的模型表面更加光滑。</p>
-<p>可以说，表面细分的步骤分为两步：</p>
-<ul>
-<li>创建更多的三角形（顶点）</li>
-<li>调整他们的位置</li>
-</ul>
-<h4 id="loop-subdivision">Loop Subdivision</h4>
-<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs tex">Loop 方法使用发明者 Charles Loop 的姓命名<br>绝不是该方法与循环有什么关系~<br></code></pre></td></tr></table></figure>
-<ul>
-<li><p>将三角形每条边的中点两两相连，将一个三角形划分成四个三角形 <img
-src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240131174211575.png" srcset="/img/loading.gif" lazyload /></p></li>
-<li><p>根据权重改变顶点的位置（新旧顶点的更新方式不同）</p>
-<ul>
-<li><p>对于新的顶点：</p>
-<p>考虑两个相邻的三角形，一般来说，旧的三角形的边都会与相邻三角形共享（边界等特殊情况除外），而新的顶点又都定义在这些边的中点上。所以，新的顶点都会与相邻另一个三角形共享。</p>
-<p>我们要做的是，找到新的顶点所在的共享边上的两个顶点，与另外的两个顶点的坐标，按照一定的权重对这些坐标取平均，用来决定这个新的顶点的坐标。</p>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240131180046059.png" srcset="/img/loading.gif" lazyload style="zoom: 50%;" /></p>
-<p>比如上图的白点 P，它所在的共享边的两端端点为 A 与
-B，另外的两个顶点坐标为 C 与 D，可以按照以下方法计算该点的坐标： <span
-class="math display">\[
-P=3/8(A+B)+1/8(C+D)
-\]</span></p></li>
-<li><p>对于旧的顶点：</p>
-<p>与新的顶点相似，旧的顶点同样考虑采用临近点的加权平均值作为新的坐标。当此时，权重是根据顶点的度数决定的。</p>
-<p>一个顶点的度数越低，那么该顶点对模型的整体外观中起到的决定性作用越强，例如一个尖锐的边缘、拐角或者是模型的凹凸点。那么这些点的原始坐标所占的权重旧越大，反之原始坐标所占的权重旧就越小。</p>
-<p>综上，定义两个变量：</p>
-<ul>
-<li><p>n：顶点的度数</p></li>
-<li><p>u：与顶点度数相关的一个常数，可以取作 <span
-class="math display">\[
-u =
-\begin{cases}
-    3/16 &amp; \text{if } n = 0 \\
-    3/(8n) &amp; \text{otherwise}
-\end{cases}
-\]</span></p></li>
-</ul>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240131204621089.png" srcset="/img/loading.gif" lazyload style="zoom:50%;" /></p></li>
-</ul>
-<p>如上图的度数为 6 的白点 P，它临近的所有点的和为
-S，那么计算新的坐标为： <span class="math display">\[
-(1-nu)*P+u*S
-\]</span></p></li>
-</ul>
-<figure>
-<img
-src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240131210604843.png" srcset="/img/loading.gif" lazyload
-alt="Loop Subdivision" />
-<figcaption aria-hidden="true">Loop Subdivision</figcaption>
-</figure>
-<p>Loop Subdivision 只有在多边形全是三角形的情况下才能工作。</p>
-<h4 id="catmull-clark-subdivision">Catmull-Clark Subdivision</h4>
-<p>在学习 Catmull-Clark Subdivision 之前，定义两个概念：</p>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240201151925127.png" srcset="/img/loading.gif" lazyload style="zoom: 50%;" /></p>
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/FGKD01B%20(realesrgan-x4plus-anime%20x2).png" srcset="/img/loading.gif" lazyload /></p>
+<h2 id="shadow-mapping">Shadow Mapping</h2>
+<p>模型在实际上存在遮挡关系，被遮挡的地方会产生阴影，之前学习的着色模型并未考虑到这一点。</p>
+<p>Shadow Mapping
+是一种图像空间算法，是一种在计算阴影时不需要了解场景几何结构的方法。</p>
+<p>Shadow Map
+理论上只能<strong>应用于点光源场景与渲染硬阴影</strong>，但不妨碍 Shadow
+Map 成为主流的技术。</p>
+<p>该算法的主要思路是：<strong>不在阴影中的点，必须同时被光源和相机所看到</strong>。</p>
+<h3 id="shadow-mapping-的步骤">Shadow Mapping 的步骤</h3>
 <ol type="1">
-<li><p>Non-quad face：非四边形面</p></li>
-<li><p>Extraordinary vertex：奇异点，度数不为 4 的点</p></li>
+<li><p>从光源对整个场景做一个光栅化，不做着色，只记录下深度信息；</p>
+<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240202170456020.png" srcset="/img/loading.gif" lazyload style="zoom: 67%;" /></p></li>
+<li><p>从摄像机视角做光栅化，任何一个点只要将其投影到之前从光源记录下的深度图中，如果从摄像机到该点的深度信息与从光源到该点的深度信息一致，那么该点不在阴影中；</p>
+<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240202171311702.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p>
+<p>如果从摄像机到该点的深度信息与从光源到该点的深度信息不一致，那么该点在阴影中；</p>
+<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240202171553857.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p></li>
 </ol>
-<ul>
-<li><p>表面细分的第一步自然是增加顶点的数量，取多边形面的每条边的中点，与多边形面内部的一个中心点，再把边上的中点与面上的中心点都连起来：</p>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240201153757845.png" srcset="/img/loading.gif" lazyload style="zoom:50%;" /></p>
-<p>在划分非四边形面时，由于其中心点要连接其边数多的点，所以它会变成一个奇异点，且非四边形面会被划分成多个四边形面。</p>
-<p>也就是说在一次 Catmull-Clark Subdivision
-中，通过引入与非四边形面相同数量的奇异点，能够将所有面划分成四边形面。</p>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240201155213466.png" srcset="/img/loading.gif" lazyload style="zoom:50%;" alt="第二次细分后奇异点数量不再增加"></p></li>
-<li><p>对顶点坐标进行更新，该方法把顶点分为三类，按照以下规则更新：</p>
-<ul>
-<li><p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240201162053717.png" srcset="/img/loading.gif" lazyload style="zoom: 67%;" />
-<span class="math display">\[
-f = \frac{v_1+v_2+v_3+v_4}{4}
-\]</span></p></li>
-<li><p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240201162248573.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" />
-<span class="math display">\[
-e=\frac{v_1+v_2+f_1+f_2}{4}
-\]</span></p></li>
-<li><p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240201162642475.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" />
-<span class="math display">\[
-v=\frac{f_1+f_2+f_3+f_4+2(m_1+m_2+m_3+m_4)+4p}{16}
-\]</span></p></li>
-</ul></li>
-</ul>
+<h3 id="shadow-mapping-的问题">Shadow Mapping 的问题</h3>
 <p><img
-src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240201164342042.png" srcset="/img/loading.gif" lazyload /></p>
-<hr />
-<h3 id="mesh-simplification">2. Mesh Simplification</h3>
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240202171946800.png" srcset="/img/loading.gif" lazyload /></p>
+<p>从光源出发，可以得到像这样一个深度图：</p>
+<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240202172212285.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p>
+<p>当我从实际的相机看到的点，再将其投影到上面那张深度图时：</p>
+<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240202172520434.png" srcset="/img/loading.gif" lazyload style="zoom:80%;" /></p>
+<p>可以观察到存在走样与明显错误。</p>
+<p>为什么会出现错误？因为几何在实际的场景中都是以浮点数计算的，那就容易出现精度问题，要做到“是否一致”这个判定条件本身就很困难。如果更改为判断大小或者添加误差范围，可以改善问题。</p>
+<p>另外，如果 Shadow Map
+本身的分辨率太低，而场景渲染时使用的分辨率太高，自然就会产生走样（游戏中的阴影质量设置大部分是对
+Shadow Map 的分辨率作调整）。</p>
+<h3 id="软阴影soft-shadows">软阴影（Soft Shadows）</h3>
 <p><img
-src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240201165257261.png" srcset="/img/loading.gif" lazyload /></p>
-<h4 id="edge-collapsing边坍缩">Edge Collapsing（边坍缩）</h4>
-<p>边坍缩：找到一条边，把这条边两端的顶点合为一个顶点。自然的这条边就消失了。</p>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240201170102345.png" srcset="/img/loading.gif" lazyload style="zoom: 50%;" /></p>
-<h4 id="quadric-error-metrics二次误差度量">Quadric Error
-Metrics（二次误差度量）</h4>
-<p>在边坍缩后，我如何决定剩下的顶点的位置，使得边坍缩对模型外观的影响最小？</p>
-<p>如果只是简单地对该坍缩点有关系的面进行求和取平均，那么通常不能得到一个很好的效果。此时我们要用到二次误差度量，它与机器学习中的
-L2 距离十分相似。</p>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240201170807947.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p>
-<p>找到一个位置，使得在该位置上坍缩点到原本的面的距离的平方和最小。</p>
-<p>那么对于一个模型，我们可以计算出其所有边坍缩后产生的二次误差度量后，对这些二次误差度量进行排序，然后从最小花费开始进行边坍缩？</p>
-<p>按照这种方法会有个小问题：坍缩一条边后，与这条边相邻的边的位置会产生变化，其二次误差度量也会跟着变化。我们无法保证经过变化后，当前排序的最小花费依旧正确。</p>
-<p>为此我们需要用小根堆，既可以快速查询，也可以动态更新。</p>
-<p>在上述方法中，我们通过不断求出局部的最优解，去试图找到全局的一个最优解，也就是典型的贪心算法，并不能保证全局的最优解（但是够用）。</p>
-<p><img
-src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240201175126362.png" srcset="/img/loading.gif" lazyload /></p>
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240202174939857.png" srcset="/img/loading.gif" lazyload /></p>
+<p>软阴影的边缘频率低，有明显的过度，且越靠近物体的根部阴影就越“硬”。</p>
+<p>软阴影就是物理上的半影，是指由于光源的扩散或光线经过不完全遮挡的物体表面而产生的较为柔和的阴影效果。当光源足够大时，从光源的不同位置向某点的遮挡情况不同。也就是说，从物体表面出发可以看到的光源大小不同，可以看到的光源越小，该点的阴影就越清晰。</p>
+<p>从不产生阴影的点逐渐向朝向光源的物体背面移动，可以看到的光源大小是逐渐变小的，也就产生了自然柔和的，边缘不清晰的阴影效果。</p>
 
                 
               </div>
@@ -473,9 +399,7 @@ src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240201
       
         <a href="/tags/%E7%AC%94%E8%AE%B0/" class="print-no-link">#笔记</a>
       
-        <a href="/tags/%E5%87%A0%E4%BD%95/" class="print-no-link">#几何</a>
-      
-        <a href="/tags/%E5%87%A0%E4%BD%95%E5%A4%84%E7%90%86/" class="print-no-link">#几何处理</a>
+        <a href="/tags/Shadows/" class="print-no-link">#Shadows</a>
       
     </div>
   
@@ -487,8 +411,8 @@ src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240201
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Games101 - Lecture 12 Geometry 3</div>
-      <div>https://memo2586.github.io/2024/01/31/Games101-Lecture-12-Geometry-3/</div>
+      <div>Games101 - Lecture 12.5 Shadows</div>
+      <div>https://memo2586.github.io/2024/02/02/Games101-Lecture-12-5-Shadows/</div>
     </div>
     <div class="license-meta">
       
@@ -500,7 +424,7 @@ src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240201
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年1月31日</div>
+          <div>2024年2月2日</div>
         </div>
       
       
@@ -532,18 +456,12 @@ src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240201
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/02/02/Games101-Lecture-12-5-Shadows/" title="Games101 - Lecture 12.5 Shadows">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Games101 - Lecture 12.5 Shadows</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/01/29/Games101-%E4%BD%9C%E4%B8%9A4/" title="Games101 - 作业4">
-                        <span class="hidden-mobile">Games101 - 作业4</span>
+                      <a href="/2024/01/31/Games101-Lecture-12-Geometry-3/" title="Games101 - Lecture 12 Geometry 3">
+                        <span class="hidden-mobile">Games101 - Lecture 12 Geometry 3</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
