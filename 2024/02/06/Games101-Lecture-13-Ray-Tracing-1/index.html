@@ -26,8 +26,9 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240206154712509.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240206171807282.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240206181235044.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240207115050005.png">
 <meta property="article:published_time" content="2024-02-06T10:18:40.000Z">
-<meta property="article:modified_time" content="2024-02-06T10:20:39.057Z">
+<meta property="article:modified_time" content="2024-02-07T04:16:26.481Z">
 <meta property="article:author" content="memo2586">
 <meta property="article:tag" content="Games101">
 <meta property="article:tag" content="计算机图形学">
@@ -255,7 +256,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.6k 字
+          1.9k 字
         
       </span>
     
@@ -266,7 +267,7 @@
         
         
         
-          14 分钟
+          16 分钟
         
       </span>
     
@@ -316,7 +317,7 @@
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2024年2月6日 晚上
+                    本文最后更新于：2024年2月7日 中午
                   
                 
               </p>
@@ -385,7 +386,7 @@ alt="早期的 Whitted-Style 光线追踪效果" />
 <p>光线（射线）在数学上由其原点和方向向量定义。</p>
 <p>例如:<img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240206171807282.png" srcset="/img/loading.gif" lazyload style="zoom:50%;" /></p>
 <p>光线方程： <span class="math display">\[
-r(t)=o+td\;,\;(0\leqslant t&lt;\infty)
+r(t)=o+td,\;0\leqslant t&lt;\infty
 \]</span> 其中 <span class="math inline">\(o\)</span> 表示原点，<span
 class="math inline">\(t\)</span> 表示“时间”，<span
 class="math inline">\(d\)</span> 表示方向。</p>
@@ -410,7 +411,8 @@ t&lt;\infty)\)</span></li>
 <li>球面上的点 <span class="math inline">\(p\)</span>：<span
 class="math inline">\((p-c)^2-R^2=0\)</span></li>
 </ul>
-<p>相交时，有 <span class="math inline">\(p=o+td\)</span>，即满足 <span
+<p>相交时，交点既在光线上，又在球表面上，所以有 <span
+class="math inline">\(p=o+td\)</span>，即满足 <span
 class="math inline">\((o+td-c)^2-R^2=0\)</span> 时相交。</p>
 <p>推广到一般性的隐式表面的求交，当</p>
 <ul>
@@ -422,6 +424,27 @@ class="math inline">\(f(o+td)=0\)</span>，解出正实数 <span
 class="math inline">\(t\)</span>，再代入光线方程得到交点。</p>
 <h4 id="ray-intersection-with-triangle-mesh">6.2 Ray Intersection with
 Triangle Mesh</h4>
+<p>解决光线与三角形面求交问题，我们可以将问题分解：</p>
+<ul>
+<li>光线与三角形所在平面求交</li>
+<li>判断交点是否在三角形内</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240207115050005.png" srcset="/img/loading.gif" lazyload style="zoom:80%;" /></p>
+<ul>
+<li>光线：<span class="math inline">\(r(t)=o+td\;,\;(0\leqslant
+t&lt;\infty)\)</span></li>
+<li>平面：<span class="math inline">\((p-p&#39;)\cdot N=0\)</span></li>
+</ul>
+<p>当光线与平面相交时，交点既在光线上，又在平面上。</p>
+<p>设 <span class="math inline">\(p=r(t)\)</span> ，得 <span
+class="math inline">\((p-p&#39;)\cdot N=(o+td-p&#39;)\cdot
+N=0\)</span></p>
+<p>化简得： <span class="math display">\[
+t=\frac{(p&#39;-o)\cdot N}{d\cdot N},\;0\leqslant t&lt;\infty
+\]</span> 解出 <span class="math inline">\(t\)</span>
+后得到交点，再判断交点是否在三角形内。</p>
+<p>如何判断交点在三角形内详见本课程第二节<a
+href="https://memo2586.github.io/2023/11/22/Games101-Lecture-02-Review-of-Linear-Algebra/#vector-multiplication-cross-product">向量叉乘</a>的内容。</p>
 
                 
               </div>
