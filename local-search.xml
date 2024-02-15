@@ -4,6 +4,37 @@
   
   
   <entry>
+    <title>Games101 - Lecture 14 Ray Tracing 2</title>
+    <link href="/2024/02/15/Games101-Lecture-14-Ray-Tracing-2/"/>
+    <url>/2024/02/15/Games101-Lecture-14-Ray-Tracing-2/</url>
+    
+    <content type="html"><![CDATA[<h1 id="ray-tracing-2">Ray Tracing 2</h1><h3 id="uniform-spatial-partitions-grids">1. Uniform Spatial Partitions(Grids)</h3><p>均匀空间划分是 AABB 的一种加速方法。</p><ul><li>找到包围盒后，用网格将包围盒划分为许多小盒子，并找到哪些盒子会与物体表面有交点。</li><li>再按光线射入的顺序遍历盒子，遇到与物体有交点的盒子时，遍历盒子内检查光线是否与物体有交点。</li></ul><p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240208142429128.png" style="zoom: 67%;" /></p><p>相比不优化的方法，我们只需要多做几次光线与盒子的求交，就可以减少光线与物体的求交次数。由于光线与物体求交的复杂度要远大于与盒子求交的复杂度，效率可以得到很好的提升。</p><p>（根据经验，当划分出盒子的数量是包围盒中物体数量的 27倍左右时效率最大化）</p><figure><imgsrc="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240215192812813.png"alt="物体分布不均的场景" /><figcaption aria-hidden="true">物体分布不均的场景</figcaption></figure><p>当场景空间中的物体分布均匀时，均匀空间划分的效果比较好。物体分布不均匀时，均匀空间划分后将会划分出许多空的盒子，划分这些盒子所消耗的计算量是无意义的。这被称为"Teapot in a stadium" 问题。</p><h3 id="spatial-partitions">2. Spatial Partitions</h3><p>空间划分是在均匀空间划分的基础上，针对其缺点（空间中物体分布不均匀时效率降低）修改的一种方法。</p><p>说白了就是在“空”的地方，不再用同样大小的网格进行划分，而是使用其他的划分结构，能够将这些“空”的地方用少量的网格划分出来。</p><p><imgsrc="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240215163643878.png" /></p><ul><li><p>N叉树：当划分得到的一个盒子足够小或它已经是空的之后，停止对这个盒子进行划分，这样就避免了分出更多小的空盒子。N叉树有个缺点，在线段中它是二叉树，在 N 维时会进化为 <spanclass="math inline">\(2^N\)</span>叉树，变成一个很复杂的数据结构，因此人们不喜欢用这个划分结构。</p></li><li><p>BSP树：二分包围盒，每次在一个方向上根据二分结果划分。缺点是划分后的网格不与轴平行，以及在高维情况下难以划分与计算。</p></li><li><p><strong>KD树</strong>：按照空间中多个坐标轴的方向，交替方向对网格进行划分，每次划分每个盒子只会被划分为两半（划分位置不一定要在中间），作为当前盒子的两个子节点，所以KD 树是一个二叉树，且空间中物体信息只会存储在叶子节点上。</p></li></ul><p><imgsrc="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240215171244960.png" /></p><p>在做光线追踪之前先建立好加速结构，那么 KD树是如何帮助我们做到加速的呢？</p><p>一束光线射入包围盒就表示它会与 KD树的根节点相交，可以从根节点出发向下遍历 KD树。遍历到根节点就判断它是否与光线相交，否则停止在该方向上遍历。遍历到叶子节点就判断它是否与光线相交，并且该节点中的物体是否与光线相交，是则找到光线打中的点并停止遍历。</p><p><imgsrc="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240215173838906.png" /></p><p>实际上的 KD树仍存在不好的问题与性质，例如如何判断三角形面是否在某个叶子节点中？如果一个物体或三角形面同时存在两个不同的叶子节点中时，应该如何存储？这些问题的解决方法较难实现，所以渐渐地KD 树已不再是一种被广泛使用的方法。</p><h3 id="bounding-volume-hierarchy-bvh">3. Bounding Volume Hierarchy(BVH)</h3><p>BVH 解决了空间划分中存在的不好的问题，得到了很广泛的应用。</p><p>首先，BVH不在空间上进行划分，而是对空间中的物体进行划分。假设我有如下一些物体，先用一个最大的包围盒将其包括起来：<imgsrc="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240215181027897.png" /></p><p>再按某个方向，将着一些三角形分为两部分并分别计算这两部分的新的包围盒。</p><p><imgsrc="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240215181209391.png" /></p><p>可以发现新的包围盒间有可能存在一部分重叠，为了提高效率，应该注意划分方式使得重叠部分面积尽可能小。再对新的包围盒划分，直到划分后的包围盒满足一定条件。同样的，只会在叶子节点存储物体信息。</p><p><imgsrc="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240215181549829.png" /></p><p>通过如此划分之后，我们可以明确地知道哪个三角形会在哪个包围盒里，并且任意一个三角形都只会出现在一个包围盒中，解决了KD 树出现的问题。</p><p>划分物体时有一些技巧：</p><ul><li>始终选择节点中最长的边的方向进行划分。</li></ul><p>注意划分方向可以保证划分后的包围盒各边平衡。</p><ul><li>在中间对象的位置分割节点。</li></ul><p>注意使划分两边的三角形数量相近可以保证二叉树平衡，快速选择算法可以在O(n) 的复杂度解决 Top K 问题。</p><ul><li>在包围盒中三角形数量少时停止划分（e.g. 5)</li></ul><p>BVH 的实际应用与 KD Tree 差不多，都是在二叉树中遍历：</p><figure><imgsrc="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240215192628979.png"alt="伪代码" /><figcaption aria-hidden="true">伪代码</figcaption></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>计算机图形学</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Games101</tag>
+      
+      <tag>计算机图形学</tag>
+      
+      <tag>笔记</tag>
+      
+      <tag>Ray Tracing</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Games101 - Lecture 13 Ray Tracing 1</title>
     <link href="/2024/02/06/Games101-Lecture-13-Ray-Tracing-1/"/>
     <url>/2024/02/06/Games101-Lecture-13-Ray-Tracing-1/</url>
