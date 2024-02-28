@@ -16,31 +16,27 @@
   <meta name="author" content="memo2586">
   <meta name="keywords" content="">
   
-    <meta name="description" content="施工中..">
+    <meta name="description" content="光线与三角形相交：生成光线与MT算法的应用">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Games101 - Lecture 15 Ray Tracing 3">
-<meta property="og:url" content="https://memo2586.github.io/2024/02/18/Games101-Lecture-15-Ray-Tracing-3/index.html">
+<meta property="og:title" content="Games101 - 作业5">
+<meta property="og:url" content="https://memo2586.github.io/2024/02/29/Games101-%E4%BD%9C%E4%B8%9A5/index.html">
 <meta property="og:site_name" content="memo&#39;s blog">
-<meta property="og:description" content="施工中..">
+<meta property="og:description" content="光线与三角形相交：生成光线与MT算法的应用">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240216163851691.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240218164150887.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240218175626506.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240218180627513.png">
-<meta property="article:published_time" content="2024-02-18T11:18:47.000Z">
-<meta property="article:modified_time" content="2024-02-18T11:20:17.454Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/FGKD13A%20-%20title.png">
+<meta property="article:published_time" content="2024-02-28T16:06:56.000Z">
+<meta property="article:modified_time" content="2024-02-28T16:51:26.906Z">
 <meta property="article:author" content="memo2586">
 <meta property="article:tag" content="Games101">
 <meta property="article:tag" content="计算机图形学">
-<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="代码实现">
 <meta property="article:tag" content="Ray Tracing">
-<meta property="article:tag" content="Basic Radiometry">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240216163851691.png">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/FGKD13A%20-%20title.png">
   
   
   
-  <title>Games101 - Lecture 15 Ray Tracing 3 - memo&#39;s blog</title>
+  <title>Games101 - 作业5 - memo&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -235,7 +231,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Games101 - Lecture 15 Ray Tracing 3"></span>
+            <span id="subtitle" data-typed-text="Games101 - 作业5"></span>
           
         </div>
 
@@ -246,8 +242,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-02-18 19:18" pubdate>
-          2024年2月18日 晚上
+        <time datetime="2024-02-29 00:06" pubdate>
+          2024年2月29日 凌晨
         </time>
       </span>
     
@@ -269,7 +265,7 @@
         
         
         
-          17 分钟
+          18 分钟
         
       </span>
     
@@ -314,12 +310,12 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Games101 - Lecture 15 Ray Tracing 3</h1>
+            <h1 id="seo-header">Games101 - 作业5</h1>
             
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2024年2月18日 晚上
+                    本文最后更新于：2024年2月29日 凌晨
                   
                 
               </p>
@@ -327,119 +323,74 @@
             
               <div class="markdown-body">
                 
-                <h1 id="ray-tracing-3">Ray Tracing 3</h1>
-<h3 id="intensity">1. Intensity</h3>
+                <p><img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/FGKD13A.png" srcset="/img/loading.gif" lazyload /></p>
+<h3 id="总览">总览</h3>
+<p>(来自课程作业介绍PDF)</p>
+<p>在这部分的课程中，我们将专注于使用光线追踪来渲染图像。在光线追踪中
+最重要的操作之一就是找到光线与物体的交点。一旦找到光线与物体的交点，就
+可以执行着色并返回像素颜色。在这次作业中，我们需要实现两个部分：光线的
+生成和光线与三角的相交。本次代码框架的工作流程为：</p>
+<ol type="1">
+<li>从 main 函数开始。我们定义场景的参数，添加物体（球体或三角形）到场景
+中，并设置其材质，然后将光源添加到场景中。</li>
+<li>调用 Render(scene) 函数。在遍历所有像素的循环里，生成对应的光线并将
+返回的颜色保存在帧缓冲区（framebuffer）中。在渲染过程结束后，帧缓冲
+区中的信息将被保存为图像。</li>
+<li>在生成像素对应的光线后，我们调用 CastRay 函数，该函数调用 trace 来
+查询光线与场景中最近的对象的交点。</li>
+<li>然后，我们在此交点执行着色。我们设置了三种不同的着色情况，并且已经
+为你提供了代码。 你需要修改的函数是： • Renderer.cpp 中的
+Render()：这里你需要为每个像素生成一条对应的光 线，然后调用函数
+castRay() 来得到颜色，最后将颜色存储在帧缓冲区的相 应像素中。 •
+Triangle.hpp 中的 rayTriangleIntersect(): v0, v1, v2 是三角形的三个
+顶点，orig 是光线的起点，dir 是光线单位化的方向向量。tnear, u, v 是你需
+要使用我们课上推导的 Moller-Trumbore 算法来更新的参数。</li>
+</ol>
+<h3 id="编写">编写</h3>
+<p>作业的介绍文档已经把新的框架以及作业内容介绍的很清楚了。</p>
+<p>先来写Renderer.cpp 中的
+Render()方法，该方法的主要目的是遍历所有像素，找到从观察点出发到某个像素的一个方向向量。此处仅介绍方法，详细推荐阅读<a
+target="_blank" rel="noopener" href="https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-generating-camera-rays/generating-camera-rays.html">Generating
+Camera Rays with Ray-Tracing</a>.</p>
+<p><img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240229002619588.png" srcset="/img/loading.gif" lazyload /></p>
 <ul>
-<li>定义：<strong>由光源辐射出的每单位立体角的功率</strong>，也就是光源在任意一个方向上的亮度。</li>
-</ul>
-<figure>
-<img
-src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240216161416460.png" srcset="/img/loading.gif" lazyload
-alt="candela 是标准制程单位" />
-<figcaption aria-hidden="true">candela 是标准制程单位</figcaption>
-</figure>
-<p>假设一个点光源在所有方向上辐射的能量是相等的，我们可以计算任意方向上的
-Radiant Intensity 为 <span class="math inline">\(\Phi/4\pi\)</span>
-。</p>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240216163851691.png" srcset="/img/loading.gif" lazyload style="zoom:80%;" /></p>
-<h3 id="irradiance">2. Irradiance</h3>
-<p>定义：<strong>由光源（垂直）辐射到每单位面积内的功率</strong>。</p>
-<p><img
-src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240217175223634.png" srcset="/img/loading.gif" lazyload /></p>
-<p>在学习 Phong Shading 的时候曾提到过 Lambert's Cosine Law
-问题，若平面与光线方向不垂直的时候，平面只能接受到光线的部分能量。</p>
-<p><img
-src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240217180236364.png" srcset="/img/loading.gif" lazyload /></p>
-<p>Irradiance 还可以解释 Phong Shading
-中的光线强度根据到光源的距衰减的问题。</p>
-<p><img
-src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240217181154466.png" srcset="/img/loading.gif" lazyload /></p>
-<p>随着到点光源距离的增加，总的能量不变，辐射到的总面积变大，所以单位面积接收到的辐射变小。也就是
-Irradiance 变小而不是 Intensity 变小，因为单位立体角不受距离 <span
-class="math inline">\(R\)</span> 影响。</p>
-<h3 id="radiance">3. Radiance</h3>
-<p>定义：<strong>在每单位立体角、每单位投影面积上辐射或接收的功率</strong>（power
-per unit solid angle per projected unit area）。</p>
-<p><img
-src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240217183128641.png" srcset="/img/loading.gif" lazyload /></p>
-<p>又可以联系前面两个概念将它理解为：</p>
-<ul>
-<li><p>Incident Radiance：Irradiance per solid angle</p>
-<p><img
-src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240218161850094.png" srcset="/img/loading.gif" lazyload /></p></li>
-<li><p>Exiting Radiance：Intensity per projected unit area</p>
-<p><img
-src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240218161925314.png" srcset="/img/loading.gif" lazyload /></p></li>
-</ul>
-<p>从上面两个方向解释就是：</p>
-<ul>
-<li>单位面积辐射出的能量，其中通过每单位立体角的那部分能量的功率</li>
+<li><strong>NDC space</strong>：将像素坐标压缩到[0,1]内：</li>
 </ul>
 <p><span class="math display">\[
-L(p,\omega)=\frac{dE(p)}{d\omega\cos{\theta}}
-\]</span></p>
-<ul>
-<li>通过单位立体角的能量，其中辐射到每单位面积的那部分能量的功率</li>
-</ul>
-<p><span class="math display">\[
-L(p,\omega)=\frac{dI(p,\omega)}{dA\cos{\theta}}
-\]</span></p>
-<h3 id="irradiance-vs.-radiance">4. Irradiance vs. Radiance</h3>
-<p><img
-src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240218162516351.png" srcset="/img/loading.gif" lazyload /></p>
-<p>区别：Irradiance 是区域 <span class="math inline">\(dA\)</span>
-的接收到的能量总功率，而 Radiance 是区域 <span
-class="math inline">\(dA\)</span> 从 <span
-class="math inline">\(d\omega\)</span> 方向接收到的功率。</p>
-<p>数学上，如果我们对 Radiance 在所有方向上积分，积分的结果就是
-Irradiance。 <span class="math display">\[
 \begin{gather*}
-dE(p,\omega)=L_i(p,\omega)\cos\theta \;d\omega \\
-E(p)=\int_{H^2}(p,\omega)\cos\theta\;dw
+PixelNDC_x = \dfrac{(Pixel_x + 0.5)}{ImageWidth}\\
+PixelNDC_y = \dfrac{(Pixel_y + 0.5)}{ImageHeight}
 \end{gather*}
 \]</span></p>
-<h3 id="bidirectional-reflectance-distribution-function-brdf">5.
-Bidirectional Reflectance Distribution Function (BRDF)</h3>
-<p>BRDF
-中文名为双向反射分布函数，它可以定义一个表面上光线反射的性质。简单地说
-BRDF 可以定义一束光线从某个方向进来，它将会被如何反射到某个方向去。</p>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240218164150887.png" srcset="/img/loading.gif" lazyload style="zoom:80%;" /></p>
-<p>光线的反射可以理解为两个过程：光线射入一个表面能量被其吸收，吸收了光线的表面发出这部分能量。这样就可以用学习了的
-Irradiance 和 Radiance 解释反射。</p>
-<p>来自 <span class="math inline">\(\omega_i\)</span> 方向的 Radiance
-会被 <span class="math inline">\(dA\)</span> 吸收为功率 <span
-class="math inline">\(E\)</span> 的能量，再将这份能量变成向其他方向的
-Radiance 发射出去。</p>
 <ul>
-<li><p>过程中 <span class="math inline">\(dA\)</span> 接收到的能量：
-<span
-class="math inline">\(dE(\omega_i)=L(\omega_i)\cos{\omega_i}d\omega_i\)</span></p></li>
-<li><p><span class="math inline">\(dA\)</span> 辐射出去的能量（源于
-<span class="math inline">\(dE\)</span>）： <span
-class="math inline">\(dL_r(\omega_r)\)</span></p></li>
+<li><strong>screen space</strong>：变换坐标轴位置</li>
 </ul>
-<p>接下来的问题就是，已知 <span class="math inline">\(dA\)</span>
-会向四周辐射能量，但不知道向某一个方向辐射的能量是多少。</p>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240218175626506.png" srcset="/img/loading.gif" lazyload style="zoom:80%;" /></p>
-<p>所以我们定义一个函数，它考虑一个单位面积 <span
-class="math inline">\(dA\)</span> ，从某个方向的单位立体角 <span
-class="math inline">\(d\omega\)</span> 来到后接收到的 Irradiance
-会被如何分配到各个不同的立体角 <span
-class="math inline">\(\omega_r\)</span> 上去。</p>
-<p>那么，从 <span class="math inline">\(\omega_i\)</span> 到 <span
-class="math inline">\(\omega_r\)</span> 方向 BRDF 的值就会等于 <span
-class="math inline">\(dL_r(\omega_r)\)</span> 与<span
-class="math inline">\(dA\)</span> 接收到的能量 <span
-class="math inline">\(dE(\omega_i)\)</span> 的比值。 <span
-class="math display">\[
-f_r(\omega_i\rightarrow\omega_r)=\frac{dL_r(\omega_r)}{dE_i(\omega_i)}=\frac{dL_r(\omega_r)}{L_i(\omega_i)\cos{\theta_i}d\omega_i}\;\;\begin{bmatrix}1\\sr\end{bmatrix}
-\]</span> 明确地说，BRDF
-表示有多少光从每个入射方向反射到每个出射方向，它描述了光线会和物体如何作用，定义了不同的材质。</p>
-<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240218180627513.png" srcset="/img/loading.gif" lazyload style="zoom:80%;" /></p>
-<p>那么，把所有入射方向上对某个出射方向上的贡献积分，可以得到相机看到的最终效果：
-<span class="math display">\[
-L_r(p,\omega_r)=\int_{H^2}f_r(p,\omega_i\rightarrow\omega_r)L_i(p,\omega_i)\cos{\theta_i}d\omega_i
+<p><span class="math display">\[
+\begin{gather*}
+PixelScreen_x = 2 * {PixelNDC_x} - 1\\
+PixelScreen_y = 1 - 2 * {PixelNDC_y}
+\end{gather*}
 \]</span></p>
+<ul>
+<li>x坐标乘以宽高比，恢复原始比例</li>
+</ul>
+<p><img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240229003408082.png" srcset="/img/loading.gif" lazyload /></p>
+<ul>
+<li>x,y坐标都乘以可视角度的一半的tan值，便可以计算出其世界坐标。</li>
+</ul>
+<p><img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240229003634269.png" srcset="/img/loading.gif" lazyload /></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j &lt; scene.height; ++j)<br>&#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; scene.width; ++i)<br>    &#123;<br>        <span class="hljs-type">float</span> x = (<span class="hljs-number">2.f</span> * (((<span class="hljs-type">float</span>)i + <span class="hljs-number">0.5</span>) / scene.width) - <span class="hljs-number">1.f</span>) * imageAspectRatio * scale;<br>        <span class="hljs-type">float</span> y = (<span class="hljs-number">1.f</span> - (<span class="hljs-number">2.f</span> * (((<span class="hljs-type">float</span>)j + <span class="hljs-number">0.5</span>) / scene.height))) * scale;<br><br>        Vector3f dir = <span class="hljs-built_in">normalize</span>(<span class="hljs-built_in">Vector3f</span>(x, y, <span class="hljs-number">-1</span>));<br>        framebuffer[m++] = <span class="hljs-built_in">castRay</span>(eye_pos, dir, scene, <span class="hljs-number">0</span>);<br>    &#125;<br>    <span class="hljs-built_in">UpdateProgress</span>(j / (<span class="hljs-type">float</span>)scene.height);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>Triangle.hpp 中的
+rayTriangleIntersect()方法要实现课上讲过的MT算法，参数在总览中有介绍，MT算法可以看以前的<a
+href="https://memo2586.github.io/2024/02/06/Games101-Lecture-13-Ray-Tracing-1/#m%C3%B6ller-trumbore-algorithm">笔记</a>。</p>
+<p><img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240229004231404.png" srcset="/img/loading.gif" lazyload /></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">bool</span> <span class="hljs-title">rayTriangleIntersect</span><span class="hljs-params">(<span class="hljs-type">const</span> Vector3f&amp; v0, <span class="hljs-type">const</span> Vector3f&amp; v1, <span class="hljs-type">const</span> Vector3f&amp; v2, <span class="hljs-type">const</span> Vector3f&amp; orig,</span></span><br><span class="hljs-params"><span class="hljs-function">                          <span class="hljs-type">const</span> Vector3f&amp; dir, <span class="hljs-type">float</span>&amp; tnear, <span class="hljs-type">float</span>&amp; u, <span class="hljs-type">float</span>&amp; v)</span></span><br><span class="hljs-function"></span>&#123;<br>    Vector3f e1 = v1 - v0;<br>    Vector3f e2 = v2 - v0;<br>    Vector3f s = orig - v0;<br>    Vector3f s1 = <span class="hljs-built_in">crossProduct</span>(dir, e2);<br>    Vector3f s2 = <span class="hljs-built_in">crossProduct</span>(s, e1);<br>    <span class="hljs-type">float</span> res = <span class="hljs-built_in">dotProduct</span>(s1, e1);<br>    <span class="hljs-keyword">if</span>(res &lt;= <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br><br>    tnear = <span class="hljs-built_in">dotProduct</span>(s2, e2) / res;<br>    u = <span class="hljs-built_in">dotProduct</span>(s1, s) / res;<br>    v = <span class="hljs-built_in">dotProduct</span>(s2,dir) / res;<br>    <span class="hljs-keyword">if</span>(tnear &gt;= <span class="hljs-number">0</span> &amp;&amp; u &gt;= <span class="hljs-number">0</span> &amp;&amp; v &gt;= <span class="hljs-number">0</span> &amp;&amp; (<span class="hljs-number">1</span> - u - v) &gt;= <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>おしまい。</p>
 
                 
               </div>
@@ -477,11 +428,9 @@ L_r(p,\omega_r)=\int_{H^2}f_r(p,\omega_i\rightarrow\omega_r)L_i(p,\omega_i)\cos{
       
         <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/" class="print-no-link">#计算机图形学</a>
       
-        <a href="/tags/%E7%AC%94%E8%AE%B0/" class="print-no-link">#笔记</a>
+        <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0/" class="print-no-link">#代码实现</a>
       
         <a href="/tags/Ray-Tracing/" class="print-no-link">#Ray Tracing</a>
-      
-        <a href="/tags/Basic-Radiometry/" class="print-no-link">#Basic Radiometry</a>
       
     </div>
   
@@ -493,8 +442,8 @@ L_r(p,\omega_r)=\int_{H^2}f_r(p,\omega_i\rightarrow\omega_r)L_i(p,\omega_i)\cos{
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Games101 - Lecture 15 Ray Tracing 3</div>
-      <div>https://memo2586.github.io/2024/02/18/Games101-Lecture-15-Ray-Tracing-3/</div>
+      <div>Games101 - 作业5</div>
+      <div>https://memo2586.github.io/2024/02/29/Games101-作业5/</div>
     </div>
     <div class="license-meta">
       
@@ -506,7 +455,7 @@ L_r(p,\omega_r)=\int_{H^2}f_r(p,\omega_i\rightarrow\omega_r)L_i(p,\omega_i)\cos{
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年2月18日</div>
+          <div>2024年2月29日</div>
         </div>
       
       
@@ -538,18 +487,12 @@ L_r(p,\omega_r)=\int_{H^2}f_r(p,\omega_i\rightarrow\omega_r)L_i(p,\omega_i)\cos{
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/02/29/Games101-%E4%BD%9C%E4%B8%9A5/" title="Games101 - 作业5">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Games101 - 作业5</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/02/15/Games101-Lecture-14-Ray-Tracing-2/" title="Games101 - Lecture 14 Ray Tracing 2">
-                        <span class="hidden-mobile">Games101 - Lecture 14 Ray Tracing 2</span>
+                      <a href="/2024/02/18/Games101-Lecture-15-Ray-Tracing-3/" title="Games101 - Lecture 15 Ray Tracing 3">
+                        <span class="hidden-mobile">Games101 - Lecture 15 Ray Tracing 3</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
