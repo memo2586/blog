@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/FGKD13A%20-%20title.png">
 <meta property="article:published_time" content="2024-02-28T16:06:56.000Z">
-<meta property="article:modified_time" content="2024-02-28T16:53:45.219Z">
+<meta property="article:modified_time" content="2024-03-02T08:22:43.133Z">
 <meta property="article:author" content="memo2586">
 <meta property="article:tag" content="Games101">
 <meta property="article:tag" content="计算机图形学">
@@ -315,7 +315,7 @@
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2024年2月29日 凌晨
+                    本文最后更新于：2024年3月2日 下午
                   
                 
               </p>
@@ -327,32 +327,32 @@
 src="https://raw.githubusercontent.com/memo2586/Image-repo/master/FGKD13A.png" srcset="/img/loading.gif" lazyload /></p>
 <h3 id="总览">总览</h3>
 <p>(来自课程作业介绍PDF)</p>
-<p>在这部分的课程中，我们将专注于使用光线追踪来渲染图像。在光线追踪中
-最重要的操作之一就是找到光线与物体的交点。一旦找到光线与物体的交点，就
-可以执行着色并返回像素颜色。在这次作业中，我们需要实现两个部分：光线的
-生成和光线与三角的相交。本次代码框架的工作流程为：</p>
+<p>在这部分的课程中，我们将专注于使用光线追踪来渲染图像。在光线追踪中最重要的操作之一就是找到光线与物体的交点。一旦找到光线与物体的交点，就可以执行着色并返回像素颜色。在这次作业中，我们需要实现两个部分：光线的生成和光线与三角的相交。本次代码框架的工作流程为：</p>
 <ol type="1">
-<li>从 main 函数开始。我们定义场景的参数，添加物体（球体或三角形）到场景
-中，并设置其材质，然后将光源添加到场景中。</li>
-<li>调用 Render(scene) 函数。在遍历所有像素的循环里，生成对应的光线并将
-返回的颜色保存在帧缓冲区（framebuffer）中。在渲染过程结束后，帧缓冲
-区中的信息将被保存为图像。</li>
-<li>在生成像素对应的光线后，我们调用 CastRay 函数，该函数调用 trace 来
-查询光线与场景中最近的对象的交点。</li>
-<li>然后，我们在此交点执行着色。我们设置了三种不同的着色情况，并且已经
-为你提供了代码。 你需要修改的函数是： • Renderer.cpp 中的
-Render()：这里你需要为每个像素生成一条对应的光 线，然后调用函数
-castRay() 来得到颜色，最后将颜色存储在帧缓冲区的相 应像素中。 •
-Triangle.hpp 中的 rayTriangleIntersect(): v0, v1, v2 是三角形的三个
-顶点，orig 是光线的起点，dir 是光线单位化的方向向量。tnear, u, v 是你需
-要使用我们课上推导的 Moller-Trumbore 算法来更新的参数。</li>
+<li>从 main
+函数开始。我们定义场景的参数，添加物体（球体或三角形）到场景中，并设置其材质，然后将光源添加到场景中。</li>
+<li>调用 Render(scene)
+函数。在遍历所有像素的循环里，生成对应的光线并将返回的颜色保存在帧缓冲区（framebuffer）中。在渲染过程结束后，帧缓冲区中的信息将被保存为图像。</li>
+<li>在生成像素对应的光线后，我们调用 CastRay 函数，该函数调用 trace
+来查询光线与场景中最近的对象的交点。</li>
+<li>然后，我们在此交点执行着色。我们设置了三种不同的着色情况，并且已经为你提供了代码。你需要修改的函数是：</li>
 </ol>
+<ul>
+<li>Renderer.cpp 中的
+Render()：这里你需要为每个像素生成一条对应的光线，然后调用函数 castRay()
+来得到颜色，最后将颜色存储在帧缓冲区的相应像素中。</li>
+<li>Triangle.hpp 中的 rayTriangleIntersect(): v0, v1, v2
+是三角形的三个顶点，orig 是光线的起点，dir
+是光线单位化的方向向量。tnear, u, v 是你需要使用我们课上推导的
+Moller-Trumbore 算法来更新的参数。</li>
+</ul>
 <h3 id="编写">编写</h3>
-<p>作业的介绍文档已经把新的框架以及作业内容介绍的很清楚了。</p>
-<p>先来写Renderer.cpp 中的
-Render()方法，该方法的主要目的是遍历所有像素，找到从观察点出发到某个像素的一个方向向量。此处仅介绍方法，详细推荐阅读<a
+<ul>
+<li>先来写Renderer.cpp 中的
+Render()方法，该方法的主要目的是遍历所有像素，找到从观察点出发到某个像素的一个方向向量。不上网找资料真的看的我一头雾水，此处仅介绍方法，详细推荐阅读<a
 target="_blank" rel="noopener" href="https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-generating-camera-rays/generating-camera-rays.html">Generating
-Camera Rays with Ray-Tracing</a>.</p>
+Camera Rays with Ray-Tracing</a>.</li>
+</ul>
 <p><img
 src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240229002619588.png" srcset="/img/loading.gif" lazyload /></p>
 <ul>
@@ -384,9 +384,11 @@ src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240229
 <p><img
 src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240229003634269.png" srcset="/img/loading.gif" lazyload /></p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j &lt; scene.height; ++j)<br>&#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; scene.width; ++i)<br>    &#123;<br>        <span class="hljs-type">float</span> x = (<span class="hljs-number">2.f</span> * (((<span class="hljs-type">float</span>)i + <span class="hljs-number">0.5</span>) / scene.width) - <span class="hljs-number">1.f</span>) * imageAspectRatio * scale;<br>        <span class="hljs-type">float</span> y = (<span class="hljs-number">1.f</span> - (<span class="hljs-number">2.f</span> * (((<span class="hljs-type">float</span>)j + <span class="hljs-number">0.5</span>) / scene.height))) * scale;<br><br>        Vector3f dir = <span class="hljs-built_in">normalize</span>(<span class="hljs-built_in">Vector3f</span>(x, y, <span class="hljs-number">-1</span>));<br>        framebuffer[m++] = <span class="hljs-built_in">castRay</span>(eye_pos, dir, scene, <span class="hljs-number">0</span>);<br>    &#125;<br>    <span class="hljs-built_in">UpdateProgress</span>(j / (<span class="hljs-type">float</span>)scene.height);<br>&#125;<br></code></pre></td></tr></table></figure>
-<p>Triangle.hpp 中的
+<ul>
+<li>Triangle.hpp 中的
 rayTriangleIntersect()方法要实现课上讲过的MT算法，参数在总览中有介绍，MT算法可以看以前的<a
-href="https://memo2586.github.io/2024/02/06/Games101-Lecture-13-Ray-Tracing-1/#m%C3%B6ller-trumbore-algorithm">笔记</a>。</p>
+href="https://memo2586.github.io/2024/02/06/Games101-Lecture-13-Ray-Tracing-1/#m%C3%B6ller-trumbore-algorithm">笔记</a>。</li>
+</ul>
 <p><img
 src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240229004231404.png" srcset="/img/loading.gif" lazyload /></p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">bool</span> <span class="hljs-title">rayTriangleIntersect</span><span class="hljs-params">(<span class="hljs-type">const</span> Vector3f&amp; v0, <span class="hljs-type">const</span> Vector3f&amp; v1, <span class="hljs-type">const</span> Vector3f&amp; v2, <span class="hljs-type">const</span> Vector3f&amp; orig,</span></span><br><span class="hljs-params"><span class="hljs-function">                          <span class="hljs-type">const</span> Vector3f&amp; dir, <span class="hljs-type">float</span>&amp; tnear, <span class="hljs-type">float</span>&amp; u, <span class="hljs-type">float</span>&amp; v)</span></span><br><span class="hljs-function"></span>&#123;<br>    Vector3f e1 = v1 - v0;<br>    Vector3f e2 = v2 - v0;<br>    Vector3f s = orig - v0;<br>    Vector3f s1 = <span class="hljs-built_in">crossProduct</span>(dir, e2);<br>    Vector3f s2 = <span class="hljs-built_in">crossProduct</span>(s, e1);<br>    <span class="hljs-type">float</span> res = <span class="hljs-built_in">dotProduct</span>(s1, e1);<br>    <span class="hljs-keyword">if</span>(res &lt;= <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br><br>    tnear = <span class="hljs-built_in">dotProduct</span>(s2, e2) / res;<br>    u = <span class="hljs-built_in">dotProduct</span>(s1, s) / res;<br>    v = <span class="hljs-built_in">dotProduct</span>(s2,dir) / res;<br>    <span class="hljs-keyword">if</span>(tnear &gt;= <span class="hljs-number">0</span> &amp;&amp; u &gt;= <span class="hljs-number">0</span> &amp;&amp; v &gt;= <span class="hljs-number">0</span> &amp;&amp; (<span class="hljs-number">1</span> - u - v) &gt;= <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
@@ -488,6 +490,12 @@ src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240229
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2024/03/02/Games101-%E4%BD%9C%E4%B8%9A6/" title="Games101-作业6">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Games101-作业6</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
