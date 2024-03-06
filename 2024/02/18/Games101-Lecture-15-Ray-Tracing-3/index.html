@@ -16,19 +16,16 @@
   <meta name="author" content="memo2586">
   <meta name="keywords" content="">
   
-    <meta name="description" content="施工中..">
+    <meta name="description" content="辐射度量学：Intensity、Irradiance、Radiance、BRDF、Rendering Equation、Global illumination">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Games101 - Lecture 15 Ray Tracing 3">
 <meta property="og:url" content="https://memo2586.github.io/2024/02/18/Games101-Lecture-15-Ray-Tracing-3/index.html">
 <meta property="og:site_name" content="memo&#39;s blog">
-<meta property="og:description" content="施工中..">
+<meta property="og:description" content="辐射度量学：Intensity、Irradiance、Radiance、BRDF、Rendering Equation、Global illumination">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240216163851691.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240218164150887.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240218175626506.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240218180627513.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/shiro-title_h160.jpg">
 <meta property="article:published_time" content="2024-02-18T11:18:47.000Z">
-<meta property="article:modified_time" content="2024-02-18T11:20:17.454Z">
+<meta property="article:modified_time" content="2024-03-06T15:14:41.525Z">
 <meta property="article:author" content="memo2586">
 <meta property="article:tag" content="Games101">
 <meta property="article:tag" content="计算机图形学">
@@ -36,7 +33,7 @@
 <meta property="article:tag" content="Ray Tracing">
 <meta property="article:tag" content="Basic Radiometry">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240216163851691.png">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/shiro-title_h160.jpg">
   
   
   
@@ -258,7 +255,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2k 字
+          3.1k 字
         
       </span>
     
@@ -269,7 +266,7 @@
         
         
         
-          17 分钟
+          26 分钟
         
       </span>
     
@@ -319,7 +316,7 @@
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2024年2月18日 晚上
+                    本文最后更新于：2024年3月6日 晚上
                   
                 
               </p>
@@ -327,7 +324,9 @@
             
               <div class="markdown-body">
                 
-                <h1 id="ray-tracing-3">Ray Tracing 3</h1>
+                <p><img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/shiro-title.jpg" srcset="/img/loading.gif" lazyload /></p>
+<h1 id="ray-tracing-3">Ray Tracing 3</h1>
 <h3 id="intensity">1. Intensity</h3>
 <ul>
 <li>定义：<strong>由光源辐射出的每单位立体角的功率</strong>，也就是光源在任意一个方向上的亮度。</li>
@@ -436,10 +435,87 @@ f_r(\omega_i\rightarrow\omega_r)=\frac{dL_r(\omega_r)}{dE_i(\omega_i)}=\frac{dL_
 \]</span> 明确地说，BRDF
 表示有多少光从每个入射方向反射到每个出射方向，它描述了光线会和物体如何作用，定义了不同的材质。</p>
 <p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240218180627513.png" srcset="/img/loading.gif" lazyload style="zoom:80%;" /></p>
-<p>那么，把所有入射方向上对某个出射方向上的贡献积分，可以得到相机看到的最终效果：
+<p>那么，把所有入射方向上对某个出射方向上的贡献积分，可以得到反射方程：
 <span class="math display">\[
 L_r(p,\omega_r)=\int_{H^2}f_r(p,\omega_i\rightarrow\omega_r)L_i(p,\omega_i)\cos{\theta_i}d\omega_i
-\]</span></p>
+\]</span>
+计算反射方程时，光源可能不止来自于发光体本身，也可能是来自由其他物体反射的间接光源。所以，解反射方程本身应该是一个较为复杂的递归过程。</p>
+<h3 id="the-rendering-equation">6. The Rendering Equation</h3>
+<p>考虑到物体可能自身也会发光，在反射方程的基础上修改得到渲染方程：
+<span class="math display">\[
+L_o(p,\omega_o)=L_e(p,\omega_o)+\int_{\Omega^+}L_i(p,\omega_i)f_r(p,\omega_i,\omega_o)(n\cdot\omega_i)d\omega_i
+\]</span> 也就是看到的某个点的 Radiance = 它自身辐射出的 Radiance +
+它反射出的 Radiance 。</p>
+<p>通过这个渲染方程，基本可以描述所有在物体表面的光线传播。</p>
+<p>当环境中只有一个点光源，很容易得到渲染方程：</p>
+<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240305104651691.png" srcset="/img/loading.gif" lazyload style="zoom:80%;" /></p>
+<p>如果环境中有多个点光源呢？按照我们对日常的理解，光强与光源的强度以及数量的比应该是线性的，所以我们把这些点光源的
+Radiance 累加起来：</p>
+<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240305104942385.png" srcset="/img/loading.gif" lazyload style="zoom:80%;" /></p>
+<p>那如果不止有点光源，环境中出现了一个面光源？我们知道，面光源其实就是在一个面积内的许多点光源的集合。和多个点光源的情况同个道理，我们可以把这个面内的点光源积分起来：</p>
+<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240305105316459.png" srcset="/img/loading.gif" lazyload style="zoom:80%;" /></p>
+<p>到目前为止，我们所理解的渲染方程就完成了。但是，还有一个没有解决的问题：环境中有非光源发出的
+Radiance 时怎么办？那么，我们可以将这些反射出 Radiance
+的面直接当成一个面光源加入计算，它们之间没有任何区别：</p>
+<p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240306194310781.png" srcset="/img/loading.gif" lazyload style="zoom:80%;" /></p>
+<p>按照上式，我们可以将从 <span class="math inline">\(v\)</span> 到
+<span class="math inline">\(u\)</span>
+的渲染方程简化为第二类弗雷德霍姆积分方程： <span class="math display">\[
+l(u)=e(u)+\int{l(v)K(u,v)dv}
+\]</span>
+如果我们把积分部分简化为一种光传输算子，还以将渲染方程进一步简化： <span
+class="math display">\[
+L=E+KL
+\]</span>
+化的那么简是要干嘛？那肯定是为了方便理解如何求解：可以通过通用类数值蒙特卡罗方法，得到场景中所有光路的近似集合：</p>
+<p><img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240306201553057.png" srcset="/img/loading.gif" lazyload /></p>
+<p>最后，我们会得到一个形式简单的结果，K
+的指数代表了这是光线经过多少次反射的结果，是根据对光线传播反射次数的一个分解。</p>
+<p><img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240306202015498.png" srcset="/img/loading.gif" lazyload /></p>
+<h3 id="global-illumination">7. Global illumination</h3>
+<p>光线反射一次的结果称为 Direct
+IIIumination（直接光照），多次的结果称为 Indirect
+IIIumination（间接光照），而包括直接光照、间接光照的光线反射的集合就是<strong>全局光照</strong>（GI）。</p>
+<figure>
+<img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240306202816710.png" srcset="/img/loading.gif" lazyload
+alt="直接光照效果" />
+<figcaption aria-hidden="true">直接光照效果</figcaption>
+</figure>
+<figure>
+<img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240306203032522.png" srcset="/img/loading.gif" lazyload
+alt="全局光照(1 bounce)" />
+<figcaption aria-hidden="true">全局光照(1 bounce)</figcaption>
+</figure>
+<figure>
+<img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240306203142396.png" srcset="/img/loading.gif" lazyload
+alt="全局光照(2 bounce)" />
+<figcaption aria-hidden="true">全局光照(2 bounce)</figcaption>
+</figure>
+<figure>
+<img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240306203224067.png" srcset="/img/loading.gif" lazyload
+alt="全局光照(4 bounce)" />
+<figcaption aria-hidden="true">全局光照(4 bounce)</figcaption>
+</figure>
+<figure>
+<img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240306203247524.png" srcset="/img/loading.gif" lazyload
+alt="全局光照(8 bounce)" />
+<figcaption aria-hidden="true">全局光照(8 bounce)</figcaption>
+</figure>
+<figure>
+<img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240306203321894.png" srcset="/img/loading.gif" lazyload
+alt="全局光照(16 bounce)" />
+<figcaption aria-hidden="true">全局光照(16 bounce)</figcaption>
+</figure>
+<p>可以观察到从8 bounce 到 16 bounce
+的全局光照效果变化不是很明显，随着反射次数的增加，光照的强度会逐渐收敛到一个亮度，不会再有剧烈的变化。</p>
 
                 
               </div>
