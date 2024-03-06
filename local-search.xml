@@ -4,6 +4,37 @@
   
   
   <entry>
+    <title>Games101-Lecture-16-Ray-Tracing-4</title>
+    <link href="/2024/03/07/Games101-Lecture-16-Ray-Tracing-4/"/>
+    <url>/2024/03/07/Games101-Lecture-16-Ray-Tracing-4/</url>
+    
+    <content type="html"><![CDATA[<h1 id="ray-tracing-4">Ray Tracing 4</h1><h3 id="probability-distribution-function-pdf">1. ProbabilityDistribution Function (PDF)</h3><figure><imgsrc="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240306234509188.png"alt="X ~ p(x)" /><figcaption aria-hidden="true">X ~ p(x)</figcaption></figure><p>一个随机变量 <spanclass="math inline">\(X\)</span>，它可以取连续集合中的任意值。在这里，每个特定值的相对概率由一个连续的概率密度函数<span class="math inline">\(p(x)\)</span> 给出。</p><ul><li><p><span class="math inline">\(p(x)\)</span> 满足条件： <spanclass="math inline">\(p(x)\geq 0 \;\; and \;\; \intp(x)dx=1\)</span></p></li><li><p><span class="math inline">\(X\)</span> 的期望值： <spanclass="math inline">\(E[X] = \int xp(x)dx\)</span></p></li><li><p><span class="math inline">\(Y = f(X)\)</span> 的期望值： <spanclass="math inline">\(E[Y]=E[f(x)]=\int f(x)p(x)dx\)</span></p></li></ul><h3 id="monte-carlo-integration">2. Monte Carlo Integration</h3><p>为什么要用蒙特卡洛积分？假如我需要计算下面这么一个函数从 a 到 b的定积分：</p><p><img src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240306235425047.png" style="zoom:80%;" /></p><p>按照以往的方法，我们需要先推导出不定积分，代入 a 和 b再去相减得到定积分。这个方法的前提是，我知道这个函数的解析式长什么样。那么这里就有一个问题，假设我要算的这个函数比较复杂，不好解析，那以往的方法就束手无策了。</p><p>蒙特卡洛积分是一种数值方法，它不关心函数本身，只关心积分的结果的值是多少。它的具体方法是：<strong>通过函数在特定区间上采样多个随机样本，并将它们的平均值作为估计，以得到对积分值的近似结果。</strong></p><p>让我们在数学上定义定积分的蒙特卡洛估计量： <spanclass="math display">\[F_N=\frac{1}{N}\sum^1_{i=1}\frac{f(X_i)}{p(X_i)}\]</span> 当最简单地在 a 到 b 之间均匀的采样，也就是 <spanclass="math inline">\(X_i \sim p(x)=C\)</span>时，相当于一个“矩形”的PDF：</p><p><imgsrc="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240307001941180.png" /></p><p>根据性质我们可以解： <span class="math display">\[\int^b_ap(x)dx=1\Longrightarrow\int^b_aCdx=1\LongrightarrowC=\frac{1}{b-a}\]</span> 在这之后，我们就可以得到最基本的蒙特卡洛估计量计算式： <spanclass="math display">\[F_N=\frac{b-a}{N}\sum^1_{i=1}f(X_i)\]</span>显然的，<strong>蒙特卡洛积分的采样数越多，积分结果就越准确</strong>。</p><h3 id="path-tracing">3. Path Tracing</h3><p>让我们先来回顾一下 Whitted-Style RayTracing，它总是遵守以下简化规则：</p><ul><li>在光滑表面（镜面）发生反射/折射</li><li>在漫反射表面停止追踪光线</li></ul><p>这些简化合理吗？让我们来看下面的具体例子：</p><figure><imgsrc="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240307010133522.png"alt="The Utah teapot" /><figcaption aria-hidden="true">The Utah teapot</figcaption></figure><p>当光线打在左边这个十分光滑的茶壶表面，会沿着镜面反射方向反射，这符合Whitted-Style Ray Tracing 的规则。</p><p>那再来看右边的茶壶，光线打在这个茶壶表面时，同样会发生反射，但反射的方向却不再是单一的，而是在镜面反射方向周围的一小片区域，所以茶壶反射出来的图像会模糊地呈现出来。Whitted-StyleRay Tracing 没有考虑这种情况，这是它的第一个问题。</p><p>第二个问题，Whitted-Style Ray Tracing为了简化，当光线打在漫反射表面停止追踪光线，这显然是不对的。</p><figure><imgsrc="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240307011916055.png"alt="The Cornell box" /><figcaption aria-hidden="true">The Cornell box</figcaption></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>计算机图形学</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Games101</tag>
+      
+      <tag>计算机图形学</tag>
+      
+      <tag>笔记</tag>
+      
+      <tag>Ray Tracing</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Games101 - 作业6</title>
     <link href="/2024/03/02/Games101-%E4%BD%9C%E4%B8%9A6/"/>
     <url>/2024/03/02/Games101-%E4%BD%9C%E4%B8%9A6/</url>
