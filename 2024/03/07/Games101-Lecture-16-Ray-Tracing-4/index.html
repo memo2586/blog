@@ -16,24 +16,25 @@
   <meta name="author" content="memo2586">
   <meta name="keywords" content="">
   
-    <meta name="description" content="施工中..">
+    <meta name="description" content="光线追踪：路径追踪的基本工作原理">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Games101-Lecture-16-Ray-Tracing-4">
 <meta property="og:url" content="https://memo2586.github.io/2024/03/07/Games101-Lecture-16-Ray-Tracing-4/index.html">
 <meta property="og:site_name" content="memo&#39;s blog">
-<meta property="og:description" content="施工中..">
+<meta property="og:description" content="光线追踪：路径追踪的基本工作原理">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240306235425047.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240307172835244.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/tia_h160.jpg">
 <meta property="article:published_time" content="2024-03-06T17:20:26.000Z">
-<meta property="article:modified_time" content="2024-03-07T10:57:18.822Z">
+<meta property="article:modified_time" content="2024-03-11T08:35:17.926Z">
 <meta property="article:author" content="memo2586">
 <meta property="article:tag" content="Games101">
 <meta property="article:tag" content="计算机图形学">
 <meta property="article:tag" content="笔记">
 <meta property="article:tag" content="Ray Tracing">
+<meta property="article:tag" content="概率论">
+<meta property="article:tag" content="Path Tracing">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240306235425047.png">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/memo2586/Image-repo/master/tia_h160.jpg">
   
   
   
@@ -255,7 +256,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4.1k 字
+          6.1k 字
         
       </span>
     
@@ -266,7 +267,7 @@
         
         
         
-          35 分钟
+          52 分钟
         
       </span>
     
@@ -316,7 +317,7 @@
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2024年3月7日 晚上
+                    本文最后更新于：2024年3月11日 下午
                   
                 
               </p>
@@ -324,7 +325,9 @@
             
               <div class="markdown-body">
                 
-                <h1 id="ray-tracing-4">Ray Tracing 4</h1>
+                <p><img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/tia-title.jpg" srcset="/img/loading.gif" lazyload /></p>
+<h1 id="ray-tracing-4">Ray Tracing 4</h1>
 <h3 id="probability-distribution-function-pdf">1. Probability
 Distribution Function (PDF)</h3>
 <figure>
@@ -470,6 +473,81 @@ E=P*(Lo/p)+(1-P)*0=Lo
 方法。但是并不完美，因为它的效率不高。</p>
 <p><img
 src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240307185426080.png" srcset="/img/loading.gif" lazyload /></p>
+<p>为了提高效率，我们可以做哪些优化呢？</p>
+<p><img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240307202244452.png" srcset="/img/loading.gif" lazyload /></p>
+<p>假如有这么三个场景，分别有从大到小的一个光源，我们均匀地进行采样。那么对于第一个场景，我可能只需要少量光线就能打到光源。而第三个场景由于光源非常的小，可能需要超级多的光线，才能有一根光线打到光源，而那些没有打到光源的光线就这么被浪费了。</p>
+<p>你可能已经发现了，均匀地采样方法，也即常数的 PDF
+采样的结果效率并不高。能否找到一个可以得到符合某个场景的，有高效的采样结果的
+PDF
+的方法，是我们现在需要解决的问题。我们将渲染过程分为两部分：直接光照和间接光照。在计算直接光照时，我们只需要关心光源带来的贡献，而不在光源上的采样是无意义的。</p>
+<p><img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240311150247670.png" srcset="/img/loading.gif" lazyload /></p>
+<p>渲染方程原本的积分域在半球上，设 <span
+class="math inline">\(d\omega\)</span> 是 <span
+class="math inline">\(dA\)</span> 的单位角，<span
+class="math inline">\(\theta\)</span>
+是渲染的点与光源的连线，与其所在平面的法线 <span
+class="math inline">\(n\)</span> 的夹角，<span
+class="math inline">\(\theta&#39;\)</span> 是面光源的法线 <span
+class="math inline">\(n&#39;\)</span> 与渲染的点与光源的连线的夹角。找到
+<span class="math inline">\(d\omega\)</span> 与 <span
+class="math inline">\(dA\)</span> 之间的关系： <span
+class="math display">\[
+d\omega=\frac{dA\cos\theta&#39;}{||x&#39;-x||^2}
+\]</span> 根据两个积分域之间的关系，修改一下渲染方程： <span
+class="math display">\[
+\begin{eqnarray}
+L_o(p,\omega_o)&amp;=&amp;\int_{\Omega^+}L_i(x,\omega_i)f_r(x,\omega_i,\omega_o)\cos\theta\;d\omega_i
+\nonumber \\
+~&amp;=&amp;\int_AL_i(x,\omega_i)f_r(x,\omega_i,\omega_o)\frac{\cos\theta\cos\theta&#39;}{||x&#39;-x||^2}\;dA
+\end{eqnarray}
+\]</span> 那么新的渲染方程的 PDF 自然就是 <span
+class="math inline">\(A/1\)</span>
+，又因为是直接光照，不需要考虑光线反射的情况，也就不需要俄罗斯轮盘赌。现在我们得到一个只在光源上采样的，快速计算直接光照的方法。让原来的方法之计算间接光照的结果，再把他们加起来：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 直接光照</span><br><br>// 在 dA 上均匀采样<br>Uniformly sample the light at x<span class="hljs-string">&#x27; (pdf_light = 1/ A)</span><br><span class="hljs-string">// 打出光线判断两点之间有无物体遮挡</span><br><span class="hljs-string">Shoot a ray from p to x’</span><br><span class="hljs-string">If the ray is not blocked in the middle:</span><br><span class="hljs-string">	L_dir = L_i * f_r * cos(theta) * cos(theta&#x27;</span>) / |x<span class="hljs-string">&#x27; - p| ^ 2 / pdf_light</span><br><span class="hljs-string"></span><br><span class="hljs-string"># 间接光照</span><br><span class="hljs-string"></span><br><span class="hljs-string">L_indir = 0.0</span><br><span class="hljs-string">// 轮盘赌</span><br><span class="hljs-string">Test Russian Roulette with probability P_RR</span><br><span class="hljs-string">// 在半球上均匀采样</span><br><span class="hljs-string">Uniformly sample the hemisphere toward wi (pdf_hemi = 1 / 2pi)</span><br><span class="hljs-string">Trace a ray r(p, wi)</span><br><span class="hljs-string">// 光线没有打到光源</span><br><span class="hljs-string">If ray r hit a non-emitting object at q:</span><br><span class="hljs-string">	L_indir = shade(q, -wi) * f_r * cos(theta) / pdf_hemi / P_RR</span><br><span class="hljs-string"></span><br><span class="hljs-string">Retuen L_dir + L_indir</span><br></code></pre></td></tr></table></figure>
+<p>到此为此，我们才算得到了一个基本正确的 Path Tracing 方法。</p>
+<figure>
+<img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240311154538047.png" srcset="/img/loading.gif" lazyload
+alt="http://www.graphics.cornell.edu/online/box/compare.html" />
+<figcaption
+aria-hidden="true">http://www.graphics.cornell.edu/online/box/compare.html</figcaption>
+</figure>
+<p>想要正确地代码实现 Path Tracing
+，还有超级多的问题需要学习如何解决，例如：</p>
+<ul>
+<li>Uniformly sampling the hemisphere
+<ul>
+<li>How? And in general, how to sample any function? (sampling)</li>
+</ul></li>
+<li>Monte Carlo integration allows arbitrary pdfs
+<ul>
+<li>What's the best choice? (importance sampling)</li>
+</ul></li>
+<li>Do random numbers matter?
+<ul>
+<li>Yes! (low discrepancy sequences)</li>
+</ul></li>
+<li>I can sample the hemisphere and the light
+<ul>
+<li>Can I combine them? Yes! (multiple imp. sampling)</li>
+</ul></li>
+<li>The radiance of a pixel is the average of radiance on all paths
+passing through it
+<ul>
+<li>Why? (pixel reconstruction filter)</li>
+</ul></li>
+<li>Is the radiance of a pixel the color of a pixel?
+<ul>
+<li>No. (gamma correction, curves, color space)</li>
+</ul></li>
+<li>Asking again, is path tracing still “Introductory”?
+<ul>
+<li>This time, yes. Fear the science, my friends.</li>
+</ul></li>
+</ul>
+<p>还只学到图形学的冰山一角。</p>
 
                 
               </div>
@@ -510,6 +588,10 @@ src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240307
         <a href="/tags/%E7%AC%94%E8%AE%B0/" class="print-no-link">#笔记</a>
       
         <a href="/tags/Ray-Tracing/" class="print-no-link">#Ray Tracing</a>
+      
+        <a href="/tags/%E6%A6%82%E7%8E%87%E8%AE%BA/" class="print-no-link">#概率论</a>
+      
+        <a href="/tags/Path-Tracing/" class="print-no-link">#Path Tracing</a>
       
     </div>
   
