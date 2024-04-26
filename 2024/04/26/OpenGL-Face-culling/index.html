@@ -24,7 +24,7 @@
 <meta property="og:description" content="LearnOpenGL-高级OpenGL:面剔除">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-04-26T15:24:51.000Z">
-<meta property="article:modified_time" content="2024-04-26T16:26:20.544Z">
+<meta property="article:modified_time" content="2024-04-26T17:29:42.101Z">
 <meta property="article:author" content="memo2586">
 <meta property="article:tag" content="OpenGL">
 <meta property="article:tag" content="Face culling">
@@ -341,22 +341,22 @@ src="https://learnopengl-cn.github.io/img/04/04/faceculling_frontback.png" srcse
 </ul>
 <p>另外，还可以通过 <code>glFrontFace</code>
 函数定义正面向的环绕顺序是顺时针还是逆时针：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-built_in">glFrontFace</span>(GL_CCW);	<span class="hljs-comment">// 默认值是逆时针，顺时针为 GL_CW</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-built_in">glFrontFace</span>(GL_CCW);<span class="hljs-comment">// 默认值是逆时针，顺时针为 GL_CW</span><br></code></pre></td></tr></table></figure>
 <p>做个实验，有这样一个立方体，它的顶点按照逆时针定义，并且其中两面是蓝色的：</p>
 <p><img
 src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240426235731286.png" srcset="/img/loading.gif" lazyload /></p>
 <p>开启面剔除，应用以下设置：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-built_in">glCullFace</span>(GL_FRONT);	<span class="hljs-comment">// 设置剔除的面的类型，试试剔除前面</span><br><span class="hljs-built_in">glFrontFace</span>(GL_CW);		<span class="hljs-comment">// 尝试定义顺时针是前面(因为剔除的是前面所以将顺时针的剔除，可以得到正常的效果)</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-built_in">glCullFace</span>(GL_FRONT);<span class="hljs-comment">// 设置剔除的面的类型，试试剔除前面</span><br><span class="hljs-built_in">glFrontFace</span>(GL_CW);	<span class="hljs-comment">// 尝试定义顺时针是前面(因为剔除的是前面所以将顺时针的剔除，可以得到正常的效果)</span><br></code></pre></td></tr></table></figure>
 <p><img
 src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240427000038869.png" srcset="/img/loading.gif" lazyload /></p>
 <p>再尝试以下设置：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-built_in">glCullFace</span>(GL_BACK);	<span class="hljs-comment">// 剔除背面</span><br><span class="hljs-built_in">glFrontFace</span>(GL_CW);		<span class="hljs-comment">// 定义顺时针是前面(会剔除逆时针的面，所以结果是背面被渲染出来)</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-built_in">glCullFace</span>(GL_BACK);<span class="hljs-comment">// 剔除背面</span><br><span class="hljs-built_in">glFrontFace</span>(GL_CW);	<span class="hljs-comment">// 定义顺时针是前面(会剔除逆时针的面，所以结果是背面被渲染出来)</span><br></code></pre></td></tr></table></figure>
 <p><img
 src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240427000249882.png" srcset="/img/loading.gif" lazyload /></p>
 <h4 id="描边">1.4 描边</h4>
 <p>利用面剔除还可做出描边效果。步骤如下：</p>
 <ul>
-<li>负值一个模型，按照原模型法线方向稍微放大一点点；</li>
+<li>复制一个模型，按照原模型法线方向稍微放大一点点；</li>
 <li>启用面剔除并且设置为剔除正面；</li>
 <li>使用着色器将新模型片元着色为一个纯色；</li>
 <li>恢复面剔除为剔除背面，正常着色原模型；</li>
@@ -455,6 +455,12 @@ src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240427
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2024/04/27/OpenGL-Framebuffers/" title="OpenGL - Framebuffers">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">OpenGL - Framebuffers</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
