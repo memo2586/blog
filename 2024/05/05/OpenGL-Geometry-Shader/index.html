@@ -1,0 +1,843 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/avatar.png">
+  <link rel="icon" href="/img/avatar.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="memo2586">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="LearnOpenGL-高级OpenGL:几何着色器">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenGL-Geometry-Shader">
+<meta property="og:url" content="https://memo2586.github.io/2024/05/05/OpenGL-Geometry-Shader/index.html">
+<meta property="og:site_name" content="memo&#39;s blog">
+<meta property="og:description" content="LearnOpenGL-高级OpenGL:几何着色器">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://learnopengl.com/img/getting-started/pipeline.png">
+<meta property="article:published_time" content="2024-05-05T08:35:01.000Z">
+<meta property="article:modified_time" content="2024-05-05T12:19:04.483Z">
+<meta property="article:author" content="memo2586">
+<meta property="article:tag" content="OpenGL">
+<meta property="article:tag" content="GLSL">
+<meta property="article:tag" content="Geometry Shader">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://learnopengl.com/img/getting-started/pipeline.png">
+  
+  
+  
+  <title>OpenGL-Geometry-Shader - memo&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"memo2586.github.io","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"h9LrXPpcrNbjrIkYzjY1DEMr-gzGzoHsz","app_key":"kEb8JH7axrNWQUX807kMvcyz","server_url":"https://h9lrxppc.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', '');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>memo&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://raw.githubusercontent.com/memo2586/Image-repo/master/109453178-small-title.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="OpenGL-Geometry-Shader"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-05-05 16:35" pubdate>
+          2024年5月5日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          7.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          63 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">OpenGL-Geometry-Shader</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2024年5月5日 晚上
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h3 id="几何着色器">1. 几何着色器</h3>
+<figure>
+<img src="https://learnopengl.com/img/getting-started/pipeline.png" srcset="/img/loading.gif" lazyload
+alt="learnopengl.com@JoeyDeVries" />
+<figcaption aria-hidden="true">learnopengl.com@JoeyDeVries</figcaption>
+</figure>
+<p>渲染管线中，在顶点着色器与片段着色器之间，还有一个可以注入自定义的着色器：几何着色器。几何着色器从顶点着色器接受一个图元，可以在几何着色器中对输入的图元中的顶点进行自定义的变换后，重新装配为图元发送给片段着色器。</p>
+<h4 id="创建一个几何着色器">1.1 创建一个几何着色器</h4>
+<p>修改 <code>Shader</code>
+类，让它支持创建几何着色器。我们可以新建一个构造函数的重载，在原本的基础上增加创建几何着色器：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><code class="hljs c++">Shader::<span class="hljs-built_in">Shader</span>(<span class="hljs-type">const</span> <span class="hljs-type">char</span>* vertexPath, <span class="hljs-type">const</span> <span class="hljs-type">char</span>* fragmentPath, <span class="hljs-type">const</span> <span class="hljs-type">char</span>* geometryPath)<br>&#123;<br>	std::string vertexCode;<br>	std::string fragmentCode;<br>	std::string geometryCode;<br>	std::ifstream vShaderFile;<br>	std::ifstream fShaderFile;<br>	std::ifstream gShaderFile;<br><br>	<span class="hljs-comment">// 异常处理</span><br>	vShaderFile.<span class="hljs-built_in">exceptions</span>(std::ifstream::failbit | std::ifstream::badbit);<br>	fShaderFile.<span class="hljs-built_in">exceptions</span>(std::ifstream::failbit | std::ifstream::badbit);<br>	gShaderFile.<span class="hljs-built_in">exceptions</span>(std::ifstream::failbit | std::ifstream::badbit);<br>	<span class="hljs-keyword">try</span> &#123;<br>		vShaderFile.<span class="hljs-built_in">open</span>(vertexPath);<br>		fShaderFile.<span class="hljs-built_in">open</span>(fragmentPath);<br>		gShaderFile.<span class="hljs-built_in">open</span>(geometryPath);<br>		std::stringstream vShaderStream;<br>		std::stringstream fShaderStream;<br>		std::stringstream gShaderStream;<br>		<span class="hljs-comment">// 读取缓存内容到数据流</span><br>		vShaderStream &lt;&lt; vShaderFile.<span class="hljs-built_in">rdbuf</span>();<br>		fShaderStream &lt;&lt; fShaderFile.<span class="hljs-built_in">rdbuf</span>();<br>		gShaderStream &lt;&lt; gShaderFile.<span class="hljs-built_in">rdbuf</span>();<br>		vShaderFile.<span class="hljs-built_in">close</span>();<br>		fShaderFile.<span class="hljs-built_in">close</span>();<br>		gShaderFile.<span class="hljs-built_in">close</span>();<br><br>		vertexCode = vShaderStream.<span class="hljs-built_in">str</span>();<br>		fragmentCode = fShaderStream.<span class="hljs-built_in">str</span>();<br>		geometryCode = gShaderStream.<span class="hljs-built_in">str</span>();<br>	&#125;<br>	<span class="hljs-built_in">catch</span> (std::ifstream::failure error) &#123;<br>		std::cout &lt;&lt; <span class="hljs-string">&quot;ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ&quot;</span> &lt;&lt; std::endl;<br>	&#125;<br>	<span class="hljs-type">const</span> <span class="hljs-type">char</span>* vShaderCode = vertexCode.<span class="hljs-built_in">c_str</span>();<br>	<span class="hljs-type">const</span> <span class="hljs-type">char</span>* fShaderCode = fragmentCode.<span class="hljs-built_in">c_str</span>();<br>	<span class="hljs-type">const</span> <span class="hljs-type">char</span>* gShaderCode = geometryCode.<span class="hljs-built_in">c_str</span>();<br><br>	<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> vertex, fragment, geometry;<br>	<span class="hljs-type">int</span> success;<br>	<span class="hljs-type">char</span> infoLog[<span class="hljs-number">512</span>];<br><br>	<span class="hljs-comment">// vertex</span><br>	vertex = <span class="hljs-built_in">glCreateShader</span>(GL_VERTEX_SHADER);<br>	<span class="hljs-built_in">glShaderSource</span>(vertex, <span class="hljs-number">1</span>, &amp;vShaderCode, <span class="hljs-literal">NULL</span>);<br>	<span class="hljs-built_in">glCompileShader</span>(vertex);<br>	<span class="hljs-built_in">glGetShaderiv</span>(vertex, GL_COMPILE_STATUS, &amp;success);<br>	<span class="hljs-keyword">if</span> (!success) &#123;<br>		<span class="hljs-built_in">glGetShaderInfoLog</span>(vertex, <span class="hljs-number">512</span>, <span class="hljs-literal">NULL</span>, infoLog);<br>		std::cout &lt;&lt; <span class="hljs-string">&quot;ERROR::SHADER::VERTEX::COMPILATTON_FAILED\n&quot;</span> &lt;&lt; infoLog &lt;&lt; std::endl;<br>	&#125;<br><br>	<span class="hljs-comment">// fragment</span><br>	fragment = <span class="hljs-built_in">glCreateShader</span>(GL_FRAGMENT_SHADER);<br>	<span class="hljs-built_in">glShaderSource</span>(fragment, <span class="hljs-number">1</span>, &amp;fShaderCode, <span class="hljs-literal">NULL</span>);<br>	<span class="hljs-built_in">glCompileShader</span>(fragment);<br>	<span class="hljs-built_in">glGetShaderiv</span>(fragment, GL_FRAGMENT_SHADER, &amp;success);<br>	<span class="hljs-keyword">if</span> (!success) &#123;<br>		<span class="hljs-built_in">glGetShaderInfoLog</span>(fragment, <span class="hljs-number">512</span>, <span class="hljs-literal">NULL</span>, infoLog);<br>		std::cout &lt;&lt; <span class="hljs-string">&quot;ERROE::SHADER::FRAGMENT::COMPILATTON_FAILED\n&quot;</span> &lt;&lt; infoLog &lt;&lt; std::endl;<br>	&#125;<br><br>	<span class="hljs-comment">// geometry</span><br>	geometry = <span class="hljs-built_in">glCreateShader</span>(GL_GEOMETRY_SHADER);<br>	<span class="hljs-built_in">glShaderSource</span>(geometry, <span class="hljs-number">1</span>, &amp;gShaderCode, <span class="hljs-literal">NULL</span>);<br>	<span class="hljs-built_in">glCompileShader</span>(geometry);<br>	<span class="hljs-built_in">glGetShaderiv</span>(geometry, GL_GEOMETRY_SHADER, &amp;success);<br>	<span class="hljs-keyword">if</span> (!success) &#123;<br>		<span class="hljs-built_in">glGetShaderInfoLog</span>(geometry, <span class="hljs-number">512</span>, <span class="hljs-literal">NULL</span>, infoLog);<br>		std::cout &lt;&lt; <span class="hljs-string">&quot;ERROE::SHADER::GEOMETRY::COMPILATTON_FAILED\n&quot;</span> &lt;&lt; infoLog &lt;&lt; std::endl;<br>	&#125;<br><br>	<span class="hljs-comment">// shader program</span><br>	ID = <span class="hljs-built_in">glCreateProgram</span>();<br>	<span class="hljs-built_in">glAttachShader</span>(ID, vertex);<br>	<span class="hljs-built_in">glAttachShader</span>(ID, fragment);<br>	<span class="hljs-built_in">glAttachShader</span>(ID, geometry);<br>	<span class="hljs-built_in">glLinkProgram</span>(ID);<br>	<span class="hljs-built_in">glGetProgramiv</span>(ID, GL_LINK_STATUS, &amp;success);<br>	<span class="hljs-keyword">if</span> (!success) &#123;<br>		<span class="hljs-built_in">glGetProgramInfoLog</span>(ID, <span class="hljs-number">512</span>, <span class="hljs-literal">NULL</span>, infoLog);<br>		std::cout &lt;&lt; <span class="hljs-string">&quot;ERROR::SHADER::PROGRAM::LINKING_FAILED\n&quot;</span> &lt;&lt; infoLog &lt;&lt; std::endl;<br>	&#125;<br><br>	<span class="hljs-built_in">glDeleteShader</span>(vertex);<br>	<span class="hljs-built_in">glDeleteShader</span>(fragment);<br>	<span class="hljs-built_in">glDeleteShader</span>(geometry);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>可以在构造 <code>Shader</code>
+时填写第三个参数让着色器支持几何着色器：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function">Shader <span class="hljs-title">shader</span><span class="hljs-params">(<span class="hljs-string">&quot;shader.vert&quot;</span>, <span class="hljs-string">&quot;shader.frag&quot;</span>, <span class="hljs-string">&quot;shader.geom&quot;</span>)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>接下来要编写几何着色器，直接看一个例子：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs glsl"><span class="hljs-meta">#version 330 core</span><br><span class="hljs-comment">// 声明输入图元</span><br><span class="hljs-keyword">layout</span> (<span class="hljs-keyword">points</span>) <span class="hljs-keyword">in</span>;<br><span class="hljs-comment">// 声明输出图元</span><br><span class="hljs-keyword">layout</span> (<span class="hljs-keyword">line_strip</span>, <span class="hljs-keyword">max_vertices</span> = <span class="hljs-number">2</span>) <span class="hljs-keyword">out</span>;<br><br><span class="hljs-type">void</span> main() &#123;<br>    <span class="hljs-comment">// 修改图元顶点</span><br>    <span class="hljs-built_in">gl_Position</span> = <span class="hljs-built_in">gl_in</span>[<span class="hljs-number">0</span>].<span class="hljs-built_in">gl_Position</span> + <span class="hljs-type">vec4</span>(<span class="hljs-number">-0.1</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>); <br>    <span class="hljs-built_in">EmitVertex</span>();<br>    <span class="hljs-built_in">gl_Position</span> = <span class="hljs-built_in">gl_in</span>[<span class="hljs-number">0</span>].<span class="hljs-built_in">gl_Position</span> + <span class="hljs-type">vec4</span>( <span class="hljs-number">0.1</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>);<br>    <span class="hljs-built_in">EmitVertex</span>();<br>	<span class="hljs-comment">// 装配图元</span><br>    <span class="hljs-built_in">EndPrimitive</span>();<br>&#125;<br></code></pre></td></tr></table></figure>
+<ul>
+<li><p>输入的图元类型：在几何着色器的顶部，在 <code>in</code>
+关键字前使用 <code>layout</code>
+修饰符声明从顶点着色器输入的图元类型，可以从顶点着色器接收下列任何一个图元值（括号内表示该类型图元需要的最小顶点数）：</p>
+<ul>
+<li><code>points</code>：绘制 <code>GL_POINTS</code>图元时（1）。</li>
+<li><code>lines</code>：绘制 <code>GL_LINES</code> 或
+<code>GL_LINE_STRIP</code> 时（2）</li>
+<li><code>lines_adjacency</code>：<code>GL_LINES_ADJACENCY</code> 或
+<code>GL_LINE_STRIP_ADJACENCY</code>（4）</li>
+<li><code>triangles</code>：<code>GL_TRIANGLES</code>、<code>GL_TRIANGLE_STRIP</code>
+或 <code>GL_TRIANGLE_FAN</code>（3）</li>
+<li><code>triangles_adjacency</code>：<code>GL_TRIANGLES_ADJACENCY</code>
+或 <code>GL_TRIANGLE_STRIP_ADJACENCY</code>（6）</li>
+</ul></li>
+<li><p>输出的图元类型：理所当然的我们也要在 <code>out</code>
+关键字前使用 <code>layout</code>
+修饰符声明几何着色器的输出图元类型，该修饰符接受下列图元值：</p>
+<ul>
+<li><code>points</code></li>
+<li><code>line_strip</code></li>
+<li><code>triangle_strip</code></li>
+</ul>
+<p>同时，需要为 <code>layout</code> 中的 <code>max_vertices</code>
+参数设置一个它最大能够输出的顶点数量，超过该参数大小的顶点都会被丢弃。</p></li>
+<li><p>输入变量：几何着色器的输入是由 GLSL
+提供的内建变量，它被声明为一个接口块数组（一个图元可能会有多个顶点），大概就像是这样子：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs glsl"><span class="hljs-keyword">in</span> <span class="hljs-built_in">gl_Vertex</span>&#123;<br>    <span class="hljs-type">vec4</span>  <span class="hljs-built_in">gl_Position</span>;<br>    <span class="hljs-type">float</span> <span class="hljs-built_in">gl_PointSize</span>;<br>    <span class="hljs-type">float</span> <span class="hljs-built_in">gl_ClipDistance</span>[];<br>&#125; <span class="hljs-built_in">gl_in</span>[]<br></code></pre></td></tr></table></figure></li>
+<li><p>输出图元：每次调用 <code>EmitVertex</code>
+时，<code>gl_Position</code>
+中的向量值会被添加到待装配的图元中，在调用了一次或者多次
+<code>EmitVertex</code> 后，调用
+<code>EndPrimitive</code>，将当前待装配的图元装配后发送到片段着色器。当然，也可以调用多次
+<code>EndPrimitive</code> 发送多个图元。</p></li>
+</ul>
+<h4 id="使用几何着色器">1.2 使用几何着色器</h4>
+<p>在了解了如何创建和编写一个几何着色器后，接下来要尝试使用它。先给它搭建一个场景看它如何发挥作用：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs c++">......<br><br><span class="hljs-comment">// 一个只有裁剪空间中四个点的场景</span><br><span class="hljs-type">float</span> points[] = &#123;<br>    <span class="hljs-number">-0.5f</span>,  <span class="hljs-number">0.5f</span>, <span class="hljs-comment">// 左上</span><br>    <span class="hljs-number">0.5f</span>,  <span class="hljs-number">0.5f</span>, <span class="hljs-comment">// 右上</span><br>    <span class="hljs-number">0.5f</span>, <span class="hljs-number">-0.5f</span>, <span class="hljs-comment">// 右下</span><br>    <span class="hljs-number">-0.5f</span>, <span class="hljs-number">-0.5f</span>  <span class="hljs-comment">// 左下</span><br>&#125;;<br><br><span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> vao, vbo;<br><span class="hljs-built_in">glGenVertexArrays</span>(<span class="hljs-number">1</span>, &amp;vao);<br><span class="hljs-built_in">glGenBuffers</span>(<span class="hljs-number">1</span>, &amp;vbo);<br><span class="hljs-built_in">glBindVertexArray</span>(vao);<br><span class="hljs-built_in">glBindBuffer</span>(GL_ARRAY_BUFFER, vbo);<br><span class="hljs-built_in">glBufferData</span>(GL_ARRAY_BUFFER, <span class="hljs-built_in">sizeof</span>(points), points, GL_STATIC_DRAW);<br><span class="hljs-built_in">glVertexAttribPointer</span>(<span class="hljs-number">0</span>, <span class="hljs-number">2</span>, GL_FLOAT, GL_FALSE, <span class="hljs-number">2</span> * <span class="hljs-built_in">sizeof</span>(<span class="hljs-type">float</span>), (<span class="hljs-type">void</span>*)<span class="hljs-number">0</span>);<br><span class="hljs-built_in">glEnableVertexAttribArray</span>(<span class="hljs-number">0</span>);<br><span class="hljs-built_in">glBindVertexArray</span>(<span class="hljs-number">0</span>);<br><span class="hljs-built_in">glBindBuffer</span>(GL_ARRAY_BUFFER, <span class="hljs-number">0</span>);<br><br><span class="hljs-comment">// 使用新写的gemoShader</span><br><span class="hljs-function">Shader <span class="hljs-title">shader</span><span class="hljs-params">(<span class="hljs-string">&quot;shader/3.3.shader.vert&quot;</span>, <span class="hljs-string">&quot;shader/3.3.shader.frag&quot;</span>, <span class="hljs-string">&quot;shader/3.3.shader.geom&quot;</span>)</span></span>;<br><br><span class="hljs-keyword">while</span> (!<span class="hljs-built_in">glfwWindowShouldClose</span>(window)) &#123;<br>    ......<br><br>    <span class="hljs-comment">// render</span><br>    shader.<span class="hljs-built_in">use</span>();<br>    <span class="hljs-built_in">glBindVertexArray</span>(vao);<br>    <span class="hljs-built_in">glDrawArrays</span>(GL_POINTS, <span class="hljs-number">0</span>, <span class="hljs-number">4</span>);<br>    <br>    <span class="hljs-built_in">glfwSwapBuffers</span>(window);<br>    <span class="hljs-built_in">glfwPollEvents</span>();<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>顶点着色器与片段着色器都十分简单：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs glsl"><span class="hljs-meta">#version 330 core</span><br><br><span class="hljs-keyword">layout</span> (<span class="hljs-keyword">location</span> = <span class="hljs-number">0</span>) <span class="hljs-keyword">in</span> <span class="hljs-type">vec2</span> vertPos;<br><br><span class="hljs-type">void</span> main()&#123;<br>	<span class="hljs-built_in">gl_Position</span> = <span class="hljs-type">vec4</span>(vertPos, <span class="hljs-number">0.</span>f, <span class="hljs-number">1.</span>f);<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs glsl"><span class="hljs-meta">#version 330 core</span><br><span class="hljs-keyword">out</span> <span class="hljs-type">vec4</span> fragColor;<br><br><span class="hljs-type">void</span> main()&#123;<br>	fragColor = <span class="hljs-type">vec4</span>(<span class="hljs-number">.2</span>f, <span class="hljs-number">.4</span>f, <span class="hljs-number">.6</span>f, <span class="hljs-number">1.</span>f);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>几何着色器搞点和例子不一样的，画个十字：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs glsl"><span class="hljs-meta">#version 330 core</span><br><span class="hljs-keyword">layout</span> (<span class="hljs-keyword">points</span>) <span class="hljs-keyword">in</span>;<br><span class="hljs-keyword">layout</span> (<span class="hljs-keyword">line_strip</span>, <span class="hljs-keyword">max_vertices</span> = <span class="hljs-number">4</span>) <span class="hljs-keyword">out</span>;<br><br><span class="hljs-type">void</span> main() &#123;    <br>    <span class="hljs-built_in">gl_Position</span> = <span class="hljs-built_in">gl_in</span>[<span class="hljs-number">0</span>].<span class="hljs-built_in">gl_Position</span> + <span class="hljs-type">vec4</span>(<span class="hljs-number">-0.1</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>); <br>    <span class="hljs-built_in">EmitVertex</span>();<br>    <span class="hljs-built_in">gl_Position</span> = <span class="hljs-built_in">gl_in</span>[<span class="hljs-number">0</span>].<span class="hljs-built_in">gl_Position</span> + <span class="hljs-type">vec4</span>( <span class="hljs-number">0.1</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>);<br>    <span class="hljs-built_in">EmitVertex</span>();<br>    <span class="hljs-built_in">EndPrimitive</span>();<br><br>    <span class="hljs-built_in">gl_Position</span> = <span class="hljs-built_in">gl_in</span>[<span class="hljs-number">0</span>].<span class="hljs-built_in">gl_Position</span> + <span class="hljs-type">vec4</span>(<span class="hljs-number">0.0</span>, <span class="hljs-number">-0.1</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>); <br>    <span class="hljs-built_in">EmitVertex</span>();<br>    <span class="hljs-built_in">gl_Position</span> = <span class="hljs-built_in">gl_in</span>[<span class="hljs-number">0</span>].<span class="hljs-built_in">gl_Position</span> + <span class="hljs-type">vec4</span>( <span class="hljs-number">0.0</span>, <span class="hljs-number">0.1</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>);<br>    <span class="hljs-built_in">EmitVertex</span>();<br>    <span class="hljs-built_in">EndPrimitive</span>();<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>编译运行后，可以看到几何着色器有在好好工作：</p>
+<p><img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240505174830138.png" srcset="/img/loading.gif" lazyload /></p>
+<h4 id="画些星星">1.3 画些星星</h4>
+<p>只是画这些无聊的线段可不好玩，来画几颗天上的星星。</p>
+<p><img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240505195955159.png" srcset="/img/loading.gif" lazyload /></p>
+<p>假设四芒星每条边的长为 <code>size</code>，那么 <span
+class="math inline">\(sn=sin(\theta)*size\)</span>，<span
+class="math inline">\(cn=cos(\theta)*size\)</span></p>
+<p>通过 <code>sn</code> 与 <code>cn</code>
+我们可以简单计算得到四芒星四个顶点的坐标与中间正方形四个顶点的坐标，最后将这些顶点组合成一颗星星。</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><code class="hljs glsl"><span class="hljs-meta">#version 330 core</span><br><span class="hljs-keyword">layout</span> (<span class="hljs-keyword">points</span>) <span class="hljs-keyword">in</span>;<br><span class="hljs-keyword">layout</span> (<span class="hljs-keyword">line_strip</span>, <span class="hljs-keyword">max_vertices</span> = <span class="hljs-number">16</span>) <span class="hljs-keyword">out</span>;<br><br><span class="hljs-keyword">const</span> <span class="hljs-type">float</span> size = <span class="hljs-number">0.07</span>f;<br><span class="hljs-keyword">const</span> <span class="hljs-type">float</span> rad = <span class="hljs-number">20.</span>f;<br><br><span class="hljs-type">void</span> main() &#123;    <br>    <span class="hljs-type">vec4</span> temp;<br>    <span class="hljs-type">vec4</span> square[<span class="hljs-number">4</span>];<br>    <span class="hljs-type">float</span> sinn = <span class="hljs-built_in">sin</span>(<span class="hljs-built_in">radians</span>(rad)) * size, cosn = <span class="hljs-built_in">cos</span>(<span class="hljs-built_in">radians</span>(rad)) * size;<br>    square[<span class="hljs-number">0</span>] = <span class="hljs-built_in">gl_in</span>[<span class="hljs-number">0</span>].<span class="hljs-built_in">gl_Position</span> + <span class="hljs-type">vec4</span>(-sinn, sinn, <span class="hljs-number">0.</span>f, <span class="hljs-number">0.</span>f);<br>    square[<span class="hljs-number">1</span>] = <span class="hljs-built_in">gl_in</span>[<span class="hljs-number">0</span>].<span class="hljs-built_in">gl_Position</span> + <span class="hljs-type">vec4</span>(sinn, sinn, <span class="hljs-number">0.</span>f, <span class="hljs-number">0.</span>f);<br>    square[<span class="hljs-number">2</span>] = <span class="hljs-built_in">gl_in</span>[<span class="hljs-number">0</span>].<span class="hljs-built_in">gl_Position</span> + <span class="hljs-type">vec4</span>(sinn, -sinn, <span class="hljs-number">0.</span>f, <span class="hljs-number">0.</span>f);<br>    square[<span class="hljs-number">3</span>] = <span class="hljs-built_in">gl_in</span>[<span class="hljs-number">0</span>].<span class="hljs-built_in">gl_Position</span> + <span class="hljs-type">vec4</span>(-sinn, -sinn, <span class="hljs-number">0.</span>f, <span class="hljs-number">0.</span>f);<br>    <span class="hljs-comment">// up</span><br>    temp = <span class="hljs-built_in">gl_in</span>[<span class="hljs-number">0</span>].<span class="hljs-built_in">gl_Position</span> + <span class="hljs-type">vec4</span>(<span class="hljs-number">0.</span>f, sinn + cosn, <span class="hljs-number">0.</span>f, <span class="hljs-number">0.</span>f);<br>    <span class="hljs-built_in">gl_Position</span> = temp; <span class="hljs-built_in">EmitVertex</span>();<br>    <span class="hljs-built_in">gl_Position</span> = square[<span class="hljs-number">0</span>]; <span class="hljs-built_in">EmitVertex</span>();<br>    <span class="hljs-built_in">gl_Position</span> = temp; <span class="hljs-built_in">EmitVertex</span>();<br>    <span class="hljs-built_in">gl_Position</span> = square[<span class="hljs-number">1</span>]; <span class="hljs-built_in">EmitVertex</span>();<br>    <span class="hljs-built_in">EndPrimitive</span>();<br>    <span class="hljs-comment">// down</span><br>    temp = <span class="hljs-built_in">gl_in</span>[<span class="hljs-number">0</span>].<span class="hljs-built_in">gl_Position</span> + <span class="hljs-type">vec4</span>(<span class="hljs-number">0.</span>f, -(sinn + cosn), <span class="hljs-number">0.</span>f, <span class="hljs-number">0.</span>f);<br>    <span class="hljs-built_in">gl_Position</span> = temp; <span class="hljs-built_in">EmitVertex</span>();<br>    <span class="hljs-built_in">gl_Position</span> = square[<span class="hljs-number">3</span>]; <span class="hljs-built_in">EmitVertex</span>();<br>    <span class="hljs-built_in">gl_Position</span> = temp; <span class="hljs-built_in">EmitVertex</span>();<br>    <span class="hljs-built_in">gl_Position</span> = square[<span class="hljs-number">2</span>]; <span class="hljs-built_in">EmitVertex</span>();<br>    <span class="hljs-built_in">EndPrimitive</span>();<br>    <span class="hljs-comment">// left</span><br>    temp = <span class="hljs-built_in">gl_in</span>[<span class="hljs-number">0</span>].<span class="hljs-built_in">gl_Position</span> + <span class="hljs-type">vec4</span>(-(sinn + cosn), <span class="hljs-number">0.</span>f, <span class="hljs-number">0.</span>f, <span class="hljs-number">0.</span>f);<br>    <span class="hljs-built_in">gl_Position</span> = temp; <span class="hljs-built_in">EmitVertex</span>();<br>    <span class="hljs-built_in">gl_Position</span> = square[<span class="hljs-number">0</span>]; <span class="hljs-built_in">EmitVertex</span>();<br>    <span class="hljs-built_in">gl_Position</span> = temp; <span class="hljs-built_in">EmitVertex</span>();<br>    <span class="hljs-built_in">gl_Position</span> = square[<span class="hljs-number">3</span>]; <span class="hljs-built_in">EmitVertex</span>();<br>    <span class="hljs-built_in">EndPrimitive</span>();<br>    <span class="hljs-comment">// right</span><br>    temp = <span class="hljs-built_in">gl_in</span>[<span class="hljs-number">0</span>].<span class="hljs-built_in">gl_Position</span> + <span class="hljs-type">vec4</span>(sinn + cosn, <span class="hljs-number">0.</span>f, <span class="hljs-number">0.</span>f, <span class="hljs-number">0.</span>f);<br>    <span class="hljs-built_in">gl_Position</span> = temp; <span class="hljs-built_in">EmitVertex</span>();<br>    <span class="hljs-built_in">gl_Position</span> = square[<span class="hljs-number">1</span>]; <span class="hljs-built_in">EmitVertex</span>();<br>    <span class="hljs-built_in">gl_Position</span> = temp; <span class="hljs-built_in">EmitVertex</span>();<br>    <span class="hljs-built_in">gl_Position</span> = square[<span class="hljs-number">2</span>]; <span class="hljs-built_in">EmitVertex</span>();<br>    <span class="hljs-built_in">EndPrimitive</span>();<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>这是使用几何着色器画出来的星星，虽然它并没有多好看。</p>
+<p><img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240505200529608.png" srcset="/img/loading.gif" lazyload /></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/OpenGL/" class="category-chain-item">OpenGL</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/OpenGL/" class="print-no-link">#OpenGL</a>
+      
+        <a href="/tags/GLSL/" class="print-no-link">#GLSL</a>
+      
+        <a href="/tags/Geometry-Shader/" class="print-no-link">#Geometry Shader</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>OpenGL-Geometry-Shader</div>
+      <div>https://memo2586.github.io/2024/05/05/OpenGL-Geometry-Shader/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>memo2586</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年5月5日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/05/04/OpenGL-Advanced-Data-and-Advanced-GLSL/" title="OpenGL - Advanced Data &amp; Advanced GLSL">
+                        <span class="hidden-mobile">OpenGL - Advanced Data &amp; Advanced GLSL</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        访问次数:
+        <span id="leancloud-site-pv"></span>
+        
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        访问人数:
+        <span id="leancloud-site-uv"></span>
+        
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
