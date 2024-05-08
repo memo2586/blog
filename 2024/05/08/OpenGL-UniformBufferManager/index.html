@@ -1,0 +1,867 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/avatar.png">
+  <link rel="icon" href="/img/avatar.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="memo2586">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="实现Uniform Buffer Manager类">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenGL - UniformBufferManager">
+<meta property="og:url" content="https://memo2586.github.io/2024/05/08/OpenGL-UniformBufferManager/index.html">
+<meta property="og:site_name" content="memo&#39;s blog">
+<meta property="og:description" content="实现Uniform Buffer Manager类">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-05-08T15:35:29.000Z">
+<meta property="article:modified_time" content="2024-05-08T17:33:56.476Z">
+<meta property="article:author" content="memo2586">
+<meta property="article:tag" content="OpenGL">
+<meta property="article:tag" content="GLSL">
+<meta property="article:tag" content="Uniform Buffer">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>OpenGL - UniformBufferManager - memo&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"memo2586.github.io","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"h9LrXPpcrNbjrIkYzjY1DEMr-gzGzoHsz","app_key":"kEb8JH7axrNWQUX807kMvcyz","server_url":"https://h9lrxppc.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', '');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>memo&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://raw.githubusercontent.com/memo2586/Image-repo/master/109453178-small-title.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="OpenGL - UniformBufferManager"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-05-08 23:35" pubdate>
+          2024年5月8日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          11k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          92 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">OpenGL - UniformBufferManager</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2024年5月9日 凌晨
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h3 id="需求的函数功能">需求的函数功能</h3>
+<ul>
+<li><p><code>unsigned int UniformBufferManager::createUniformBuffer(GLsizeiptr size, GLenum usage);</code></p>
+<p>参数接受一个 <code>GLsizeiptr</code> 型变量 <code>size</code>，与一个
+<code>GLenum</code> 型变量 <code>usage</code>，函数将创建一个大小为
+<code>size</code> 个字节的，内存使用类型为 <code>usage</code> 的 Uniform
+Buffer 对象，并返回该对象的 <code>ID</code>。</p></li>
+<li><p><code>void UniformBufferManager::uniformBufferBinding(unsigned int ubo, unsigned index);</code></p>
+<p>参数接受一个 Uniform Buffer 对象
+<code>ubo</code>，与一个无符号整型变量 <code>index</code>
+作为绑定点的下标。函数会将传入的 <code>ubo</code> 绑定到
+<code>index</code> 绑定点。</p></li>
+<li><p><code>void Shader::uniformBlockBinding(const std::string&amp; name, unsigned int index);</code></p>
+<p>参数接受一个<code>string</code> 型变量
+<code>name</code>，与一个无符号整型变量 <code>index</code>
+作为绑定点的下标。参数将 <code>Shader</code> 中名为 <code>name</code> 的
+Uniform Block 绑定到 <code>index</code> 绑定点。</p></li>
+<li><p><code>void UniformBufferManager::setUniformBufferxxx(unsigned int ubo, const std::string&amp; name, xxx value);</code></p>
+<p>参数接受一个 Uniform Buffer 对象 <code>ubo</code>，一个
+<code>string</code> 型变量 <code>name</code>，与一个对应的 xxx
+类型的变量（可以是数组）。函数将检查变量名为 <code>name</code>
+的变量是否已经存在 <code>ubo</code>
+中，如果是，将对应的内存中的数据修改为新的数据
+<code>value</code>，否则使用 <code>std140</code>
+布局，在未使用的内存中将数据 <code>value</code> 保存。</p></li>
+</ul>
+<h3 id="实现">实现</h3>
+<p>实现上述函数，需要使用 <code>map</code>
+数据结构，保证可以保存，以及快速查找当前 Uniform Buffer 内的存储情况。而
+<code>std140</code>
+布局，网上能找到很多关于布局规则的说明（有点绕），踩坑的地方会在注释中写出来。</p>
+<p><img
+src="https://raw.githubusercontent.com/memo2586/Image-repo/master/image-20240509012208453.png" srcset="/img/loading.gif" lazyload /></p>
+<ul>
+<li><p><code>uniformStruct</code> 结构体</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">uniformStruct</span>&#123;<br>	<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> base;	<span class="hljs-comment">// 基准对齐量</span><br>	<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> offset;	<span class="hljs-comment">// 偏移量</span><br><br>	<span class="hljs-built_in">uniformStruct</span>() &#123; base = <span class="hljs-number">0</span>; offset = <span class="hljs-number">0</span>; &#125;<br>	<span class="hljs-built_in">uniformStruct</span>(<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> _base, <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> _offset) :<br>		<span class="hljs-built_in">base</span>(_base), <span class="hljs-built_in">offset</span>(_offset) &#123;&#125;;<br>&#125;;<br></code></pre></td></tr></table></figure>
+<p><code>uniformStruct</code>
+的成员变量保存了对应变量的基准对齐量，以及在 Buffer
+中的偏移量。</p></li>
+<li><p>成员变量</p>
+<ul>
+<li><p><code>std::map&lt;std::string, uniformStruct&gt;* uniformBufferStruct;</code></p>
+<p>变量名为键，变量的 <code>uniformStruct</code> 为键值的一个
+<code>map</code>，保存了所有变量在 Buffer
+中的信息，可以用变量名快速查找变量在 Buffer 中的信息。</p></li>
+<li><p><code>std::map&lt;unsigned int, unsigned int&gt;* curUniformBufferIndex;</code></p>
+<p>Uniform Buffer 的 <code>ID</code> 为键，键值保存的是 <code>ID</code>
+对应的 Uniform Buffer 内存的使用情况，指向当前未使用内存的前端（遵守
+<code>std140</code> 规则）。</p></li>
+</ul></li>
+<li><p>函数的实现</p>
+<ul>
+<li><p><code>unsigned int UniformBufferManager::createUniformBuffer(GLsizeiptr size, GLenum usage)</code></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> <span class="hljs-title">UniformBufferManager::createUniformBuffer</span><span class="hljs-params">(GLsizeiptr size, GLenum usage)</span> </span>&#123;<br>	<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> ubo;<br>	<span class="hljs-built_in">glGenBuffers</span>(<span class="hljs-number">1</span>, &amp;ubo);<br>	<span class="hljs-built_in">glBindBuffer</span>(GL_UNIFORM_BUFFER, ubo);<br>	<span class="hljs-built_in">glBufferData</span>(GL_UNIFORM_BUFFER, size, <span class="hljs-literal">NULL</span>, usage);<br>	<span class="hljs-built_in">glBindBuffer</span>(GL_UNIFORM_BUFFER, <span class="hljs-number">0</span>);<br>    <span class="hljs-comment">// 将新的ubo下标初始化</span><br>	(*curUniformBufferIndex)[ubo] = <span class="hljs-number">0</span>;<br>	<span class="hljs-keyword">return</span> ubo;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li><p><code>void UniformBufferManager::uniformBufferBinding(unsigned int ubo, unsigned index)</code></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">UniformBufferManager::uniformBufferBinding</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> ubo, <span class="hljs-type">unsigned</span> index)</span> </span>&#123;<br>	<span class="hljs-built_in">glBindBufferBase</span>(GL_UNIFORM_BUFFER, index, ubo);<br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li><p><code>void Shader::uniformBlockBinding(const std::string&amp; name, unsigned int index)</code></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">Shader::uniformBlockBinding</span><span class="hljs-params">(<span class="hljs-type">const</span> std::string&amp; name, <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> index)</span> </span>&#123;<br>	<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> block_index = <span class="hljs-built_in">glGetUniformBlockIndex</span>(ID, name.<span class="hljs-built_in">c_str</span>());<br>	<span class="hljs-built_in">glUniformBlockBinding</span>(ID, block_index, index);<br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li><p><code>UniformBufferManager::setUniformBufferBool</code></p>
+<p><code>UniformBufferManager::setUniformBufferInt</code></p>
+<p><code>UniformBufferManager::setUniformBufferFloat</code></p>
+<p><code>Int</code> 与 <code>Float</code> 以及 <code>Bool</code>
+都是标量，在 <code>std140</code> 中占最小单元 <code>4</code>字节
+(<code>1N</code>)。例如：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs glsl"><span class="hljs-type">float</span> f;	<span class="hljs-comment">// 0 -&gt; 4</span><br><span class="hljs-type">int</span> i;		<span class="hljs-comment">// 4 -&gt; 8</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">UniformBufferManager::setUniformBufferBool</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> ubo, <span class="hljs-type">const</span> std::string&amp; name, <span class="hljs-type">int</span> value)</span> </span>&#123;<br>	<span class="hljs-built_in">glBindBuffer</span>(GL_UNIFORM_BUFFER, ubo);<br>    <span class="hljs-comment">// 从未存储过该变量</span><br>	<span class="hljs-keyword">if</span> (!uniformBufferStruct-&gt;<span class="hljs-built_in">count</span>(name)) &#123;<br>        <span class="hljs-comment">// 从 curUniformBufferIndex 获取当前ubo存储到哪里</span><br>        <span class="hljs-comment">// 使用 glBufferSubData 更新内存</span><br>		<span class="hljs-built_in">glBufferSubData</span>(GL_UNIFORM_BUFFER, (*curUniformBufferIndex)[ubo], <span class="hljs-number">4</span>, &amp;value);<br>        <span class="hljs-comment">// 保存该变量的存储信息</span><br>		(*uniformBufferStruct)[name] = <span class="hljs-built_in">uniformStruct</span>(<span class="hljs-number">4</span>, (*curUniformBufferIndex)[ubo]);<br>        <span class="hljs-comment">// 更新 curUniformBufferIndex</span><br>		(*curUniformBufferIndex)[ubo] += <span class="hljs-number">4</span>;<br>	&#125;<br>    <span class="hljs-comment">// 该变量已经被存储过</span><br>	<span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-comment">// 获取该变量的存储信息</span><br>		<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> base = (*uniformBufferStruct)[name].base;<br>		<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> offset = (*uniformBufferStruct)[name].offset;<br>        <span class="hljs-comment">// 更新内存</span><br>		<span class="hljs-built_in">glBufferSubData</span>(GL_UNIFORM_BUFFER, offset, base, &amp;value);<br>	&#125;<br>	<span class="hljs-built_in">glBindBuffer</span>(GL_UNIFORM_BUFFER, <span class="hljs-number">0</span>);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">UniformBufferManager::setUniformBufferInt</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> ubo, <span class="hljs-type">const</span> std::string name, <span class="hljs-type">int</span> value)</span> </span>&#123;<br>	<span class="hljs-built_in">glBindBuffer</span>(GL_UNIFORM_BUFFER, ubo);<br>	<span class="hljs-keyword">if</span> (!uniformBufferStruct-&gt;<span class="hljs-built_in">count</span>(name)) &#123;<br>		<span class="hljs-built_in">glBufferSubData</span>(GL_UNIFORM_BUFFER, (*curUniformBufferIndex)[ubo], <span class="hljs-number">4</span>, &amp;value);<br>		(*uniformBufferStruct)[name] = <span class="hljs-built_in">uniformStruct</span>(<span class="hljs-number">4</span>, (*curUniformBufferIndex)[ubo]);<br>		(*curUniformBufferIndex)[ubo] += <span class="hljs-number">4</span>;<br>	&#125;<br>	<span class="hljs-keyword">else</span> &#123;<br>		<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> base = (*uniformBufferStruct)[name].base;<br>		<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> offset = (*uniformBufferStruct)[name].offset;<br>		<span class="hljs-built_in">glBufferSubData</span>(GL_UNIFORM_BUFFER, offset, base, &amp;value);<br>	&#125;<br>	<span class="hljs-built_in">glBindBuffer</span>(GL_UNIFORM_BUFFER, <span class="hljs-number">0</span>);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">UniformBufferManager::setUniformBufferFloat</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> ubo, <span class="hljs-type">const</span> std::string name, <span class="hljs-type">float</span> value)</span> </span>&#123;<br>	<span class="hljs-built_in">glBindBuffer</span>(GL_UNIFORM_BUFFER, ubo);<br>	<span class="hljs-keyword">if</span> (!uniformBufferStruct-&gt;<span class="hljs-built_in">count</span>(name)) &#123;<br>		<span class="hljs-built_in">glBufferSubData</span>(GL_UNIFORM_BUFFER, (*curUniformBufferIndex)[ubo], <span class="hljs-number">4</span>, &amp;value);<br>		(*uniformBufferStruct)[name] = <span class="hljs-built_in">uniformStruct</span>(<span class="hljs-number">4</span>, (*curUniformBufferIndex)[ubo]);<br>		(*curUniformBufferIndex)[ubo] += <span class="hljs-number">4</span>;<br>	&#125;<br>	<span class="hljs-keyword">else</span> &#123;<br>		<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> base = (*uniformBufferStruct)[name].base;<br>		<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> offset = (*uniformBufferStruct)[name].offset;<br>		<span class="hljs-built_in">glBufferSubData</span>(GL_UNIFORM_BUFFER, offset, base, &amp;value);<br>	&#125;<br>	<span class="hljs-built_in">glBindBuffer</span>(GL_UNIFORM_BUFFER, <span class="hljs-number">0</span>);<br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li><p><code>UniformBufferManager::setUniformBufferVecxfArray</code></p>
+<p>可以使用 <code>name[index]</code> 修改数组中下标为 <code>index</code>
+的变量（使用对应变量类型的函数）。</p>
+<p>向量：<code>2N</code> 或者 <code>4N</code>，向量的偏移量以字 (16bit)
+为单位，但是该字未满时，仍可以在该字未使用的内存中保存标量。例如：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs glsl"><span class="hljs-type">float</span> f;	<span class="hljs-comment">// 0 -&gt; 4</span><br><span class="hljs-type">vec3</span> v3;	<span class="hljs-comment">// 16 -&gt; 28, 偏移量以16为单位</span><br><span class="hljs-type">bool</span> b; 	<span class="hljs-comment">// 28 -&gt; 32</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><code class="hljs c++"> <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">UniformBufferManager::setUniformBufferVec2f</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> ubo, <span class="hljs-type">const</span> std::string name, glm::vec2 value)</span> </span>&#123;<br>     <span class="hljs-comment">// 数据保存为float数组</span><br> 	<span class="hljs-type">float</span> data[] = &#123; value.x, value.y &#125;;<br> 	<span class="hljs-built_in">glBindBuffer</span>(GL_UNIFORM_BUFFER, ubo);<br> 	<span class="hljs-keyword">if</span> (!uniformBufferStruct-&gt;<span class="hljs-built_in">count</span>(name)) &#123;<br> 		<span class="hljs-comment">// 处理偏移量，必须是16的倍数，对curUniformBufferIndex取16的整数倍</span><br> 		<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> cur;<br> 		<span class="hljs-keyword">if</span> ((*curUniformBufferIndex)[ubo] % <span class="hljs-number">16</span> == <span class="hljs-number">0</span>) cur = (*curUniformBufferIndex)[ubo];<br> 		<span class="hljs-keyword">else</span> cur = (*curUniformBufferIndex)[ubo] + <span class="hljs-number">16</span> - ((*curUniformBufferIndex)[ubo] % <span class="hljs-number">16</span>);<br> 		<span class="hljs-comment">// 其余的与标量大致相同</span><br> 		<span class="hljs-built_in">glBufferSubData</span>(GL_UNIFORM_BUFFER, cur, <span class="hljs-number">8</span>, &amp;data);<br> 		(*uniformBufferStruct)[name] = <span class="hljs-built_in">uniformStruct</span>(<span class="hljs-number">8</span>, cur);<br> 		(*curUniformBufferIndex)[ubo] = cur + <span class="hljs-number">8</span>;<br> 	&#125;<br> 	<span class="hljs-keyword">else</span> &#123;<br> 		<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> base = (*uniformBufferStruct)[name].base;<br> 		<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> offset = (*uniformBufferStruct)[name].offset;<br> 		<span class="hljs-built_in">glBufferSubData</span>(GL_UNIFORM_BUFFER, offset, base, &amp;data);<br> 	&#125;<br> 	<span class="hljs-built_in">glBindBuffer</span>(GL_UNIFORM_BUFFER, <span class="hljs-number">0</span>);<br> &#125;<br> <br> <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">UniformBufferManager::setUniformBufferVec3f</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> ubo, <span class="hljs-type">const</span> std::string name, glm::vec3 value)</span> </span>&#123;<br> 	<span class="hljs-type">float</span> data[] = &#123; value.x, value.y, value.z &#125;;<br> 	<span class="hljs-built_in">glBindBuffer</span>(GL_UNIFORM_BUFFER, ubo);<br> 	<span class="hljs-keyword">if</span> (!uniformBufferStruct-&gt;<span class="hljs-built_in">count</span>(name)) &#123;<br> 		<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> cur;<br> 		<span class="hljs-keyword">if</span> ((*curUniformBufferIndex)[ubo] % <span class="hljs-number">16</span> == <span class="hljs-number">0</span>) cur = (*curUniformBufferIndex)[ubo];<br> 		<span class="hljs-keyword">else</span> cur = (*curUniformBufferIndex)[ubo] + <span class="hljs-number">16</span> - ((*curUniformBufferIndex)[ubo] % <span class="hljs-number">16</span>);<br> <br> 		<span class="hljs-built_in">glBufferSubData</span>(GL_UNIFORM_BUFFER, cur, <span class="hljs-number">12</span>, &amp;data);<br> 		(*uniformBufferStruct)[name] = <span class="hljs-built_in">uniformStruct</span>(<span class="hljs-number">12</span>, cur);<br> 		(*curUniformBufferIndex)[ubo] = cur + <span class="hljs-number">12</span>;<br> 	&#125;<br> 	<span class="hljs-keyword">else</span> &#123;<br> 		<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> base = (*uniformBufferStruct)[name].base;<br> 		<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> offset = (*uniformBufferStruct)[name].offset;<br> 		<span class="hljs-built_in">glBufferSubData</span>(GL_UNIFORM_BUFFER, offset, base, &amp;data);<br> 	&#125;<br> 	<span class="hljs-built_in">glBindBuffer</span>(GL_UNIFORM_BUFFER, <span class="hljs-number">0</span>);<br> &#125;<br> <br> <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">UniformBufferManager::setUniformBufferVec4f</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> ubo, <span class="hljs-type">const</span> std::string name, glm::vec4 value)</span> </span>&#123;<br> 	<span class="hljs-type">float</span> data[] = &#123; value.x, value.y, value.z, value.w &#125;;<br> 	<span class="hljs-built_in">glBindBuffer</span>(GL_UNIFORM_BUFFER, ubo);<br> 	<span class="hljs-keyword">if</span> (!uniformBufferStruct-&gt;<span class="hljs-built_in">count</span>(name)) &#123;<br> 		<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> cur;<br> 		<span class="hljs-keyword">if</span> ((*curUniformBufferIndex)[ubo] % <span class="hljs-number">16</span> == <span class="hljs-number">0</span>) cur = (*curUniformBufferIndex)[ubo];<br> 		<span class="hljs-keyword">else</span> cur = (*curUniformBufferIndex)[ubo] + <span class="hljs-number">16</span> - ((*curUniformBufferIndex)[ubo] % <span class="hljs-number">16</span>);<br> <br> 		<span class="hljs-built_in">glBufferSubData</span>(GL_UNIFORM_BUFFER, cur, <span class="hljs-number">16</span>, &amp;data);<br> 		(*uniformBufferStruct)[name] = <span class="hljs-built_in">uniformStruct</span>(<span class="hljs-number">16</span>, cur);<br> 		(*curUniformBufferIndex)[ubo] = cur + <span class="hljs-number">16</span>;<br> 	&#125;<br> 	<span class="hljs-keyword">else</span> &#123;<br> 		<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> base = (*uniformBufferStruct)[name].base;<br> 		<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> offset = (*uniformBufferStruct)[name].offset;<br> 		<span class="hljs-built_in">glBufferSubData</span>(GL_UNIFORM_BUFFER, offset, base, &amp;data);<br> 	&#125;<br> 	<span class="hljs-built_in">glBindBuffer</span>(GL_UNIFORM_BUFFER, <span class="hljs-number">0</span>);<br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li><p><code>UniformBufferManager::setUniformBufferxxxArray</code></p>
+<p>数组：数组中每个变量都必须是
+<code>4N</code>，并且最后一个字未满时也不能给标量使用（坑）。例如：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs glsl"><span class="hljs-type">int</span> i;			<span class="hljs-comment">// 0 -&gt; 4</span><br><span class="hljs-type">float</span>[<span class="hljs-number">2</span>] arr;	<span class="hljs-comment">// 16 -&gt; 48</span><br><span class="hljs-type">bool</span> b;			<span class="hljs-comment">// 48 -&gt; 52，36-48都是不可使用的</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">UniformBufferManager::setUniformBufferIntArray</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> ubo, <span class="hljs-type">const</span> std::string name, <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> size, <span class="hljs-type">int</span> value[])</span> </span>&#123;<br>	<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; size; i++) &#123;<br>        <span class="hljs-comment">// 存储为size个Int类型，变量名使用name[index]</span><br>		<span class="hljs-built_in">setUniformBufferInt</span>(ubo, name + <span class="hljs-string">&quot;[&quot;</span> + std::<span class="hljs-built_in">to_string</span>(i) + <span class="hljs-string">&quot;]&quot;</span>, value[i]);<br>        <span class="hljs-comment">// 修改curUniformBufferIndex指向下一个字</span><br>		<span class="hljs-keyword">if</span> ((*curUniformBufferIndex)[ubo] % <span class="hljs-number">16</span> != <span class="hljs-number">0</span>)<br>			(*curUniformBufferIndex)[ubo] = (*curUniformBufferIndex)[ubo] + <span class="hljs-number">16</span> - ((*curUniformBufferIndex)[ubo] % <span class="hljs-number">16</span>);<br>	&#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">UniformBufferManager::setUniformBufferFloatArray</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> ubo, <span class="hljs-type">const</span> std::string name, <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> size, <span class="hljs-type">float</span> value[])</span> </span>&#123;<br>	<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; size; i++) &#123;<br>		<span class="hljs-built_in">setUniformBufferFloat</span>(ubo, name + <span class="hljs-string">&quot;[&quot;</span> + std::<span class="hljs-built_in">to_string</span>(i) + <span class="hljs-string">&quot;]&quot;</span>, value[i]);<br>		<span class="hljs-keyword">if</span> ((*curUniformBufferIndex)[ubo] % <span class="hljs-number">16</span> != <span class="hljs-number">0</span>)<br>			(*curUniformBufferIndex)[ubo] = (*curUniformBufferIndex)[ubo] + <span class="hljs-number">16</span> - ((*curUniformBufferIndex)[ubo] % <span class="hljs-number">16</span>);<br>	&#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">UniformBufferManager::setUniformBufferVec2fArray</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> ubo, <span class="hljs-type">const</span> std::string name, <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> size, glm::vec2 value[])</span> </span>&#123;<br>	<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; size; i++) &#123;<br>		<span class="hljs-built_in">setUniformBufferVec2f</span>(ubo, name + <span class="hljs-string">&quot;[&quot;</span> + std::<span class="hljs-built_in">to_string</span>(i) + <span class="hljs-string">&quot;]&quot;</span>, value[i]);<br>		<span class="hljs-keyword">if</span> ((*curUniformBufferIndex)[ubo] % <span class="hljs-number">16</span> != <span class="hljs-number">0</span>)<br>			(*curUniformBufferIndex)[ubo] = (*curUniformBufferIndex)[ubo] + <span class="hljs-number">16</span> - ((*curUniformBufferIndex)[ubo] % <span class="hljs-number">16</span>);<br>	&#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">UniformBufferManager::setUniformBufferVec3fArray</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> ubo, <span class="hljs-type">const</span> std::string name, <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> size, glm::vec3 value[])</span> </span>&#123;<br>	<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; size; i++) &#123;<br>		<span class="hljs-built_in">setUniformBufferVec3f</span>(ubo, name + <span class="hljs-string">&quot;[&quot;</span> + std::<span class="hljs-built_in">to_string</span>(i) + <span class="hljs-string">&quot;]&quot;</span>, value[i]);<br>		<span class="hljs-keyword">if</span> ((*curUniformBufferIndex)[ubo] % <span class="hljs-number">16</span> != <span class="hljs-number">0</span>)<br>			(*curUniformBufferIndex)[ubo] = (*curUniformBufferIndex)[ubo] + <span class="hljs-number">16</span> - ((*curUniformBufferIndex)[ubo] % <span class="hljs-number">16</span>);<br>	&#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">UniformBufferManager::setUniformBufferVec4fArray</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> ubo, <span class="hljs-type">const</span> std::string name, <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> size, glm::vec4 value[])</span> </span>&#123;<br>	<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; size; i++) &#123;<br>		<span class="hljs-built_in">setUniformBufferVec4f</span>(ubo, name + <span class="hljs-string">&quot;[&quot;</span> + std::<span class="hljs-built_in">to_string</span>(i) + <span class="hljs-string">&quot;]&quot;</span>, value[i]);<br>		<span class="hljs-keyword">if</span> ((*curUniformBufferIndex)[ubo] % <span class="hljs-number">16</span> != <span class="hljs-number">0</span>)<br>			(*curUniformBufferIndex)[ubo] = (*curUniformBufferIndex)[ubo] + <span class="hljs-number">16</span> - ((*curUniformBufferIndex)[ubo] % <span class="hljs-number">16</span>);<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li><p><code>UniformBufferManager::setUniformBufferMatxf</code></p>
+<p>矩阵：其实就是向量数组，规则和数组一样</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">UniformBufferManager::setUniformBufferMat3f</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> ubo, <span class="hljs-type">const</span> std::string name, glm::mat3 value)</span> </span>&#123;<br>	<span class="hljs-comment">// 矩阵算数组，在他之后的第一个变量的偏移地址应该是下一个16的倍数</span><br>	<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">3</span>; i++) &#123;<br>		glm::vec3 row = value[i];<br>		<span class="hljs-built_in">setUniformBufferVec3f</span>(ubo, name + <span class="hljs-string">&quot;[&quot;</span> + std::<span class="hljs-built_in">to_string</span>(i) + <span class="hljs-string">&quot;]&quot;</span>, row);<br>	&#125;<br>    <span class="hljs-comment">// 修改curUniformBufferIndex指向下一个字</span><br>	<span class="hljs-keyword">if</span> ((*curUniformBufferIndex)[ubo] % <span class="hljs-number">16</span> != <span class="hljs-number">0</span>)<br>		(*curUniformBufferIndex)[ubo] = (*curUniformBufferIndex)[ubo] + <span class="hljs-number">16</span> - ((*curUniformBufferIndex)[ubo] % <span class="hljs-number">16</span>);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">UniformBufferManager::setUniformBufferMat4f</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> ubo, <span class="hljs-type">const</span> std::string name, glm::mat4 value)</span> </span>&#123;<br>	<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">4</span>; i++) &#123;<br>		glm::vec4 row = value[i];<br>		<span class="hljs-built_in">setUniformBufferVec4f</span>(ubo, name + <span class="hljs-string">&quot;[&quot;</span> + std::<span class="hljs-built_in">to_string</span>(i) + <span class="hljs-string">&quot;]&quot;</span>, row);<br>	&#125;<br>	<span class="hljs-keyword">if</span> ((*curUniformBufferIndex)[ubo] % <span class="hljs-number">16</span> != <span class="hljs-number">0</span>)<br>		(*curUniformBufferIndex)[ubo] = (*curUniformBufferIndex)[ubo] + <span class="hljs-number">16</span> - ((*curUniformBufferIndex)[ubo] % <span class="hljs-number">16</span>);<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ul></li>
+</ul>
+<h3 id="使用">使用</h3>
+<ul>
+<li><p>实例化 <code>UniformBufferManager</code> 类</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c++">UniformBufferManager* ubm = <span class="hljs-keyword">new</span> <span class="hljs-built_in">UniformBufferManager</span>();<br></code></pre></td></tr></table></figure></li>
+<li><p>创建 Uniform Buffer 并将 Uniform Buffer 与 Uniform Block
+绑定到相同的绑定点：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> mvpBuffer = ubm-&gt;<span class="hljs-built_in">createUniformBuffer</span>(<span class="hljs-number">256</span>, GL_STATIC_DRAW);<br>ubm-&gt;<span class="hljs-built_in">uniformBufferBinding</span>(mvpBuffer, <span class="hljs-number">0</span>);<br>lightShader.<span class="hljs-built_in">uniformBlockBinding</span>(<span class="hljs-string">&quot;mvp&quot;</span>, <span class="hljs-number">0</span>);<br></code></pre></td></tr></table></figure></li>
+<li><p>使用 Uniform Buffer 工具函数更新 Buffer：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs c++">ubm-&gt;<span class="hljs-built_in">setUniformBufferMat4f</span>(mvpBuffer, <span class="hljs-string">&quot;model&quot;</span>, model);<br>ubm-&gt;<span class="hljs-built_in">setUniformBufferMat4f</span>(mvpBuffer, <span class="hljs-string">&quot;view&quot;</span>, view);<br>ubm-&gt;<span class="hljs-built_in">setUniformBufferMat4f</span>(mvpBuffer, <span class="hljs-string">&quot;projection&quot;</span>, projection);<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="注意">注意</h3>
+<ul>
+<li>添加到 <code>UniformBufferManager</code> 中的变量名不能重复；</li>
+<li>添加变量的顺序需要和 Uniform Block 中的定义顺序相同；</li>
+<li>添加的变量名可以与 Uniform Block
+中的变量名不同，只要类型以及顺序相同即可；</li>
+<li>不要添加超过创建 Buffer 内存大小的变量；</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/OpenGL/" class="category-chain-item">OpenGL</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/OpenGL/" class="print-no-link">#OpenGL</a>
+      
+        <a href="/tags/GLSL/" class="print-no-link">#GLSL</a>
+      
+        <a href="/tags/Uniform-Buffer/" class="print-no-link">#Uniform Buffer</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>OpenGL - UniformBufferManager</div>
+      <div>https://memo2586.github.io/2024/05/08/OpenGL-UniformBufferManager/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>memo2586</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年5月8日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/05/05/OpenGL-Geometry-Shader/" title="OpenGL - Geometry Shader">
+                        <span class="hidden-mobile">OpenGL - Geometry Shader</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        访问次数:
+        <span id="leancloud-site-pv"></span>
+        
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        访问人数:
+        <span id="leancloud-site-uv"></span>
+        
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
